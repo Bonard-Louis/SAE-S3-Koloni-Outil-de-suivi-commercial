@@ -15,10 +15,10 @@
 Actuellement, les membres font circuler des opportunités de mission et relancent des contacts de manière isolée, avec leurs propres notes, sans centralisation ni partage. 
 
 ###  Objectifs de l'application :
-* Suivre centralement les **contacts** et les **leads**.
-* Gérer des **relances datées** et des rappels.
-* Assurer un suivi précis du **statut par opportunité**.
-* Visualiser clairement ce qui se transforme en **mission** au bout du compte.
+* Suivre centralement les contacts et les leads.
+* Gérer des relances datées et des rappels.
+* Assurer un suivi précis du statut par opportunité.
+* Visualiser clairement ce qui se transforme en mission au bout du compte.
 
 A completer après le rdv avec le client 
 
