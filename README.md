@@ -5,6 +5,7 @@
 * **Drapied Hugo** - *Product Owner*
 * **Martinez Lucie** - *Developer*
 * **Fellah Sara** - *Developer*
+* **Bonard Louis** - *Developer*
 
 ---
 
