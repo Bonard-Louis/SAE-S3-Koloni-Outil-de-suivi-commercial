@@ -7,6 +7,36 @@ Version 0.3 — Document de travail
 
 ---
 
+## Table des matières
+
+1. [Contexte](#1-contexte)
+   - 1.1 [Présentation de l'organisation](#11-présentation-de-lorganisation)
+   - 1.2 [Rôle dans le projet](#12-rôle-dans-le-projet)
+   - 1.3 [Utilisateurs finaux](#13-utilisateurs-finaux)
+   - 1.4 [Origine et problématique](#14-origine-et-problématique)
+   - 1.5 [Solution proposée](#15-solution-proposée)
+2. [Comprendre l'existant](#2-comprendre-lexistant)
+   - 2.1 [Solution actuelle](#21-solution-actuelle)
+   - 2.2 [Limites identifiées](#22-limites-identifiées)
+   - 2.3 [Fonctionnalités manquantes](#23-fonctionnalités-manquantes)
+3. [Besoins fonctionnels](#3-besoins-fonctionnels)
+   - 3.1 [Fonctionnalités indispensables](#31-fonctionnalités-indispensables)
+   - 3.2 [Actions des utilisateurs](#32-actions-des-utilisateurs)
+   - 3.3 [Données à enregistrer](#33-données-à-enregistrer)
+   - 3.4 [Résultats attendus](#34-résultats-attendus)
+4. [Besoins non fonctionnels](#4-besoins-non-fonctionnels)
+5. [Contraintes et limites](#5-contraintes-et-limites)
+6. [Persona](#6-persona)
+7. [Use Cases](#7-use-cases)
+8. [User Stories](#8-user-stories)
+9. [Priorités](#9-priorités)
+   - 9.1 [Fonctionnalités obligatoires](#91-fonctionnalités-obligatoires)
+   - 9.2 [Fonctionnalités souhaitées](#92-fonctionnalités-souhaitées)
+   - 9.3 [Hors périmètre / évolutions](#93-hors-périmètre--évolutions)
+10. [Reprise et livraison](#10-reprise-et-livraison)
+
+---
+
 ## 1. Contexte
 
 ### 1.1 Présentation de l'organisation
