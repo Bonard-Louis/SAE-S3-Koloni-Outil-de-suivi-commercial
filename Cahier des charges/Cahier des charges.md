@@ -8,6 +8,38 @@ Document de référence : Recueil de besoins, version 0.3
 
 ---
 
+## Table des matières
+
+1. [Présentation du projet](#1-présentation-du-projet)
+   - 1.1 [Contexte](#11-contexte)
+   - 1.2 [Objectif](#12-objectif)
+   - 1.3 [Parties prenantes](#13-parties-prenantes)
+   - 1.4 [Utilisateurs et rôles](#14-utilisateurs-et-rôles)
+2. [Périmètre](#2-périmètre)
+   - 2.1 [Inclus dans le projet](#21-inclus-dans-le-projet)
+   - 2.2 [Hors périmètre](#22-hors-périmètre)
+3. [Exigences fonctionnelles](#3-exigences-fonctionnelles)
+   - 3.1 [Authentification et comptes](#31-authentification-et-comptes)
+   - 3.2 [Opportunités](#32-opportunités)
+   - 3.3 [Collaboration sur une opportunité](#33-collaboration-sur-une-opportunité)
+   - 3.4 [Contacts, entreprises et profils extérieurs](#34-contacts-entreprises-et-profils-extérieurs)
+   - 3.5 [Profil membre](#35-profil-membre)
+   - 3.6 [Données](#36-données)
+4. [Exigences non fonctionnelles et contraintes](#4-exigences-non-fonctionnelles-et-contraintes)
+5. [Organisation, planning et chiffrage](#5-organisation-planning-et-chiffrage)
+   - 5.1 [Équipe](#51-équipe)
+   - 5.2 [Découpage en releases](#52-découpage-en-releases)
+   - 5.3 [Chiffrage économique](#53-chiffrage-économique)
+6. [Risques et points ouverts](#6-risques-et-points-ouverts)
+   - 6.1 [Risques](#61-risques)
+   - 6.2 [Points ouverts](#62-points-ouverts)
+7. [Livrables, recette et reprise](#7-livrables-recette-et-reprise)
+   - 7.1 [Livrables](#71-livrables)
+   - 7.2 [Recette](#72-recette)
+   - 7.3 [Reprise](#73-reprise)
+
+---
+
 ## 1. Présentation du projet
 
 ### 1.1 Contexte
