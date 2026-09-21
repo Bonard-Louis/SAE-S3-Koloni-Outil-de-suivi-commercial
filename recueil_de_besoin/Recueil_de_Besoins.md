@@ -3,7 +3,7 @@
 ## _Gestion de la Relation Client_
 
 **Projet KOLONI — CRM interne**
-Version 0.2 — Document de travail
+Version 0.3 — Document de travail
 
 ---
 
@@ -94,15 +94,15 @@ Le client a transmis par mail, pour inspiration, la liste des colonnes de sa tab
 ### 3.1 Fonctionnalités indispensables
 
 - Se connecter à l'application (un compte par personne, rôle administrateur ou membre) ; aucune page ni donnée n'est consultable sans connexion.
-- Publier une opportunité via un formulaire structuré (template fourni par le client). Une opportunité peut être publiée incomplète : elle démarre en Signal et passe en Matching une fois qualifiée (interlocuteur, besoin, TJM et mode de candidature connus), la qualification étant validée par l'apporteur ou un administrateur.
+- Publier une opportunité via un formulaire structuré (template fourni par le client). Une opportunité peut être publiée incomplète : elle démarre en Signal et passe en Matching une fois qualifiée (interlocuteur, besoin, TJM et mode de candidature connus). Le remplissage des champs ne suffit pas : la qualification est un acte explicite, posé par l'apporteur ou un administrateur, qui atteste que l'opportunité est qualifiée.
 - Consulter la liste des opportunités et se positionner sur l'une d'entre elles. Plusieurs membres peuvent se positionner sur une même opportunité tant qu'elle est en Signal ou en Matching ; se positionner signale un intérêt et ne réserve pas l'opportunité. L'apporteur (ou le moteur) choisit le ou les profils présentés au client, et le passage en Proposé ne masque pas l'opportunité.
-- À profil équivalent, un membre passe devant un profil extérieur au moment du choix. Une recherche hors collectif peut être menée en parallèle ; sa publication hors collectif dépend du niveau de diffusion et de l'accord de l'apporteur.
+- À profil équivalent, un membre passe devant un profil extérieur au moment du choix. Les membres disposent d'un délai (2 jours à ce jour, règle en cours de rédaction au sein du collectif) avant que l'opportunité ne s'ouvre à l'extérieur du collectif ; l'outil affiche la date à partir de laquelle elle s'ouvre. Cette ouverture dépend en outre du niveau de diffusion et de l'accord de l'apporteur.
 - Rechercher et filtrer les opportunités (technologie ou domaine, statut, ville, mode, client final, société du contact, date du signal).
 - Consulter une vue des opportunités signées, une vue des opportunités perdues avec la raison de la perte, et une vue des opportunités en pause dont la date de relance est atteinte.
 - Ajouter une note à une opportunité : tout membre peut en écrire une, et les notes sont lisibles par tous.
 - Faire évoluer le statut d'une opportunité parmi les 7 statuts définis, avec horodatage automatique du changement. Les transitions sont libres : un statut peut être sauté, on peut revenir en arrière ou rouvrir une opportunité, qui conserve son historique. Raison obligatoire au passage en Perdu, date de relance obligatoire au passage en En pause.
 - Conserver un historique complet et daté des changements de statut d'une opportunité.
-- Consigner dans un journal d'actions ce que chacun a fait sur une opportunité (positionnement, présentation d'un profil, note, profil extérieur contacté, changement de statut).
+- Consigner dans un journal d'actions ce que chacun a fait sur une opportunité (positionnement, présentation d'un profil, note, profil extérieur contacté, contact ou entreprise cliente ajouté, changement de statut).
 - Ne jamais supprimer une opportunité, y compris signée ou perdue (conservation en base, pas de suppression physique).
 - Clôturer une opportunité signée en renseignant le preneur, le TJM preneur, le nombre de jours et la date de clôture.
 - Gérer les contacts associés à une opportunité (une même personne pouvant être liée à plusieurs opportunités dans le temps), rattachés à une entreprise cliente.
@@ -148,19 +148,22 @@ _La lecture est ouverte à tous : la distinction ci-dessous ne porte que sur les
 | Faire évoluer le statut d'une opportunité | ✓ | ✓ | ✓ | ✓ | — |
 | Clôturer une opportunité signée | ✓ | ✓ | ✓ | ✓ | — |
 | Ajouter une note | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Gérer les contacts et les entreprises clientes ² | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Gérer les contacts et les entreprises clientes | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Enregistrer un profil contacté hors collectif | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Gérer son propre profil | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Gérer les comptes utilisateurs | ✓ | — | — | — | — |
 
 ¹ Membre positionné sur l'opportunité concernée, lorsque le mode de candidature est « contact direct recruteur ».
-² Ouvert à tous par défaut, en application du principe « tout le monde voit tout, seules les actions distinguent » — à confirmer, cf. question 1 en section 12.
 
 _La lecture est ouverte à tous, sans restriction : seules les colonnes d'action ci-dessus distinguent les profils._
 
 _Les colonnes ne s'excluent pas : un administrateur est aussi un freelance du collectif, et peut donc être l'apporteur ou le moteur d'une opportunité. Les droits d'un apporteur ou d'un moteur ne valent que sur les opportunités qu'il porte ; ceux de la colonne Admin valent sur toutes. C'est pourquoi le choix des profils présentés au client n'est pas un droit d'administrateur : il appartient à celui qui porte l'opportunité._
 
 _La clôture d'une opportunité s'opérant par le passage au statut « Signé », elle suit les mêmes droits que le changement de statut._
+
+_Le passage de Signal à Matching résulte de la validation explicite de la qualification, réservée à l'apporteur et aux administrateurs. Les autres transitions suivent les droits de changement de statut._
+
+_Tout membre peut créer et modifier les contacts et les entreprises clientes : le journal d'actions trace qui a créé quoi._
 
 ### 3.3 Données à enregistrer
 
@@ -189,6 +192,7 @@ _La clôture d'une opportunité s'opérant par le passage au statut « Signé »
 | Timing | Urgence de la mission (urgent / < 1 mois / > 1 mois). |
 | Mode de candidature | Via apporteur / contact direct recruteur / via moteur, avec précision (nom, mail, canal). |
 | Niveau de diffusion | Choisi par l'apporteur. **Libre** : relais LinkedIn et posts publics bienvenus. **Réseau perso** : recommandation de personne à personne, sans publication ni contact d'autres ESN. **Interne strict** : membres du collectif uniquement. Sans choix, Réseau perso s'applique. |
+| Date d'ouverture à l'extérieur | Date à partir de laquelle l'opportunité peut s'ouvrir hors collectif : date de publication augmentée du délai laissé aux membres (2 jours à ce jour, règle en cours de rédaction au sein du collectif). Affichée à titre d'information ; sans objet pour une opportunité en « Interne strict ». |
 | Statut | Un des 7 statuts définis (voir ci-dessous). |
 | Date du signal | Date de détection de l'opportunité. |
 | Date de clôture | Date de signature ou de perte de l'opportunité. |
@@ -240,7 +244,7 @@ _Tout membre peut écrire une note sur une opportunité, y compris s'il n'y est 
 | --- | --- |
 | Auteur | Utilisateur à l'origine de l'action. |
 | Date | Date et heure de l'action. |
-| Type | Positionnement, présentation d'un profil, note, profil extérieur contacté, changement de statut. |
+| Type | Positionnement, présentation d'un profil, note, profil extérieur contacté, ajout ou modification d'un contact ou d'une entreprise cliente, changement de statut. |
 | Commentaire | Précision libre sur l'action (ex. « j'ai contacté telle personne »). |
 
 _Le journal couvre également les écritures faites hors de l'interface (cf. « IA-friendly », section 4) : tout auteur, humain ou agent, écrit sous un compte identifié._
@@ -282,7 +286,7 @@ _Un même contact peut être lié à plusieurs opportunités au fil du temps : u
 | TJM | Taux journalier moyen souhaité. |
 | Date de sollicitation | Date du contact. |
 | Opportunités concernées | Opportunités pour lesquelles le profil a été sollicité. |
-| Issue | Résultat de la sollicitation. |
+| Issue | Résultat de la sollicitation : présenté, retenu, écarté par le client, indisponible, sans réponse du profil, sans retour du client. |
 | Auteur de la saisie | Membre qui a contacté et enregistré le profil. |
 
 _Entité distincte du contact client. Le moteur, administrateur ou non, saisit lui-même chaque profil qu'il contacte hors collectif, sous forme de fiche technique structurée. Un profil peut être lié à plusieurs opportunités. Pas de fichier CV ni de pièce jointe dans cette version._
@@ -298,9 +302,9 @@ _Entité distincte du contact client. Le moteur, administrateur ou non, saisit l
 | Rôle | Administrateur ou membre. |
 | Ville | Champ texte, avec une validation a minima du format (ex. code postal). |
 | Disponibilité | En recherche ou en mission, avec date de fin de mission le cas échéant. C'est ce qui permet à un membre de se rendre visible. |
-| Actif / désactivé | Un membre peut être désactivé sans que ses traces soient effacées. |
+| Actif / désactivé | Un membre peut être désactivé sans que ses traces soient effacées : ses positionnements, ses notes et ses actions restent visibles. |
 
-_Compétences : hors périmètre de la V0, décision de l'équipe projet. Une intégration en fin de projet reste envisagée si le planning le permet. Elle prendra alors la forme d'une table dédiée associant la clé primaire du freelance à chacune de ses compétences avec son niveau (note de 1 à 4), afin de rester exploitable (filtrage, matching) — et non d'un champ libre sur le profil membre._
+_Compétences : hors périmètre à ce stade, décision de l'équipe projet. Une intégration en fin de projet reste envisagée si le planning le permet. Elle prendra alors la forme d'une table dédiée associant la clé primaire du freelance à chacune de ses compétences avec son niveau (note de 1 à 4), afin de rester exploitable (filtrage, matching) — et non d'un champ libre sur le profil membre._
 
 _L'historique des clients chez qui chaque membre a déjà travaillé, pour obtenir une mise en relation, est hors périmètre de cette version._
 
@@ -320,11 +324,11 @@ _L'historique des clients chez qui chaque membre a déjà travaillé, pour obten
 | --- | --- |
 | Facilité d'utilisation | Priorité n°1 du client : l'outil doit être facile à prendre en main pour fédérer un maximum de membres du collectif. |
 | Responsive | Application web utilisable confortablement sur smartphone, en plus du poste de travail. |
-| Simplicité technique | Stack volontairement simple, retenue par l'équipe projet : interface web + base de données PostgreSQL. L'exposition d'une API est hors périmètre de la V0 et de la V1. |
+| Simplicité technique | Stack volontairement simple, retenue par l'équipe projet : interface web + base de données PostgreSQL. L'exposition d'une API est hors périmètre à ce stade, à reconsidérer ensuite. |
 | Technologies libres | Exigence du client : des outils libres et simples, qu'il pourra reprendre après la livraison. Le choix précis des technologies revient à l'équipe projet. |
 | IA-friendly | Un agent IA lira et écrira directement dans la base. Cela impose un schéma lisible (noms explicites, commentaires sur les tables et les colonnes, contraintes déclarées) et l'enregistrement de tout ce qui se passe sur une opportunité. Le journal d'actions et les contrôles obligatoires (raison de la perte, date de relance) couvrent donc aussi les écritures faites hors de l'interface ; l'agent écrit sous un compte identifié. |
 | Langue | Interface et documentation intégralement en français. |
-| Hébergement | V0 développée et validée en local, puis installée sur un VPS fourni par le client (cf. section Reprise et livraison). |
+| Hébergement | Outil développé et validé en local, puis installé sur un VPS fourni par le client (cf. section Reprise et livraison). |
 | Accès | Application accessible en ligne depuis un navigateur, sans VPN, réservée aux membres du collectif connectés (un compte par personne, rôle administrateur ou membre). Aucune page ni donnée n'est consultable sans connexion. |
 | Sécurité et données personnelles | Connexion obligatoire, droits d'action par rôle, aucun export public. |
 | Conservation des données | Aucune suppression : les opportunités signées ou perdues restent consultables en base. Rien n'est archivé ni purgé. |
@@ -336,14 +340,14 @@ _L'historique des clients chez qui chaque membre a déjà travaillé, pour obten
 ## 5. Contraintes et limites
 
 - Le modèle de données est à concevoir par l'équipe : aucun schéma existant n'a été transmis (cf. section 2.1).
-- Une version V0 doit être développée et validée en local avant toute mise à disposition d'un VPS de production.
-- Pendant la V0, l'outil vient en complément du réseau social Circle et de la table personnelle du client ; un remplacement éventuel se décidera après la phase de test.
+- L'outil doit être développé et validé en local avant toute mise à disposition d'un VPS de production.
+- Dans un premier temps, l'outil vient en complément du réseau social Circle et de la table personnelle du client ; un remplacement éventuel se décidera après la phase de test.
 - Pas d'objet Mission dans cette version : une opportunité signée reste une opportunité, au statut Signé, avec ses champs de clôture. Il n'y a ni conversion en mission, ni affectation, ni compte-rendu de mission.
 - Le reporting et les statistiques (nombre d'opportunités par statut, délai entre signal et signature) ne sont pas demandés dans ce périmètre et deviennent une évolution possible. En revanche, le suivi de « qui a fait quoi » sur une opportunité fait bien partie de cette version, via le journal d'actions.
 - Pas de pièce jointe ni de fichier CV dans cette version : les profils extérieurs sont saisis sous forme de fiche structurée.
 - Rien n'est archivé ni purgé : l'intégralité des opportunités et de leur historique reste en base.
-- Les notifications et l'exposition d'une API sont hors périmètre de la V0 et de la V1, à reconsidérer ensuite. Le besoin exprimé par le client pour les notifications est un abonnement : un membre reçoit un mail à chaque nouvelle opportunité.
-- La ville est intégrée au profil membre (champ texte avec validation de format a minima). Les compétences sont hors périmètre de la V0, avec une intégration envisagée en fin de projet.
+- Les notifications et l'exposition d'une API sont hors périmètre à ce stade, à reconsidérer ensuite. Le besoin exprimé par le client pour les notifications est un abonnement : un membre reçoit un mail à chaque nouvelle opportunité.
+- La ville est intégrée au profil membre (champ texte avec validation de format a minima). Les compétences sont hors périmètre à ce stade, avec une intégration envisagée en fin de projet.
 - La matrice de compétences (Google Sheet) et l'historique des clients chez qui chaque membre a déjà travaillé sont hors périmètre de cette version.
 - Tests et démonstrations sur données fictives uniquement : aucune donnée réelle du collectif ne sera transmise. Le client a fourni un fichier `Contacts_fictifs.csv` (50 contacts fictifs) ; les opportunités fictives sont à créer par l'équipe à partir du template.
 
@@ -448,7 +452,7 @@ Freelance du collectif Koloni, susceptible de se positionner sur une opportunit�
 
 ### UC12 — Consulter le journal d'actions d'une opportunité
 >
-> En tant que membre, je veux consulter le journal d'actions d'une opportunité, afin de savoir qui a fait quoi et quand : positionnements, profils présentés, notes, profils extérieurs contactés, changements de statut.
+> En tant que membre, je veux consulter le journal d'actions d'une opportunité, afin de savoir qui a fait quoi et quand : positionnements, profils présentés, notes, profils extérieurs contactés, contacts ajoutés, changements de statut.
 
 ### UC13 — Enregistrer un profil contacté hors collectif
 >
@@ -500,67 +504,15 @@ Freelance du collectif Koloni, susceptible de se positionner sur une opportunit�
 - Prospection partagée : suivi de clients qui n'ont pas encore de besoin.
 - Statistiques simples : nombre d'opportunités par statut, délai entre signal et signature.
 - Pilotage de la base par un agent IA.
-- Notifications (abonnement mail à chaque nouvelle opportunité) et exposition d'une API : hors périmètre de la V0 et de la V1, à reconsidérer ensuite.
+- Notifications (abonnement mail à chaque nouvelle opportunité) et exposition d'une API : hors périmètre à ce stade, à reconsidérer ensuite.
 
 ---
 
-## 10. Découpage et charge estimée
-
-Le projet se déroule en 4 à 5 releases, chacune correspondant à un sprint de deux semaines. L'équipe compte 5 personnes pour environ 40 heures de travail chacune par sprint, soit **200 heures brutes par release**. En retirant les réunions, la coordination et la montée en compétence, la capacité réellement productive est estimée à **environ 170 heures par sprint**.
-
-Les cas d'usage de la section 7 et les fonctionnalités de la section 9.1 couvrent l'intégralité du projet, pas la seule V0.
-
-### 10.1 Contenu de la V0
-
-La V0 correspond au premier sprint. Elle vise un socle utilisable et validable en local par le client, avant toute mise à disposition d'un VPS.
-
-| Lot | Détail | Heures |
-| --- | --- | ---: |
-| Socle | Mise en place du projet, conventions, environnement | 8 |
-| | Modèle de données et scripts de migration | 12 |
-| | Authentification, rôles et droits d'action | 16 |
-| | Gabarit d'interface, navigation, responsive | 12 |
-| Opportunités | Formulaire de publication (publication incomplète possible) | 16 |
-| | Qualification Signal → Matching et validation | 6 |
-| | Liste et fiche détail d'une opportunité | 12 |
-| | Workflow des 7 statuts, historique daté, contrôles obligatoires | 12 |
-| Entités liées | Positionnements (multi-candidats, présenté / retenu) | 10 |
-| | Notes | 6 |
-| Livraison | Jeu de données fictives | 4 |
-| | Tests et corrections | 12 |
-| | Documentation d'installation et de reprise | 8 |
-| | **Total V0** | **134 h** |
-
-L'écart avec les ~170 heures utiles constitue une marge volontaire, destinée à absorber la montée en compétence sur la stack et les imprévus du premier sprint.
-
-### 10.2 Contenu des releases suivantes
-
-| Release | Contenu | Charge estimée |
-| --- | --- | ---: |
-| V1 | Journal d'actions, recherche et filtres, vues dédiées (signées, perdues, en pause à relancer), clôture d'une opportunité signée, contacts et entreprises clientes. Première installation sur le VPS. | ~70 h |
-| V2 | Profils extérieurs (saisie et consultation), profils membres et disponibilité, gestion des comptes et désactivation, finition responsive. | ~50 h |
-| V3 | Vue des opportunités en colonnes par statut (section 9.2), puis reprise des retours client issus des premières utilisations réelles. | à arbitrer |
-| V4 | Recette finale, documentation de reprise, et selon le temps disponible : compétences au profil membre, statistiques simples, notifications, API (section 9.3). | à arbitrer |
-
-Les charges des releases V1 et V2 sont inférieures à la capacité d'un sprint : la marge est destinée à la correction des retours client, qui augmenteront à mesure que l'outil sera réellement utilisé.
-
----
-
-## 11. Reprise et livraison
+## 10. Reprise et livraison
 
 - Koloni forkera le dépôt de l'équipe en fin de projet.
 - Un README permettant de relancer le projet sur une machine vierge.
 - Un fichier d'architecture et de conventions de 2 pages.
 - Un schéma de base versionné par scripts de migration.
 - Une documentation en français.
-- Une fois la V0 validée en local, le client fournit un VPS et les accès pour l'y installer.
-
----
-
-## 12. Questions au client
-
-1. Qui peut créer et modifier les contacts d'une opportunité et les entreprises clientes : tout membre, ou seulement l'apporteur, le moteur et les administrateurs ?
-2. La qualification d'une opportunité (Signal → Matching) doit-elle faire l'objet d'une validation explicite dans l'outil, ou le remplissage des champs requis suffit-il à faire basculer l'opportunité ?
-3. Quelles valeurs attendez-vous pour le champ « Issue » d'un profil extérieur (retenu, écarté, sans réponse, indisponible…) ?
-4. Lorsqu'un membre est désactivé, ses positionnements en cours doivent-ils rester visibles sur les opportunités concernées ?
-5. Les retours d'Anaël sur la répartition des droits sont-ils susceptibles de modifier le tableau des droits d'action de la section 3.2 ?
+- Une fois l'outil validé en local, le client fournit un VPS et les accès pour l'y installer.
