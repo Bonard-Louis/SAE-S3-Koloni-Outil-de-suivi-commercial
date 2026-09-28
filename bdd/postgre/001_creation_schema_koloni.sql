@@ -91,13 +91,22 @@ CREATE TABLE contact (
     entreprise_cliente_id  BIGINT REFERENCES entreprise_cliente(id) ON DELETE RESTRICT,
     mail                   VARCHAR(255),
     telephone              VARCHAR(30),
-    date_creation          TIMESTAMPTZ   NOT NULL DEFAULT now()
+    date_creation          TIMESTAMPTZ   NOT NULL DEFAULT now(),
+
+    CONSTRAINT chk_contact_moyen_contact
+        CHECK (mail IS NOT NULL OR telephone IS NOT NULL)
 );
 
 COMMENT ON TABLE contact IS
     'Personne côté client (commercial, DSI, responsable data...), rattachée à une entreprise cliente. Distinct des profils extérieurs (freelances hors collectif). Un même contact peut être lié à plusieurs opportunités au fil du temps.';
 COMMENT ON COLUMN contact.role IS
     'Fonction chez le client (ex. commercial, responsable data, DSI).';
+COMMENT ON COLUMN contact.mail IS
+    'Au moins un moyen de contact (mail ou téléphone) est requis, cf. chk_contact_moyen_contact.';
+COMMENT ON COLUMN contact.telephone IS
+    'Au moins un moyen de contact (mail ou téléphone) est requis, cf. chk_contact_moyen_contact.';
+COMMENT ON COLUMN contact.entreprise_cliente_id IS
+    'Nullable : le contact peut être saisi avant que son entreprise soit connue. À renseigner dès que possible, recommandé mais non bloquant.';
 
 CREATE INDEX idx_contact_entreprise ON contact(entreprise_cliente_id);
 
@@ -109,7 +118,7 @@ CREATE TABLE profil_exterieur (
     id                  BIGSERIAL PRIMARY KEY,
     nom                 VARCHAR(100)  NOT NULL,
     prenom              VARCHAR(100)  NOT NULL,
-    moyen_contact       VARCHAR(255),
+    moyen_contact       VARCHAR(255)  NOT NULL,
     niveau              VARCHAR(20),
     experiences_cles    TEXT,
     ville               VARCHAR(100),
@@ -131,6 +140,18 @@ CREATE TABLE profil_exterieur (
 
 COMMENT ON TABLE profil_exterieur IS
     'Fiche technique d''un profil freelance contacté hors collectif par un moteur. Peut être lié à plusieurs opportunités. Pas de suppression, pas de pièce jointe/CV dans cette version.';
+COMMENT ON COLUMN profil_exterieur.moyen_contact IS
+    'Mail, téléphone ou autre canal. Obligatoire : un profil non recontactable n''a pas d''intérêt pour la base de profils qualifiés (cf. UC13).';
+COMMENT ON COLUMN profil_exterieur.niveau IS
+    'operationnel, senior ou expert, ou NULL si non renseigné (cf. chk_profil_ext_niveau).';
+COMMENT ON COLUMN profil_exterieur.ville IS
+    'Localisation du profil.';
+COMMENT ON COLUMN profil_exterieur.disponibilite IS
+    'Texte libre : disponible immédiatement, à partir d''une date...';
+COMMENT ON COLUMN profil_exterieur.tjm IS
+    'Taux journalier moyen souhaité par le profil.';
+COMMENT ON COLUMN profil_exterieur.date_sollicitation IS
+    'Date du contact avec le profil.';
 COMMENT ON COLUMN profil_exterieur.auteur_id IS
     'Membre qui a contacté et saisi ce profil (moteur, administrateur ou non).';
 COMMENT ON COLUMN profil_exterieur.issue IS
@@ -238,6 +259,14 @@ COMMENT ON COLUMN opportunite.tjm_client IS
     'Taux journalier moyen facturé au client.';
 COMMENT ON COLUMN opportunite.tjm_preneur IS
     'Taux journalier moyen versé au freelance preneur, renseigné à la clôture.';
+COMMENT ON COLUMN opportunite.type_mission IS
+    'Run / Build / Expertise... Liste ouverte (non contrainte par un CHECK), contrairement à source, mode, timing et mode_candidature.';
+COMMENT ON COLUMN opportunite.mode IS
+    'Mode de travail : teletravail, hybride ou presentiel (cf. chk_opp_mode).';
+COMMENT ON COLUMN opportunite.timing IS
+    'Urgence de la mission : urgent, moins_1_mois ou plus_1_mois (cf. chk_opp_timing).';
+COMMENT ON COLUMN opportunite.mode_candidature IS
+    'Voie de mise en relation : via_apporteur, contact_direct_recruteur ou via_moteur (cf. chk_opp_mode_candidature). Précision (nom, mail, canal) dans mode_candidature_precision.';
 COMMENT ON COLUMN opportunite.nombre_jours IS
     'Nombre de jours effectif de la mission, renseigné à la clôture (distinct de duree_annoncee_mois, issue du template).';
 COMMENT ON COLUMN opportunite.niveau_diffusion IS
@@ -469,5 +498,35 @@ CREATE TRIGGER trg_opportunite_historique_statut_creation
     AFTER INSERT ON opportunite
     FOR EACH ROW
     EXECUTE FUNCTION fn_opportunite_historique_statut_creation();
+
+-- -----------------------------------------------------------------------------
+-- TRIGGER : positionnement réservé aux opportunités en Signal ou Matching
+-- -----------------------------------------------------------------------------
+-- EF-15 / recueil 3.1 : "plusieurs membres peuvent se positionner sur une
+-- même opportunité tant qu'elle est en Signal ou en Matching".
+
+CREATE FUNCTION fn_positionnement_verifie_statut_opportunite() RETURNS TRIGGER AS $$
+DECLARE
+    v_statut VARCHAR(20);
+BEGIN
+    SELECT statut INTO v_statut FROM opportunite WHERE id = NEW.opportunite_id;
+
+    IF v_statut NOT IN ('signal', 'matching') THEN
+        RAISE EXCEPTION
+            'Positionnement impossible : l''opportunité % est au statut % (seuls signal et matching acceptent un nouveau positionnement)',
+            NEW.opportunite_id, v_statut;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+COMMENT ON FUNCTION fn_positionnement_verifie_statut_opportunite() IS
+    'Bloque la création d''un positionnement si l''opportunité n''est pas au statut signal ou matching (EF-15).';
+
+CREATE TRIGGER trg_positionnement_verifie_statut_opportunite
+    BEFORE INSERT ON positionnement
+    FOR EACH ROW
+    EXECUTE FUNCTION fn_positionnement_verifie_statut_opportunite();
 
 COMMIT;
