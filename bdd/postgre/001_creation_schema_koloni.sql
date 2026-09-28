@@ -218,6 +218,8 @@ COMMENT ON TABLE opportunite IS
     'Opportunité commerciale : publiée même incomplète (statut signal), suit un cycle de vie en 7 statuts jusqu''à signature ou perte. Jamais supprimée physiquement.';
 COMMENT ON COLUMN opportunite.source IS
     'Qui porte le besoin côté client : client, commercial (ESN) ou contact.';
+COMMENT ON COLUMN opportunite.temperature IS
+    'Niveau de maturité de l''opportunité : chaud, tiede, ou NULL si non renseigné (cf. chk_opp_temperature). Facultatif, non requis pour la qualification Signal → Matching.';
 COMMENT ON COLUMN opportunite.client_final_nom IS
     'Entreprise où se déroule la mission, si connue. Facultatif (souvent inconnu si le besoin passe par une ESN) : ne bloque jamais la publication. Distinct de la société du contact (cf. table contact).';
 COMMENT ON COLUMN opportunite.apporteur_id IS
