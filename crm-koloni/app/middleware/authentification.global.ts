@@ -1,6 +1,10 @@
 import { Role } from '#shared/types/utilisateur'
 
 export default defineNuxtRouteMiddleware(async (to, _from) => {
+  // Redirection désactivée temporairement : /login n'est pas encore développée.
+  // TODO(Dresseur_Panda): retirer cette ligne dès que la page de connexion existe.
+  return true
+
   const { isAuthenticated, role, refresh } = useAuth()
   await refresh()
 
