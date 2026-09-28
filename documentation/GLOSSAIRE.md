@@ -7,6 +7,7 @@ fichier) : toute l'explication du schéma vit exclusivement ici.
 Base cible : PostgreSQL 14+.
 
 Références :
+
 - Recueil de besoins v0.2/v0.3, section 3.3 (données à enregistrer)
 - Cahier des charges v0.1, sections 3.1 à 3.6, 4 (ENF-05/08/09/11), 7.1
 
