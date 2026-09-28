@@ -27,3 +27,7 @@ build/
 *.dump
 *.sql.bak
 pgdata/
+
+# Données temporaires de dev
+bdd/data/*
+!bdd/data/.gitkeep
