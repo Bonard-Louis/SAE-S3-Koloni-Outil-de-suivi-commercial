@@ -23,13 +23,14 @@ const items = computed<NavigationMenuItem[]>(() => [
     toggle-side="left"
     :menu="{ side: 'left' }"
     :toggle="{
-      color: 'success',
+      color: 'primary',
       variant: 'subtle',
       class: 'full'
     }"
   >
     <UNavigationMenu
       :items="items"
+      :ui="{ link: 'hover:text-primary', linkLeadingIcon: 'group-hover:text-primary' }"
       aria-label="Navigation principale"
     />
     <template #right>
@@ -41,6 +42,7 @@ const items = computed<NavigationMenuItem[]>(() => [
         :items="items"
         orientation="vertical"
         class="-mx-2.5"
+        :ui="{ link: 'hover:text-primary', linkLeadingIcon: 'group-hover:text-primary' }"
         aria-label="Navigation mobile"
       />
     </template>
