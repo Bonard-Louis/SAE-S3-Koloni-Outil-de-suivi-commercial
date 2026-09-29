@@ -1,2 +1,28 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+@theme static {
+  --color-koloni-teal-50: #eafdfd;
+  --color-koloni-teal-100: #d4f7f6;
+  --color-koloni-teal-200: #b0e7e6;
+  --color-koloni-teal-300: #80cecd;
+  --color-koloni-teal-400: #4db0b0;
+  --color-koloni-teal-500: #009393;
+  --color-koloni-teal-600: #007272;
+  --color-koloni-teal-700: #005959;
+  --color-koloni-teal-800: #004141;
+  --color-koloni-teal-900: #002d2d;
+  --color-koloni-teal-950: #001818;
+
+  --color-koloni-orange-50: #fff6f3;
+  --color-koloni-orange-100: #ffe9e2;
+  --color-koloni-orange-200: #ffcebd;
+  --color-koloni-orange-300: #ffa382;
+  --color-koloni-orange-400: #fd5a00;
+  --color-koloni-orange-500: #d74b00;
+  --color-koloni-orange-600: #a83900;
+  --color-koloni-orange-700: #852b00;
+  --color-koloni-orange-800: #631e00;
+  --color-koloni-orange-900: #461300;
+  --color-koloni-orange-950: #280700;
+}
