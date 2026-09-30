@@ -29,6 +29,8 @@
 <script setup lang="ts">
 import * as z from 'zod'
 
+// TODO : page réservée aux administrateurs (EF-02) ; accessible à tous uniquement pour les tests pour le moment.
+// Restreindre l'accès au rôle administrateur une fois l'authentification branchée.
 definePageMeta({ layout: false })
 
 const schema = z.object({
