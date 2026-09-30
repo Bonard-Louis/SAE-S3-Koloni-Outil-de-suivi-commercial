@@ -3,9 +3,8 @@
 
 // Colonnes fixes du tableau — ordre, clé (= tooltip du badge) et largeur partagés avec TableauOpportunites
 export const OPPORTUNITE_BADGE_COLUMNS = [
-  { key: 'Ville', label: 'Ville', width: 'w-28' },
-  { key: 'Mode', label: 'Mode', width: 'w-24' },
-  { key: 'Client final', label: 'Client final', width: 'w-32' }
+  { key: 'Client final', label: 'Client', width: 'w-32' },
+  { key: 'Ville', label: 'Ville', width: 'w-28' }
 ] as const
 
 const BADGE_PALETTE: NuxtUiColor[] = [
@@ -31,7 +30,7 @@ export function useOpportuniteBadges(opportunites: Ref<Opportunite[] | null | un
       badges.push({
         label: techno,
         color: technologieColors.value[techno] ?? 'secondary',
-        to: `/?technologie=${encodeURIComponent(techno)}`
+        to: `/opportunites?technologie=${encodeURIComponent(techno)}`
       })
     }
     if (o.ville) {
