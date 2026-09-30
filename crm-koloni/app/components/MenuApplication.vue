@@ -5,7 +5,8 @@ import { Role } from '#shared/types/utilisateur'
 const { isAuthenticated, role } = useAuth()
 
 const items = computed<NavigationMenuItem[]>(() => [
-  { label: 'Opportunités', icon: 'i-lucide-briefcase', to: '/' },
+  { label: 'Dashboard', icon: 'i-lucide-layout-dashboard', to: '/' },
+  { label: 'Opportunités', icon: 'i-lucide-briefcase', to: '/opportunites' },
   { label: 'Contacts', icon: 'i-lucide-users', to: '/contacts' },
   { label: 'Profils extérieurs', icon: 'i-lucide-user-search', to: '/profils-exterieurs' },
   ...(role.value === Role.admin
