@@ -48,6 +48,11 @@ const STATUT_COLOR: Record<StatutOpportunite, NuxtUiColor> = {
   'En pause': 'neutral'
 }
 
+const TEMPERATURE_COLOR: Record<Temperature, NuxtUiColor> = {
+  Chaud: 'orange',
+  Tiède: 'info'
+}
+
 function badgeMap(o: Opportunite): Record<string, BadgeItem> {
   return Object.fromEntries(props.getBadges(o).map(b => [b.tooltip ?? b.label, b]))
 }
@@ -106,6 +111,24 @@ const tableColumns = computed(() => {
       }
     })),
 
+    // Apporteur
+    {
+      accessorKey: 'apporteur',
+      header: 'Apporteur',
+      meta: { class: { th: 'w-32', td: 'w-32 text-sm' } }
+    },
+
+    // Température
+    {
+      id: 'temperature',
+      header: 'Température',
+      meta: { class: { th: 'w-28 text-center', td: 'w-28 text-center' } },
+      cell: ({ row }: { row: { original: Opportunite } }) => {
+        const t = row.original.temperature
+        return t ? h(UBadge, { color: TEMPERATURE_COLOR[t], variant: 'soft', size: 'md' }, () => t) : null
+      }
+    },
+
     // Statut
     {
       id: 'statut',
@@ -119,6 +142,15 @@ const tableColumns = computed(() => {
           size: 'md'
         }, () => o.statut)
       }
+    },
+
+    // Date du signal (ISO AAAA-MM-JJ → JJ/MM/AAAA)
+    {
+      accessorKey: 'dateSignal',
+      header: 'Date signal',
+      meta: { class: { th: 'w-28 text-center', td: 'w-28 text-center text-sm' } },
+      cell: ({ row }: { row: { original: Opportunite } }) =>
+        row.original.dateSignal?.split('-').reverse().join('/') ?? ''
     }
   ]
 })
