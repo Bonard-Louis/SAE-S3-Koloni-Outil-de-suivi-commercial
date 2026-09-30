@@ -1,6 +1,9 @@
 // StatutOpportunite — les 7 statuts du cycle de vie d'une opportunité (recueil de besoins §3.3)
 type StatutOpportunite = 'Signal' | 'Matching' | 'Proposé' | 'En discussion' | 'Signé' | 'Perdu' | 'En pause'
 
+// Temperature — niveau de maturité d'une opportunité (recueil de besoins §3.3)
+type Temperature = 'Chaud' | 'Tiède'
+
 // Opportunite — opportunité commerciale suivie dans le CRM
 interface Opportunite {
   id: string
@@ -10,7 +13,9 @@ interface Opportunite {
   ville?: string
   mode?: string // télétravail / hybride / présentiel
   clientFinal?: string // entreprise où se déroule la mission, si connue
-  dateSignal?: string // date de détection de l'opportunité
+  apporteur: string // membre qui amène l'opportunité (obligatoire)
+  temperature?: Temperature
+  dateSignal: string // date de détection de l'opportunité (AAAA-MM-JJ)
 }
 
 // NuxtUiColor — couleurs acceptées par les composants Nuxt UI (UBadge, UButton…)
