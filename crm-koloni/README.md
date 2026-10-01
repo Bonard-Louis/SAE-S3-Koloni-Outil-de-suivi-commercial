@@ -90,7 +90,7 @@ Slot par défaut : contenu de la carte.
 
 ### `TableauOpportunites`
 
-Tableau d'opportunités réutilisable (liste principale et vues filtrées), basé sur `UTable`. La barre colorée à gauche et le badge de statut reflètent le `StatutOpportunite` de chaque ligne ; les colonnes intermédiaires affichent des pastilles (`BadgeItem`) configurables.
+Tableau d'opportunités réutilisable (liste principale et vues filtrées), basé sur `UTable`. La barre colorée à gauche et le badge de statut reflètent le `StatutOpportunite` de chaque ligne ; les colonnes intermédiaires affichent des pastilles (`BadgeItem`) configurables, suivies de l'apporteur et de la date du signal.
 
 | Prop | Type | Description |
 | --- | --- | --- |
