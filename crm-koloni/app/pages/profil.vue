@@ -59,5 +59,22 @@
 </template>
 
 <script setup lang="ts">
-// TODO:
+// Données de démonstration en attendant la connexion à la base de donnée
+const profil = {
+  nom: 'Nicolas',
+  prenom: 'D.',
+  mail: 'nicolas.d@koloni.fr',
+  telephone: '06 00 00 00 00',
+  ville: 'Toulouse'
+}
+
+const DISPONIBILITES = [
+  { label: 'En recherche', value: 'en_recherche' },
+  { label: 'En mission', value: 'en_mission' }
+]
+
+const disponibilite = ref('en_mission')
+// Obligatoire uniquement si la disponibilité est « En mission »
+const dateFinMission = ref('2026-10-10')
+const note = ref('')
 </script>
