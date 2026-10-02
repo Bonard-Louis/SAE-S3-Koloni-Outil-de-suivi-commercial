@@ -5,4 +5,4 @@ ENV POSTGRES_USER=koloni_app
 
 COPY *.sql /docker-entrypoint-initdb.d/
 
-EXPOSE 5432
+EXPOSE 5432 
