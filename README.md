@@ -30,8 +30,8 @@ A completer après le rdv avec le client
 ## Technologies utilisés
 
 * **Base de données :** PostgreSQL
-* **Backend :
-* **Frontend :
+* **Backend :** NUXT
+* **Frontend :** NUXT
 
 ---
 
