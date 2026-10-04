@@ -54,6 +54,14 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    // Connexion PostgreSQL, surchargée par NUXT_DATABASE_HOST, NUXT_DATABASE_PORT, etc.
+    database: {
+      host: 'localhost',
+      port: '5432',
+      name: 'koloni',
+      user: 'koloni_app',
+      password: ''
+    },
     session: {
       password: process.env.NUXT_SESSION_PASSWORD || '',
       cookie: {
