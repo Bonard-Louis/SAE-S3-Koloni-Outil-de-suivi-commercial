@@ -1,0 +1,23 @@
+services:
+  db:
+    build: .
+    image: koloni-postgres:16
+    container_name: koloni_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-koloni}
+      POSTGRES_USER: ${POSTGRES_USER:-koloni_app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Définir POSTGRES_PASSWORD dans .env}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - koloni_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-koloni_app} -d ${POSTGRES_DB:-koloni}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  koloni_pgdata:

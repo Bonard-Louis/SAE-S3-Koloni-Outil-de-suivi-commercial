@@ -1,8 +1,5 @@
 FROM postgres:16-alpine
 
-ENV POSTGRES_DB=koloni
-ENV POSTGRES_USER=koloni_app
+COPY --chown=postgres:postgres *.sql /docker-entrypoint-initdb.d/
 
-COPY *.sql /docker-entrypoint-initdb.d/
-
-EXPOSE 5432 
+EXPOSE 5432
