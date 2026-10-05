@@ -3,7 +3,7 @@
 ## Alias sémantiques (Nuxt UI)
 
 | Alias | Couleur pointée | Base (shade par défaut) |
-|---|---|---|
+| --- | --- | --- |
 | `primary` | `koloni-teal` | `#009393` |
 | `secondary` | `koloni-orange` | `#fd5a00` |
 | `neutral` | `slate` (Tailwind) | — |
@@ -17,7 +17,7 @@ Défini dans `crm-koloni/app/app.config.ts` pour `primary`/`secondary`/`neutral`
 ## Palette `koloni-teal` (primary — base `#009393`)
 
 | Palier | Hex |
-|---|---|
+| --- | --- |
 | 50 | `#eafdfd` |
 | 100 | `#d4f7f6` |
 | 200 | `#b0e7e6` |
@@ -33,7 +33,7 @@ Défini dans `crm-koloni/app/app.config.ts` pour `primary`/`secondary`/`neutral`
 ## Palette `koloni-orange` (secondary — base `#fd5a00`)
 
 | Palier | Hex |
-|---|---|
+| --- | --- |
 | 50 | `#fff6f3` |
 | 100 | `#ffe9e2` |
 | 200 | `#ffcebd` |
