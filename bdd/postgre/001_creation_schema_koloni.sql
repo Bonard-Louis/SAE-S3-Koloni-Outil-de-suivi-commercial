@@ -15,6 +15,7 @@ CREATE TABLE membre (
     prenom            VARCHAR(100)  NOT NULL,
     mail              VARCHAR(255)  NOT NULL,
     telephone         VARCHAR(30),
+    lien_linkedin     VARCHAR(255),
     notes             TEXT,
     role              VARCHAR(20)   NOT NULL DEFAULT 'membre',
     ville             VARCHAR(100),
@@ -30,12 +31,16 @@ CREATE TABLE membre (
         CHECK (disponibilite IN ('en_recherche', 'en_mission')),
     CONSTRAINT chk_membre_date_fin_mission
         CHECK (disponibilite = 'en_mission' OR date_fin_mission IS NULL),
+    CONSTRAINT chk_membre_linkedin
+        CHECK (lien_linkedin IS NULL OR lien_linkedin LIKE 'https://%linkedin.com/%'),
     CONSTRAINT chk_membre_ville_format
         CHECK (ville IS NULL OR length(btrim(ville)) > 0)
 );
 
 COMMENT ON TABLE membre IS
     'Freelance du collectif Koloni, avec un compte personnel. Un membre désactivé garde toutes ses traces (positionnements, notes, actions).';
+COMMENT ON COLUMN membre.lien_linkedin IS
+    'URL du profil LinkedIn (optionnel).';
 COMMENT ON COLUMN membre.role IS
     'Droits d''action : administrateur ou membre. Un administrateur reste un freelance et peut être apporteur/moteur.';
 COMMENT ON COLUMN membre.disponibilite IS
@@ -91,10 +96,13 @@ CREATE TABLE contact (
     entreprise_cliente_id  BIGINT REFERENCES entreprise_cliente(id) ON DELETE RESTRICT,
     mail                   VARCHAR(255),
     telephone              VARCHAR(30),
+    lien_linkedin          VARCHAR(255),
     date_creation          TIMESTAMPTZ   NOT NULL DEFAULT now(),
 
     CONSTRAINT chk_contact_moyen_contact
-        CHECK (mail IS NOT NULL OR telephone IS NOT NULL)
+        CHECK (mail IS NOT NULL OR telephone IS NOT NULL OR lien_linkedin IS NOT NULL),
+    CONSTRAINT chk_contact_linkedin
+        CHECK (lien_linkedin IS NULL OR lien_linkedin LIKE 'https://%linkedin.com/%')
 );
 
 COMMENT ON TABLE contact IS
@@ -102,9 +110,11 @@ COMMENT ON TABLE contact IS
 COMMENT ON COLUMN contact.role IS
     'Fonction chez le client (ex. commercial, responsable data, DSI).';
 COMMENT ON COLUMN contact.mail IS
-    'Au moins un moyen de contact (mail ou téléphone) est requis, cf. chk_contact_moyen_contact.';
+    'Au moins un moyen de contact (mail, téléphone ou LinkedIn) est requis, cf. chk_contact_moyen_contact.';
 COMMENT ON COLUMN contact.telephone IS
-    'Au moins un moyen de contact (mail ou téléphone) est requis, cf. chk_contact_moyen_contact.';
+    'Au moins un moyen de contact (mail, téléphone ou LinkedIn) est requis, cf. chk_contact_moyen_contact.';
+COMMENT ON COLUMN contact.lien_linkedin IS
+    'URL du profil LinkedIn. Compte comme moyen de contact, cf. chk_contact_moyen_contact.';
 COMMENT ON COLUMN contact.entreprise_cliente_id IS
     'Nullable : le contact peut être saisi avant que son entreprise soit connue. À renseigner dès que possible, recommandé mais non bloquant.';
 
@@ -119,6 +129,7 @@ CREATE TABLE profil_exterieur (
     nom                 VARCHAR(100)  NOT NULL,
     prenom              VARCHAR(100)  NOT NULL,
     moyen_contact       VARCHAR(255)  NOT NULL,
+    lien_linkedin       VARCHAR(255),
     niveau              VARCHAR(20),
     experiences_cles    TEXT,
     ville               VARCHAR(100),
@@ -129,6 +140,8 @@ CREATE TABLE profil_exterieur (
     auteur_id           BIGINT        NOT NULL REFERENCES membre(id) ON DELETE RESTRICT,
     date_creation       TIMESTAMPTZ   NOT NULL DEFAULT now(),
 
+    CONSTRAINT chk_profil_ext_linkedin
+        CHECK (lien_linkedin IS NULL OR lien_linkedin LIKE 'https://%linkedin.com/%'),
     CONSTRAINT chk_profil_ext_niveau
         CHECK (niveau IS NULL OR niveau IN ('operationnel', 'senior', 'expert')),
     CONSTRAINT chk_profil_ext_issue
@@ -142,6 +155,8 @@ COMMENT ON TABLE profil_exterieur IS
     'Fiche technique d''un profil freelance contacté hors collectif par un moteur. Peut être lié à plusieurs opportunités. Pas de suppression, pas de pièce jointe/CV dans cette version.';
 COMMENT ON COLUMN profil_exterieur.moyen_contact IS
     'Mail, téléphone ou autre canal. Obligatoire : un profil non recontactable n''a pas d''intérêt pour la base de profils qualifiés (cf. UC13).';
+COMMENT ON COLUMN profil_exterieur.lien_linkedin IS
+    'URL du profil LinkedIn (optionnel).';
 COMMENT ON COLUMN profil_exterieur.niveau IS
     'operationnel, senior ou expert, ou NULL si non renseigné (cf. chk_profil_ext_niveau).';
 COMMENT ON COLUMN profil_exterieur.ville IS
