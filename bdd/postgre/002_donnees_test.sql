@@ -224,6 +224,11 @@ INSERT INTO journal_action (opportunite_id, auteur_id, date_action, type_action,
   (5, 1, '2026-10-01 11:31:00+02', 'note', 'Note de cadrage ajoutée.'),
   (6, 1, '2026-10-02 11:38:00+02', 'changement_statut', 'Passage au statut signé.');
 
+-- Liens LinkedIn fictifs, dérivés du prénom et du nom
+UPDATE membre SET lien_linkedin = 'https://www.linkedin.com/in/' || lower(translate(prenom || '-' || nom, 'éèêëàâîïôöùûüç', 'eeeeaaiioouuuc'));
+UPDATE profil_exterieur SET lien_linkedin = 'https://www.linkedin.com/in/' || lower(translate(prenom || '-' || nom, 'éèêëàâîïôöùûüç', 'eeeeaaiioouuuc'));
+UPDATE contact SET lien_linkedin = 'https://www.linkedin.com/in/' || lower(translate(prenom || '-' || nom, 'éèêëàâîïôöùûüç', 'eeeeaaiioouuuc'));
+
 -- Resynchronisation des séquences après insertion d'identifiants explicites
 SELECT setval(pg_get_serial_sequence('membre', 'id'), (SELECT max(id) FROM membre));
 SELECT setval(pg_get_serial_sequence('technologie', 'id'), (SELECT max(id) FROM technologie));
