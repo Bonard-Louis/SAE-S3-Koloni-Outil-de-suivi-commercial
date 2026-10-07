@@ -7,13 +7,14 @@
 BEGIN;
 
 -- MEMBRES
-INSERT INTO membre (id, nom, prenom, mail, telephone, notes, role, ville, disponibilite, date_fin_mission, actif) VALUES
-  (1, 'Exemple', 'Alice', 'alice.exemple@example.com', '0601020301', 'Data analyst freelance', 'administrateur', 'Bordeaux', 'en_recherche', NULL, TRUE),
-  (2, 'Fictif', 'Bastien', 'bastien.fictif@example.com', '0601020302', 'Analytics engineer freelance', 'membre', 'Grenoble', 'en_mission', '2026-12-18', TRUE),
-  (3, 'Démo', 'Camille', 'camille.demo@example.com', '0601020303', 'Analytics engineer freelance', 'membre', 'Nantes', 'en_recherche', NULL, TRUE),
-  (4, 'Test', 'Damien', 'damien.test@example.com', '0601020304', 'Data analyst freelance', 'membre', 'Strasbourg', 'en_mission', '2027-03-31', TRUE),
-  (5, 'Factice', 'Élodie', 'elodie.factice@example.com', '0601020305', 'Analytics engineer freelance', 'membre', 'Lyon', 'en_recherche', NULL, TRUE),
-  (6, 'Modèle', 'Fabien', 'fabien.modele@example.com', '0601020306', 'Consultant BI freelance (ancien membre du collectif)', 'membre', 'Rennes', 'en_recherche', NULL, FALSE);
+-- Mot de passe de tous les membres fictifs : CoucouKol0n1 (tests uniquement)
+INSERT INTO membre (id, nom, prenom, mail, telephone, notes, role, ville, disponibilite, date_fin_mission, actif, mot_de_passe_hash) VALUES
+  (1, 'Exemple', 'Alice', 'alice.exemple@example.com', '0601020301', 'Data analyst freelance', 'administrateur', 'Bordeaux', 'en_recherche', NULL, TRUE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg'),
+  (2, 'Fictif', 'Bastien', 'bastien.fictif@example.com', '0601020302', 'Analytics engineer freelance', 'membre', 'Grenoble', 'en_mission', '2026-12-18', TRUE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg'),
+  (3, 'Démo', 'Camille', 'camille.demo@example.com', '0601020303', 'Analytics engineer freelance', 'membre', 'Nantes', 'en_recherche', NULL, TRUE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg'),
+  (4, 'Test', 'Damien', 'damien.test@example.com', '0601020304', 'Data analyst freelance', 'membre', 'Strasbourg', 'en_mission', '2027-03-31', TRUE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg'),
+  (5, 'Factice', 'Élodie', 'elodie.factice@example.com', '0601020305', 'Analytics engineer freelance', 'membre', 'Lyon', 'en_recherche', NULL, TRUE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg'),
+  (6, 'Modèle', 'Fabien', 'fabien.modele@example.com', '0601020306', 'Consultant BI freelance (ancien membre du collectif)', 'membre', 'Rennes', 'en_recherche', NULL, FALSE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg');
 
 -- TECHNOLOGIES
 INSERT INTO technologie (id, nom) VALUES

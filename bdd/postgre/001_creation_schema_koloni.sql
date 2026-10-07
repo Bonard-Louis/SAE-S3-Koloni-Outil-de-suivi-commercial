@@ -22,6 +22,7 @@ CREATE TABLE membre (
     disponibilite     VARCHAR(20)   NOT NULL DEFAULT 'en_recherche',
     date_fin_mission  DATE,
     actif             BOOLEAN       NOT NULL DEFAULT TRUE,
+    mot_de_passe_hash VARCHAR(255),
     date_creation     TIMESTAMPTZ   NOT NULL DEFAULT now(),
 
     CONSTRAINT uq_membre_mail UNIQUE (mail),
@@ -49,6 +50,8 @@ COMMENT ON COLUMN membre.date_fin_mission IS
     'Renseignée uniquement quand disponibilite = en_mission (cf. chk_membre_date_fin_mission).';
 COMMENT ON COLUMN membre.actif IS
     'FALSE = compte désactivé (ex-membre du collectif). Ne jamais supprimer la ligne : conserve l''historique de ses actions.';
+COMMENT ON COLUMN membre.mot_de_passe_hash IS
+    'Mot de passe haché (scrypt, format PHC, produit par nuxt-auth-utils), jamais en clair. NULL = connexion impossible.';
 
 -- -----------------------------------------------------------------------------
 -- TECHNOLOGIE
