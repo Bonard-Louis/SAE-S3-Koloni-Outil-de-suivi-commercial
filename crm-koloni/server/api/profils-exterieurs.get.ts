@@ -10,6 +10,7 @@ interface LigneProfil {
 }
 
 export default defineEventHandler(async (event) => {
+  await exigerSession(event)
   const sql = useDb(event)
 
   const lignes = await sql<LigneProfil[]>`

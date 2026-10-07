@@ -1,7 +1,8 @@
 // Role — les deux profils d'utilisateurs du CRM (recueil de besoins §1.3)
+// Les valeurs sont celles stockées dans membre.role.
 export enum Role {
-  admin,
-  membre
+  admin = 'administrateur',
+  membre = 'membre'
 }
 
 // Utilisateur — compte connecté au CRM

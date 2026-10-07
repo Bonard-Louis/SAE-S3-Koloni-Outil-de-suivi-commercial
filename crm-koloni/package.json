@@ -15,7 +15,8 @@
     "@nuxt/ui": "~4.11.2",
     "nuxt": "~4.5.2",
     "nuxt-auth-utils": "~0.5.30",
-    "postgres": "~3.4.9"
+    "postgres": "~3.4.9",
+    "zod": "~4.6.5"
   },
   "devDependencies": {
     "@nuxt/eslint": "~1.17.0",
