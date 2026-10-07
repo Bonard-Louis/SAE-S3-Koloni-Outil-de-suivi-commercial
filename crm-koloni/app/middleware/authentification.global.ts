@@ -1,21 +1,19 @@
 import { Role } from '#shared/types/utilisateur'
 
-export default defineNuxtRouteMiddleware(async (to, _from) => {
-  // Redirection désactivée temporairement : /login n'est pas encore développée.
-  // TODO(Dresseur_Panda): retirer cette ligne dès que la page de connexion existe.
-  return true
+export default defineNuxtRouteMiddleware((to) => {
+  const { isAuthenticated, role } = useAuth()
 
-  const { isAuthenticated, role, refresh } = useAuth()
-  await refresh()
+  // Page de connexion : un utilisateur déjà connecté est renvoyé à l'accueil
+  if (to.path === '/connexion/login') {
+    return isAuthenticated.value ? navigateTo('/', { replace: true }) : true
+  }
 
-  // Utilisateur non connecté sur /login : on le laisse accéder (évite une boucle infinie)
-  if (!isAuthenticated.value && to.path === '/login') return true
+  // Toute autre page exige d'être connecté
+  if (!isAuthenticated.value) return navigateTo('/connexion/login', { replace: true })
 
-  // Non connecté ailleurs que /login : redirection vers la page de connexion
-  if (!isAuthenticated.value) return navigateTo('/login', { replace: true })
-
-  // /comptes (gestion des comptes utilisateurs) réservé aux administrateurs
-  if (to.path.startsWith('/comptes') && role.value !== Role.admin) {
+  // Gestion des comptes et création de compte réservées aux administrateurs
+  const reserveAdmin = to.path.startsWith('/comptes') || to.path === '/connexion/register'
+  if (reserveAdmin && role.value !== Role.admin) {
     return navigateTo('/', { replace: true })
   }
 })
