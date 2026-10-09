@@ -26,10 +26,6 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 201)
     return { id: membre!.id }
   } catch (error) {
-    // 23505 : violation de uq_membre_mail
-    if ((error as { code?: string }).code === '23505') {
-      throw createError({ statusCode: 409, statusMessage: 'Un compte existe déjà avec cette adresse mail' })
-    }
-    throw error
+    throw erreurSql(error)
   }
 })
