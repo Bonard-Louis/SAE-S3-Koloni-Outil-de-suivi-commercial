@@ -217,6 +217,8 @@ CREATE TABLE opportunite (
     date_cloture                  DATE,
     date_relance                  DATE,
     raison_perte                  TEXT,
+    qualifiee_par_id              BIGINT        REFERENCES membre(id) ON DELETE RESTRICT,
+    date_qualification            TIMESTAMPTZ,
     date_creation                 TIMESTAMPTZ   NOT NULL DEFAULT now(),
 
     CONSTRAINT chk_opp_source
@@ -255,7 +257,11 @@ CREATE TABLE opportunite (
     CONSTRAINT chk_opp_preneur_exclusif
         CHECK (NOT (preneur_membre_id IS NOT NULL AND preneur_profil_exterieur_id IS NOT NULL)),
     CONSTRAINT chk_opp_nombre_jours_positif
-        CHECK (nombre_jours IS NULL OR nombre_jours >= 0)
+        CHECK (nombre_jours IS NULL OR nombre_jours >= 0),
+    CONSTRAINT chk_opp_qualification_complete
+        CHECK ((qualifiee_par_id IS NULL) = (date_qualification IS NULL)),
+    CONSTRAINT chk_opp_qualifiee
+        CHECK (statut IN ('signal', 'perdu', 'en_pause') OR qualifiee_par_id IS NOT NULL)
 );
 
 COMMENT ON TABLE opportunite IS
@@ -306,6 +312,10 @@ COMMENT ON COLUMN opportunite.date_relance IS
     'Obligatoire au passage en en_pause (cf. chk_opp_date_relance_obligatoire).';
 COMMENT ON COLUMN opportunite.raison_perte IS
     'Motif de la perte, obligatoire au passage en perdu (cf. chk_opp_raison_perte_obligatoire).';
+COMMENT ON COLUMN opportunite.qualifiee_par_id IS
+    'Membre (apporteur ou administrateur) qui a validé explicitement la qualification Signal → Matching. NULL tant que l''opportunité n''est pas qualifiée ; obligatoire au-delà de Signal, sauf perdu et en_pause qui restent possibles avant qualification (cf. chk_opp_qualifiee).';
+COMMENT ON COLUMN opportunite.date_qualification IS
+    'Date et heure de la validation de la qualification. Renseignée dans le même UPDATE que qualifiee_par_id (cf. chk_opp_qualification_complete).';
 
 CREATE INDEX idx_opportunite_statut ON opportunite(statut);
 CREATE INDEX idx_opportunite_ville ON opportunite(ville);
@@ -317,6 +327,7 @@ CREATE INDEX idx_opportunite_apporteur ON opportunite(apporteur_id);
 CREATE INDEX idx_opportunite_moteur ON opportunite(moteur_id);
 CREATE INDEX idx_opportunite_preneur_membre ON opportunite(preneur_membre_id);
 CREATE INDEX idx_opportunite_saisi_par ON opportunite(saisi_par_id);
+CREATE INDEX idx_opportunite_qualifiee_par ON opportunite(qualifiee_par_id);
 
 -- -----------------------------------------------------------------------------
 -- TABLES DE LIAISON : TECHNOLOGIES, CONTACTS, PROFILS EXTERIEURS
@@ -553,5 +564,40 @@ CREATE TRIGGER trg_positionnement_verifie_statut_opportunite
     BEFORE INSERT ON positionnement
     FOR EACH ROW
     EXECUTE FUNCTION fn_positionnement_verifie_statut_opportunite();
+
+-- -----------------------------------------------------------------------------
+-- TRIGGER : la qualification est validée par l'apporteur ou par un administrateur
+-- -----------------------------------------------------------------------------
+-- Recueil 3.1 : le passage de Signal à Matching résulte d'une validation explicite,
+-- réservée à l'apporteur et aux administrateurs. Un CHECK ne pouvant pas lire une autre
+-- table, ce trigger vérifie le qualificateur au moment où il est posé ou changé.
+-- Une qualification déjà posée n'est pas remise en cause si son auteur est désactivé ensuite.
+
+CREATE FUNCTION fn_opportunite_verifie_qualificateur() RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.qualifiee_par_id IS NOT NULL
+       AND (TG_OP = 'INSERT' OR NEW.qualifiee_par_id IS DISTINCT FROM OLD.qualifiee_par_id) THEN
+        IF NOT EXISTS (
+            SELECT 1 FROM membre m
+            WHERE m.id = NEW.qualifiee_par_id
+              AND m.actif
+              AND (m.id = NEW.apporteur_id OR m.role = 'administrateur')
+        ) THEN
+            RAISE EXCEPTION
+                'La qualification doit être validée par l''apporteur de l''opportunité ou par un administrateur actif';
+        END IF;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+COMMENT ON FUNCTION fn_opportunite_verifie_qualificateur() IS
+    'Refuse un qualificateur (qualifiee_par_id) qui n''est ni l''apporteur de l''opportunité ni un administrateur, ou dont le compte est désactivé. Ne contrôle que la pose ou le changement du qualificateur.';
+
+CREATE TRIGGER trg_opportunite_verifie_qualificateur
+    BEFORE INSERT OR UPDATE OF qualifiee_par_id ON opportunite
+    FOR EACH ROW
+    EXECUTE FUNCTION fn_opportunite_verifie_qualificateur();
 
 COMMIT;
