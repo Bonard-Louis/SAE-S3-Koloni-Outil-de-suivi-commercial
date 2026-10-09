@@ -441,7 +441,7 @@ CREATE INDEX idx_historique_statut_opportunite ON historique_statut(opportunite_
 
 CREATE TABLE journal_action (
     id               BIGSERIAL PRIMARY KEY,
-    opportunite_id   BIGINT REFERENCES opportunite(id) ON DELETE RESTRICT,
+    opportunite_id   BIGINT NOT NULL REFERENCES opportunite(id) ON DELETE RESTRICT,
     auteur_id        BIGINT NOT NULL REFERENCES membre(id) ON DELETE RESTRICT,
     date_action      TIMESTAMPTZ NOT NULL DEFAULT now(),
     type_action      VARCHAR(40) NOT NULL,
