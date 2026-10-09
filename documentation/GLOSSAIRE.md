@@ -111,6 +111,7 @@ opportunité au statut Signé : pas d'objet Mission distinct.
 | `statut` | Un des 7 statuts. Transitions libres (saut, retour arrière, réouverture) : aucune contrainte de séquence en base, seul `historique_statut` journalise les changements. |
 | `raison_perte` | Obligatoire dès que `statut = perdu` (`chk_opp_raison_perte_obligatoire`). |
 | `date_relance` | Obligatoire dès que `statut = en_pause` (`chk_opp_date_relance_obligatoire`). |
+| `qualifiee_par_id` / `date_qualification` | Validation explicite de la qualification Signal → Matching. Renseignées ensemble (`chk_opp_qualification_complete`) et obligatoires au-delà de Signal, sauf `perdu` et `en_pause` qui restent possibles avant qualification (`chk_opp_qualifiee`). Le qualificateur est l'apporteur de l'opportunité ou un administrateur actif (trigger `trg_opportunite_verifie_qualificateur`). |
 
 Index posés uniquement sur les critères de filtre listés section 3.1 du
 recueil : `statut`, `ville`, `mode`, `client_final_nom`, `date_signal`,
