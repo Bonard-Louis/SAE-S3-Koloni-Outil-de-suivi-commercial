@@ -62,10 +62,11 @@ COMMENT ON COLUMN membre.mot_de_passe_hash IS
 
 CREATE TABLE technologie (
     id    BIGSERIAL PRIMARY KEY,
-    nom   VARCHAR(100) NOT NULL,
-
-    CONSTRAINT uq_technologie_nom UNIQUE (nom)
+    nom   VARCHAR(100) NOT NULL
 );
+
+-- Unique quelle que soit la casse : « Python » et « python » sont la même technologie
+CREATE UNIQUE INDEX uq_technologie_nom_minuscule ON technologie (lower(nom));
 
 COMMENT ON TABLE technologie IS
     'Liste de valeurs réutilisable (ex. Talend, Power BI, Python), utilisée par les opportunités et les profils extérieurs, et servant de filtre.';
@@ -80,15 +81,16 @@ CREATE TABLE entreprise_cliente (
     secteur        VARCHAR(150),
     taille         VARCHAR(50),
     ville          VARCHAR(100),
-    date_creation  TIMESTAMPTZ  NOT NULL DEFAULT now(),
-
-    CONSTRAINT uq_entreprise_cliente_nom UNIQUE (nom)
+    date_creation  TIMESTAMPTZ  NOT NULL DEFAULT now()
 );
+
+-- Unique quelle que soit la casse : « Capgemini » et « capgemini » sont la même société
+CREATE UNIQUE INDEX uq_entreprise_cliente_nom_minuscule ON entreprise_cliente (lower(nom));
 
 COMMENT ON TABLE entreprise_cliente IS
     'Société (ESN ou client direct) à laquelle sont rattachés les contacts. Réutilisable d''une opportunité à l''autre, sert au filtre "société du contact".';
 COMMENT ON COLUMN entreprise_cliente.nom IS
-    'Unique : évite la création de doublons lors de la saisie répétée d''une même société par différents membres.';
+    'Unique quelle que soit la casse : évite la création de doublons lors de la saisie répétée d''une même société par différents membres.';
 
 -- -----------------------------------------------------------------------------
 -- CONTACT
