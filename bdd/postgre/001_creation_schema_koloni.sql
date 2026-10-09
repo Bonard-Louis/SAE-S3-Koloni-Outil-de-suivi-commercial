@@ -478,11 +478,12 @@ DECLARE
     v_auteur_id BIGINT;
 BEGIN
     IF NEW.statut IS DISTINCT FROM OLD.statut THEN
-        v_auteur_id := current_setting('app.current_membre_id', true)::BIGINT;
+        -- NULLIF : sur une connexion déjà utilisée, la variable vaut '' et non NULL, et ''::BIGINT lève une erreur
+        v_auteur_id := NULLIF(current_setting('app.current_membre_id', true), '')::BIGINT;
 
         IF v_auteur_id IS NULL THEN
             RAISE EXCEPTION
-                'app.current_membre_id doit être défini avant tout changement de statut (SET app.current_membre_id = ...)';
+                'app.current_membre_id doit être défini avant tout changement de statut (SET LOCAL app.current_membre_id = ...)';
         END IF;
 
         INSERT INTO historique_statut (opportunite_id, ancien_statut, nouveau_statut, auteur_id)
@@ -494,7 +495,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 COMMENT ON FUNCTION fn_opportunite_historique_statut() IS
-    'Alimente historique_statut à chaque changement de opportunite.statut. Exige que la session ait défini app.current_membre_id (SET LOCAL app.current_membre_id = ''<id>'').';
+    'Alimente historique_statut à chaque changement de opportunite.statut. Exige que la transaction ait défini app.current_membre_id (SET LOCAL app.current_membre_id = ''<id>''), jamais un SET de session avec un pool de connexions.';
 
 CREATE TRIGGER trg_opportunite_historique_statut
     AFTER UPDATE OF statut ON opportunite
@@ -505,7 +506,8 @@ CREATE FUNCTION fn_opportunite_historique_statut_creation() RETURNS TRIGGER AS $
 DECLARE
     v_auteur_id BIGINT;
 BEGIN
-    v_auteur_id := COALESCE(current_setting('app.current_membre_id', true)::BIGINT, NEW.apporteur_id);
+    -- Auteur = membre connecté ; à défaut, celui qui a saisi l'opportunité, puis son apporteur
+    v_auteur_id := COALESCE(NULLIF(current_setting('app.current_membre_id', true), '')::BIGINT, NEW.saisi_par_id, NEW.apporteur_id);
 
     INSERT INTO historique_statut (opportunite_id, ancien_statut, nouveau_statut, auteur_id)
     VALUES (NEW.id, NULL, NEW.statut, v_auteur_id);
