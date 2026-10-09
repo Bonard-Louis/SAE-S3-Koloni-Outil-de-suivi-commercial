@@ -38,6 +38,9 @@ CREATE TABLE membre (
         CHECK (ville IS NULL OR length(btrim(ville)) > 0)
 );
 
+-- La connexion compare les mails sans tenir compte de la casse : l'unicité doit faire de même
+CREATE UNIQUE INDEX uq_membre_mail_minuscule ON membre (lower(mail));
+
 COMMENT ON TABLE membre IS
     'Freelance du collectif Koloni, avec un compte personnel. Un membre désactivé garde toutes ses traces (positionnements, notes, actions).';
 COMMENT ON COLUMN membre.lien_linkedin IS
