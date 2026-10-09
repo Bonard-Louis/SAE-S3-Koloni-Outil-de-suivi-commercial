@@ -1,4 +1,4 @@
-import type { Role } from '#shared/types/utilisateur'
+import type { Role } from './utilisateur'
 
 declare module '#auth-utils' {
   interface User {

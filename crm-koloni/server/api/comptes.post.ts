@@ -5,7 +5,7 @@ import { Role } from '#shared/types/utilisateur'
 const schema = z.object({
   prenom: z.string().trim().min(1).max(100),
   nom: z.string().trim().min(1).max(100),
-  mail: z.email().max(255),
+  mail: z.email().max(255).transform(mail => mail.toLowerCase()),
   password: z.string().min(8).max(200),
   role: z.enum(Role).default(Role.membre)
 })
