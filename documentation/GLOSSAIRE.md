@@ -163,10 +163,12 @@ changement, en même temps que la mise à jour de `opportunite.statut`.
 
 ## journal_action
 
-Journal de toute action menée sur une opportunité (ou, pour un ajout de
-contact/entreprise sans opportunité identifiée, `opportunite_id` est
-`NULL`). Couvre aussi les écritures faites hors interface : tout auteur,
-humain ou agent IA, écrit sous un compte identifié (ENF-05).
+Journal de toute action menée sur une opportunité. `opportunite_id` est
+obligatoire : créer un contact, une entreprise ou un compte membre en
+dehors d'une opportunité n'est pas journalisé, seul le rattachement d'un
+contact à une opportunité l'est. Couvre aussi les écritures faites hors
+interface : tout auteur, humain ou agent IA, écrit sous un compte
+identifié (ENF-05).
 
 ---
 
