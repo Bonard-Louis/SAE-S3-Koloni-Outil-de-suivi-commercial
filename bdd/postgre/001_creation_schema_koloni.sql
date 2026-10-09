@@ -19,8 +19,9 @@ CREATE TABLE membre (
     notes             TEXT,
     role              VARCHAR(20)   NOT NULL DEFAULT 'membre',
     ville             VARCHAR(100),
-    disponibilite     VARCHAR(20)   NOT NULL DEFAULT 'en_recherche',
-    date_fin_mission  DATE,
+    disponibilite     VARCHAR(20)   NOT NULL DEFAULT 'inconnu',
+    date_disponibilite DATE,
+    dispo_confirmee_le DATE,
     actif             BOOLEAN       NOT NULL DEFAULT TRUE,
     mot_de_passe_hash VARCHAR(255),
     date_creation     TIMESTAMPTZ   NOT NULL DEFAULT now(),
@@ -29,9 +30,9 @@ CREATE TABLE membre (
     CONSTRAINT chk_membre_role
         CHECK (role IN ('administrateur', 'membre')),
     CONSTRAINT chk_membre_disponibilite
-        CHECK (disponibilite IN ('en_recherche', 'en_mission')),
-    CONSTRAINT chk_membre_date_fin_mission
-        CHECK (disponibilite = 'en_mission' OR date_fin_mission IS NULL),
+        CHECK (disponibilite IN ('inconnu', 'en_recherche', 'a_l_ecoute', 'en_mission')),
+    CONSTRAINT chk_membre_date_disponibilite
+        CHECK (disponibilite IN ('en_mission', 'a_l_ecoute') OR date_disponibilite IS NULL),
     CONSTRAINT chk_membre_linkedin
         CHECK (lien_linkedin IS NULL OR lien_linkedin LIKE 'https://%linkedin.com/%'),
     CONSTRAINT chk_membre_ville_format
@@ -48,9 +49,11 @@ COMMENT ON COLUMN membre.lien_linkedin IS
 COMMENT ON COLUMN membre.role IS
     'Droits d''action : administrateur ou membre. Un administrateur reste un freelance et peut être apporteur/moteur.';
 COMMENT ON COLUMN membre.disponibilite IS
-    'en_recherche ou en_mission. Permet au membre de rendre visible sa disponibilité auprès de tout le collectif.';
-COMMENT ON COLUMN membre.date_fin_mission IS
-    'Renseignée uniquement quand disponibilite = en_mission (cf. chk_membre_date_fin_mission).';
+    'inconnu (rien déclaré, valeur d''un compte neuf), en_recherche, a_l_ecoute (en mission mais ouvert à une proposition) ou en_mission. Permet au membre de rendre visible sa disponibilité auprès de tout le collectif.';
+COMMENT ON COLUMN membre.date_disponibilite IS
+    'Date de fin de mission (en_mission) ou date à partir de laquelle le membre est disponible (a_l_ecoute). Renseignée uniquement pour ces deux états (cf. chk_membre_date_disponibilite).';
+COMMENT ON COLUMN membre.dispo_confirmee_le IS
+    'Date à laquelle le membre a déclaré sa disponibilité pour la dernière fois, enregistrée par l''application. NULL = jamais déclarée. À la connexion, l''outil repose la question si cette date est absente ou a plus de 30 jours.';
 COMMENT ON COLUMN membre.actif IS
     'FALSE = compte désactivé (ex-membre du collectif). Ne jamais supprimer la ligne : conserve l''historique de ses actions.';
 COMMENT ON COLUMN membre.mot_de_passe_hash IS

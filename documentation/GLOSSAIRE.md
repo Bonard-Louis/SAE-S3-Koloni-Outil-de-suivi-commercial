@@ -57,8 +57,9 @@ propres opportunités, apporteur ou moteur.
 | Colonne | Explication |
 | --- | --- |
 | `role` | `administrateur` (droits étendus sur tout) ou `membre`. Ne préjuge pas des rôles « apporteur »/« moteur », portés par opportunité. |
-| `disponibilite` | `en_recherche` ou `en_mission` ; sert de signal de visibilité aux autres membres. |
-| `date_fin_mission` | Obligatoire uniquement si `disponibilite = en_mission` (contrainte `chk_membre_date_fin_mission`). |
+| `disponibilite` | `inconnu` (valeur d'un compte neuf, rien déclaré), `en_recherche`, `a_l_ecoute` (en mission mais ouvert à une proposition) ou `en_mission` ; sert de signal de visibilité aux autres membres. |
+| `date_disponibilite` | Fin de mission (`en_mission`) ou date de disponibilité (`a_l_ecoute`). Uniquement pour ces deux états (contrainte `chk_membre_date_disponibilite`). |
+| `dispo_confirmee_le` | Date de la dernière déclaration de disponibilité, enregistrée par l'application. Vide = jamais déclarée. À la connexion, l'outil repose la question si elle est vide ou a plus de 30 jours. |
 | `actif` | `FALSE` = compte désactivé. Ne supprime jamais la ligne : les traces (positionnements, notes, journal) restent visibles (EF-02). |
 | `ville` | Champ texte unique ; `chk_membre_ville_format` rejette une chaîne vide ou faite uniquement d'espaces, comme validation a minima demandée par le recueil. |
 
