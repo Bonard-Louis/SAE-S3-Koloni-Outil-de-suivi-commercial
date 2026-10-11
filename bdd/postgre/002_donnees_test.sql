@@ -76,22 +76,22 @@ INSERT INTO contact (id, nom, prenom, role, entreprise_cliente_id, mail, telepho
   (29, 'Imaginaire', 'Béatrice', 'Responsable BI', 5, 'b.imaginaire@example.com', NULL);
 
 -- PROFILS EXTÉRIEURS (freelances contactés hors collectif)
-INSERT INTO profil_exterieur (id, nom, prenom, moyen_contact, niveau, experiences_cles, ville, disponibilite, tjm, date_sollicitation, issue, auteur_id) VALUES
-  (1, 'Specimen', 'Gaëlle', 'gaelle.specimen@example.com', 'senior', 'Consultant BI depuis 4 ans, missions chez des clients du secteur industrie.', 'Toulouse', 'Disponible à partir du 1er novembre 2026', 590, '2026-09-03', 'retenu', 2),
-  (2, 'Prototype', 'Henri', 'henri.prototype@example.com', 'expert', 'Data engineer depuis 5 ans, missions chez des clients du secteur retail.', 'Montpellier', 'Disponible dans 2 mois', 740, '2026-09-05', 'ecarte_client', 3),
-  (3, 'Imaginaire', 'Inès', 'ines.imaginaire@example.com', 'operationnel', 'Data engineer depuis 6 ans, missions chez des clients du secteur télécom.', 'Bordeaux', 'En mission jusquen janvier 2027', 480, '2026-09-07', 'indisponible', 4),
-  (4, 'Exemple', 'Julien', 'julien.exemple@example.com', 'senior', 'Consultant BI depuis 7 ans, missions chez des clients du secteur banque.', 'Dijon', 'Disponible immédiatement', 580, '2026-09-09', 'sans_reponse_profil', 5),
-  (5, 'Fictif', 'Karine', 'karine.fictif@example.com', 'expert', 'Consultant BI depuis 8 ans, missions chez des clients du secteur industrie.', 'Saint-Denis (La Réunion)', 'Disponible à partir du 1er novembre 2026', 730, '2026-09-11', 'sans_retour_client', 1),
-  (6, 'Démo', 'Laurent', 'laurent.demo@example.com', 'operationnel', 'Data engineer depuis 9 ans, missions chez des clients du secteur retail.', 'Tours', 'Disponible dans 2 mois', 470, '2026-09-13', NULL, 2),
-  (7, 'Test', 'Manon', 'manon.test@example.com', 'senior', 'Data engineer depuis 10 ans, missions chez des clients du secteur télécom.', 'Grenoble', 'En mission jusquen janvier 2027', 610, '2026-09-15', 'presente', 3),
-  (8, 'Factice', 'Nicolas', 'nicolas.factice@example.com', 'expert', 'Analytics engineer depuis 11 ans, missions chez des clients du secteur banque.', 'Toulouse', 'Disponible immédiatement', 720, '2026-09-17', 'retenu', 4),
-  (9, 'Modèle', 'Océane', 'oceane.modele@example.com', 'operationnel', 'Consultant BI depuis 3 ans, missions chez des clients du secteur industrie.', 'Nice', 'Disponible à partir du 1er novembre 2026', 460, '2026-09-19', 'ecarte_client', 5),
-  (10, 'Specimen', 'Pierre', 'pierre.specimen@example.com', 'senior', 'Data analyst depuis 4 ans, missions chez des clients du secteur retail.', 'Lyon', 'Disponible dans 2 mois', 600, '2026-09-21', 'indisponible', 1),
-  (11, 'Prototype', 'Quentin', 'quentin.prototype@example.com', 'expert', 'Analytics engineer depuis 5 ans, missions chez des clients du secteur télécom.', 'Dijon', 'En mission jusquen janvier 2027', 750, '2026-09-23', 'sans_reponse_profil', 2),
-  (12, 'Imaginaire', 'Rachel', 'rachel.imaginaire@example.com', 'operationnel', 'Data engineer depuis 6 ans, missions chez des clients du secteur banque.', 'Bordeaux', 'Disponible immédiatement', 450, '2026-09-25', 'sans_retour_client', 3),
-  (13, 'Exemple', 'Sophie', 'sophie.exemple@example.com', 'senior', 'Data engineer depuis 7 ans, missions chez des clients du secteur industrie.', 'Nantes', 'Disponible à partir du 1er novembre 2026', 590, '2026-09-27', NULL, 4),
-  (14, 'Fictif', 'Thomas', 'thomas.fictif@example.com', 'expert', 'Analytics engineer depuis 8 ans, missions chez des clients du secteur retail.', 'Saint-Denis (La Réunion)', 'Disponible dans 2 mois', 740, '2026-09-01', 'presente', 5),
-  (15, 'Factice', 'Élodie', 'e.factice@example.com', 'operationnel', 'Analytics engineer depuis 9 ans, missions chez des clients du secteur télécom.', 'Lyon', 'En mission jusquen janvier 2027', 480, '2026-09-03', 'retenu', 1);
+INSERT INTO profil_exterieur (id, nom, prenom, moyen_contact, niveau, experiences_cles, ville, disponibilite, tjm, auteur_id) VALUES
+  (1, 'Specimen', 'Gaëlle', 'gaelle.specimen@example.com', 'senior', 'Consultant BI depuis 4 ans, missions chez des clients du secteur industrie.', 'Toulouse', 'Disponible à partir du 1er novembre 2026', 590, 2),
+  (2, 'Prototype', 'Henri', 'henri.prototype@example.com', 'expert', 'Data engineer depuis 5 ans, missions chez des clients du secteur retail.', 'Montpellier', 'Disponible dans 2 mois', 740, 3),
+  (3, 'Imaginaire', 'Inès', 'ines.imaginaire@example.com', 'operationnel', 'Data engineer depuis 6 ans, missions chez des clients du secteur télécom.', 'Bordeaux', 'En mission jusquen janvier 2027', 480, 4),
+  (4, 'Exemple', 'Julien', 'julien.exemple@example.com', 'senior', 'Consultant BI depuis 7 ans, missions chez des clients du secteur banque.', 'Dijon', 'Disponible immédiatement', 580, 5),
+  (5, 'Fictif', 'Karine', 'karine.fictif@example.com', 'expert', 'Consultant BI depuis 8 ans, missions chez des clients du secteur industrie.', 'Saint-Denis (La Réunion)', 'Disponible à partir du 1er novembre 2026', 730, 1),
+  (6, 'Démo', 'Laurent', 'laurent.demo@example.com', 'operationnel', 'Data engineer depuis 9 ans, missions chez des clients du secteur retail.', 'Tours', 'Disponible dans 2 mois', 470, 2),
+  (7, 'Test', 'Manon', 'manon.test@example.com', 'senior', 'Data engineer depuis 10 ans, missions chez des clients du secteur télécom.', 'Grenoble', 'En mission jusquen janvier 2027', 610, 3),
+  (8, 'Factice', 'Nicolas', 'nicolas.factice@example.com', 'expert', 'Analytics engineer depuis 11 ans, missions chez des clients du secteur banque.', 'Toulouse', 'Disponible immédiatement', 720, 4),
+  (9, 'Modèle', 'Océane', 'oceane.modele@example.com', 'operationnel', 'Consultant BI depuis 3 ans, missions chez des clients du secteur industrie.', 'Nice', 'Disponible à partir du 1er novembre 2026', 460, 5),
+  (10, 'Specimen', 'Pierre', 'pierre.specimen@example.com', 'senior', 'Data analyst depuis 4 ans, missions chez des clients du secteur retail.', 'Lyon', 'Disponible dans 2 mois', 600, 1),
+  (11, 'Prototype', 'Quentin', 'quentin.prototype@example.com', 'expert', 'Analytics engineer depuis 5 ans, missions chez des clients du secteur télécom.', 'Dijon', 'En mission jusquen janvier 2027', 750, 2),
+  (12, 'Imaginaire', 'Rachel', 'rachel.imaginaire@example.com', 'operationnel', 'Data engineer depuis 6 ans, missions chez des clients du secteur banque.', 'Bordeaux', 'Disponible immédiatement', 450, 3),
+  (13, 'Exemple', 'Sophie', 'sophie.exemple@example.com', 'senior', 'Data engineer depuis 7 ans, missions chez des clients du secteur industrie.', 'Nantes', 'Disponible à partir du 1er novembre 2026', 590, 4),
+  (14, 'Fictif', 'Thomas', 'thomas.fictif@example.com', 'expert', 'Analytics engineer depuis 8 ans, missions chez des clients du secteur retail.', 'Saint-Denis (La Réunion)', 'Disponible dans 2 mois', 740, 5),
+  (15, 'Factice', 'Élodie', 'e.factice@example.com', 'operationnel', 'Analytics engineer depuis 9 ans, missions chez des clients du secteur télécom.', 'Lyon', 'En mission jusquen janvier 2027', 480, 1);
 
 INSERT INTO profil_exterieur_technologie (profil_exterieur_id, technologie_id) VALUES
   (1, 2),
@@ -193,14 +193,16 @@ INSERT INTO opportunite_contact (opportunite_id, contact_id) VALUES
   (10, 2),
   (10, 3);
 
-INSERT INTO profil_exterieur_opportunite (profil_exterieur_id, opportunite_id) VALUES
-  (1, 2),
-  (2, 2),
-  (3, 5),
-  (7, 2),
-  (4, 3),
-  (5, 7),
-  (8, 6);
+INSERT INTO profil_exterieur_opportunite (profil_exterieur_id, opportunite_id, sollicite_par_id, date_sollicitation, issue) VALUES
+  (1, 2, 2, '2026-09-03', 'retenu'),
+  (2, 2, 3, '2026-09-05', 'ecarte_client'),
+  (3, 5, 4, '2026-09-07', 'indisponible'),
+  (7, 2, 3, '2026-09-15', 'presente'),
+  (4, 3, 5, '2026-09-09', 'sans_reponse_profil'),
+  (5, 7, 1, '2026-09-11', 'sans_retour_client'),
+  (8, 6, 4, '2026-09-17', 'retenu'),
+  -- Le profil 2, écarté sur l'opportunité 2, est le preneur de l'opportunité 7 : sa sollicitation y est obligatoire
+  (2, 7, 4, '2026-08-10', 'retenu');
 
 -- POSITIONNEMENTS
 INSERT INTO positionnement (membre_id, opportunite_id, date_positionnement, etat, commentaire) VALUES

@@ -1,4 +1,5 @@
 // Liste des profils extérieurs, du plus récemment sollicité au plus ancien
+// La date est celle de la dernière sollicitation du profil ; un profil jamais sollicité arrive en fin de liste, sans date.
 interface LigneProfil {
   id: string
   nom: string
@@ -6,7 +7,7 @@ interface LigneProfil {
   technologies: string[]
   ville: string | null
   disponibilite: string | null
-  date_sollicitation: string
+  date_sollicitation: string | null
 }
 
 export default defineEventHandler(async (event) => {
@@ -27,9 +28,10 @@ export default defineEventHandler(async (event) => {
       ) AS technologies,
       p.ville,
       p.disponibilite,
-      to_char(p.date_sollicitation, 'YYYY-MM-DD') AS date_sollicitation
+      to_char(s.date_sollicitation, 'YYYY-MM-DD') AS date_sollicitation
     FROM profil_exterieur p
-    ORDER BY p.date_sollicitation DESC, p.id DESC
+    LEFT JOIN profil_exterieur_derniere_sollicitation s ON s.profil_exterieur_id = p.id
+    ORDER BY s.date_sollicitation DESC NULLS LAST, p.id DESC
   `
 
   return lignes.map(l => ({
@@ -39,6 +41,6 @@ export default defineEventHandler(async (event) => {
     technologies: l.technologies,
     ville: nullEnUndefined(l.ville),
     disponibilite: nullEnUndefined(l.disponibilite),
-    dateSollicitation: l.date_sollicitation
+    dateSollicitation: nullEnUndefined(l.date_sollicitation)
   }))
 })

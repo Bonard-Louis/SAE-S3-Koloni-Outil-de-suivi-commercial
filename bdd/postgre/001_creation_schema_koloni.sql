@@ -146,20 +146,13 @@ CREATE TABLE profil_exterieur (
     ville               VARCHAR(100),
     disponibilite       VARCHAR(100),
     tjm                 NUMERIC(8,2),
-    date_sollicitation  DATE          NOT NULL DEFAULT CURRENT_DATE,
-    issue               VARCHAR(30),
     auteur_id           BIGINT        NOT NULL REFERENCES membre(id) ON DELETE RESTRICT,
     date_creation       TIMESTAMPTZ   NOT NULL DEFAULT now(),
 
     CONSTRAINT chk_profil_ext_linkedin
         CHECK (lien_linkedin IS NULL OR lien_linkedin LIKE 'https://%linkedin.com/%'),
     CONSTRAINT chk_profil_ext_niveau
-        CHECK (niveau IS NULL OR niveau IN ('operationnel', 'senior', 'expert')),
-    CONSTRAINT chk_profil_ext_issue
-        CHECK (issue IS NULL OR issue IN (
-            'presente', 'retenu', 'ecarte_client', 'indisponible',
-            'sans_reponse_profil', 'sans_retour_client'
-        ))
+        CHECK (niveau IS NULL OR niveau IN ('operationnel', 'senior', 'expert'))
 );
 
 COMMENT ON TABLE profil_exterieur IS
@@ -176,12 +169,8 @@ COMMENT ON COLUMN profil_exterieur.disponibilite IS
     'Texte libre : disponible immédiatement, à partir d''une date...';
 COMMENT ON COLUMN profil_exterieur.tjm IS
     'Taux journalier moyen souhaité par le profil.';
-COMMENT ON COLUMN profil_exterieur.date_sollicitation IS
-    'Date du contact avec le profil.';
 COMMENT ON COLUMN profil_exterieur.auteur_id IS
-    'Membre qui a contacté et saisi ce profil (moteur, administrateur ou non).';
-COMMENT ON COLUMN profil_exterieur.issue IS
-    'Résultat de la sollicitation. Voir chk_profil_ext_issue pour les valeurs autorisées.';
+    'Membre qui a saisi la fiche de ce profil (moteur, administrateur ou non). La date et l''issue d''une sollicitation se trouvent dans profil_exterieur_opportunite, une ligne par opportunité.';
 
 -- -----------------------------------------------------------------------------
 -- OPPORTUNITE
@@ -362,14 +351,47 @@ COMMENT ON TABLE profil_exterieur_technologie IS
     'Technologies maîtrisées par un profil contacté hors collectif.';
 
 CREATE TABLE profil_exterieur_opportunite (
-    profil_exterieur_id  BIGINT NOT NULL REFERENCES profil_exterieur(id) ON DELETE RESTRICT,
-    opportunite_id       BIGINT NOT NULL REFERENCES opportunite(id) ON DELETE RESTRICT,
+    profil_exterieur_id  BIGINT      NOT NULL REFERENCES profil_exterieur(id) ON DELETE RESTRICT,
+    opportunite_id       BIGINT      NOT NULL REFERENCES opportunite(id) ON DELETE RESTRICT,
+    sollicite_par_id     BIGINT      NOT NULL REFERENCES membre(id) ON DELETE RESTRICT,
+    date_sollicitation   DATE        NOT NULL DEFAULT CURRENT_DATE,
+    issue                VARCHAR(30),
 
-    PRIMARY KEY (profil_exterieur_id, opportunite_id)
+    PRIMARY KEY (profil_exterieur_id, opportunite_id),
+    CONSTRAINT chk_pext_opp_issue
+        CHECK (issue IS NULL OR issue IN (
+            'presente', 'retenu', 'ecarte_client', 'indisponible',
+            'sans_reponse_profil', 'sans_retour_client'
+        ))
 );
 
 COMMENT ON TABLE profil_exterieur_opportunite IS
-    'Opportunités pour lesquelles un profil extérieur a été sollicité (un même profil peut être lié à plusieurs opportunités).';
+    'Sollicitation d''un profil extérieur pour une opportunité : qui l''a sollicité, quand, et avec quelle issue. Un même profil peut être sollicité sur plusieurs opportunités, chacune avec sa propre issue.';
+COMMENT ON COLUMN profil_exterieur_opportunite.sollicite_par_id IS
+    'Membre qui a sollicité le profil pour cette opportunité (le moteur en général).';
+COMMENT ON COLUMN profil_exterieur_opportunite.date_sollicitation IS
+    'Date du contact avec le profil pour cette opportunité.';
+COMMENT ON COLUMN profil_exterieur_opportunite.issue IS
+    'Résultat de cette sollicitation (cf. chk_pext_opp_issue), NULL tant qu''elle est en cours.';
+
+-- Un preneur extérieur doit avoir été sollicité sur cette opportunité.
+-- DEFERRABLE : la sollicitation exige l'opportunité et l'opportunité exigerait la sollicitation ;
+-- le contrôle est reporté à la fin de la transaction, sinon aucun ordre d'insertion ne passe.
+-- Sans effet quand l'opportunité n'a pas de preneur extérieur (colonne NULL).
+ALTER TABLE opportunite ADD CONSTRAINT fk_opp_preneur_sollicite
+    FOREIGN KEY (preneur_profil_exterieur_id, id)
+    REFERENCES profil_exterieur_opportunite (profil_exterieur_id, opportunite_id)
+    DEFERRABLE INITIALLY DEFERRED;
+
+-- Dernière fois où on a fait appel à chaque profil (un profil jamais sollicité n'apparaît pas)
+CREATE VIEW profil_exterieur_derniere_sollicitation AS
+SELECT DISTINCT ON (profil_exterieur_id)
+       profil_exterieur_id, opportunite_id, sollicite_par_id, date_sollicitation, issue
+FROM profil_exterieur_opportunite
+ORDER BY profil_exterieur_id, date_sollicitation DESC, opportunite_id DESC;
+
+COMMENT ON VIEW profil_exterieur_derniere_sollicitation IS
+    'Une ligne par profil extérieur déjà sollicité : sa sollicitation la plus récente (date, opportunité, issue).';
 
 CREATE TABLE opportunite_contact (
     opportunite_id  BIGINT NOT NULL REFERENCES opportunite(id) ON DELETE RESTRICT,

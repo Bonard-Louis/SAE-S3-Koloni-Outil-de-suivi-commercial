@@ -90,8 +90,7 @@ distincte du contact client. Pas de CV ni pièce jointe (V0).
 
 | Colonne | Explication |
 | --- | --- |
-| `issue` | Résultat de la sollicitation. Valeurs non figées : liste attendue du client (question 3, section 12 du recueil) — laissé en texte libre volontairement. |
-| `auteur_id` | Membre (humain ou agent IA sous compte identifié) ayant contacté et enregistré le profil. |
+| `auteur_id` | Membre (humain ou agent IA sous compte identifié) ayant enregistré la fiche du profil. La date et l'issue d'une sollicitation ne sont plus sur le profil : elles sont dans `profil_exterieur_opportunite`, une ligne par opportunité. |
 
 ## opportunite
 
@@ -133,7 +132,23 @@ Technologies maîtrisées par un profil contacté hors collectif.
 
 ## profil_exterieur_opportunite
 
-Opportunités concernées par un même profil extérieur.
+Sollicitation d'un profil extérieur pour une opportunité. Un même profil
+peut être sollicité sur plusieurs opportunités, chacune avec sa propre
+issue : l'issue d'une sollicitation n'écrase donc plus celle d'une autre.
+
+| Colonne | Explication |
+| --- | --- |
+| `sollicite_par_id` | Membre qui a sollicité le profil pour cette opportunité (le moteur en général). |
+| `date_sollicitation` | Date du contact avec le profil pour cette opportunité. |
+| `issue` | Résultat de cette sollicitation : `presente`, `retenu`, `ecarte_client`, `indisponible`, `sans_reponse_profil` ou `sans_retour_client` (`chk_pext_opp_issue`). Vide tant qu'elle est en cours. |
+
+Un preneur extérieur (`opportunite.preneur_profil_exterieur_id`) doit avoir
+été sollicité sur cette opportunité : clé étrangère composite
+`fk_opp_preneur_sollicite`, contrôlée en fin de transaction
+(`DEFERRABLE INITIALLY DEFERRED`), car la sollicitation exige l'opportunité
+et l'opportunité exigerait la sollicitation. La vue
+`profil_exterieur_derniere_sollicitation` donne, par profil, la dernière
+fois où on a fait appel à lui.
 
 ## opportunite_contact
 
