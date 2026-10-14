@@ -220,12 +220,11 @@ INSERT INTO note (opportunite_id, auteur_id, date_redaction, contenu) VALUES
   (8, 3, '2026-10-01 10:30:00+02', 'Projet reporté, à relancer au printemps.'),
   (9, 1, '2026-10-02 10:35:00+02', 'Relance prévue après la clôture budgétaire.');
 
-INSERT INTO journal_action (opportunite_id, auteur_id, date_action, type_action, commentaire) VALUES
-  (1, 3, '2026-10-01 11:10:00+02', 'positionnement', 'Positionnement de Camille.'),
-  (2, 5, '2026-10-02 11:17:00+02', 'positionnement', 'Positionnement d''Élodie.'),
-  (2, 3, '2026-10-03 11:24:00+02', 'profil_exterieur_contacte', 'Profil extérieur sollicité pour la mission.'),
-  (5, 1, '2026-10-01 11:31:00+02', 'note', 'Note de cadrage ajoutée.'),
-  (6, 1, '2026-10-02 11:38:00+02', 'changement_statut', 'Passage au statut signé.');
+INSERT INTO journal_action (opportunite_id, profil_exterieur_id, auteur_id, date_action, type_action, commentaire) VALUES
+  (1, NULL, 3, '2026-10-01 11:10:00+02', 'positionnement', 'Positionnement de Camille.'),
+  (2, NULL, 5, '2026-10-02 11:17:00+02', 'positionnement', 'Positionnement d''Élodie.'),
+  (2, 2, 3, '2026-10-03 11:24:00+02', 'profil_exterieur_contacte', 'Profil extérieur sollicité pour la mission.'),
+  (5, NULL, 1, '2026-10-01 11:31:00+02', 'note', 'Note de cadrage ajoutée.');
 
 -- Liens LinkedIn fictifs, dérivés du prénom et du nom
 UPDATE membre SET lien_linkedin = 'https://www.linkedin.com/in/' || lower(translate(prenom || '-' || nom, 'éèêëàâîïôöùûüç', 'eeeeaaiioouuuc'));

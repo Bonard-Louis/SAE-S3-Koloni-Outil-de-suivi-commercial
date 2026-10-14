@@ -180,12 +180,17 @@ changement, en même temps que la mise à jour de `opportunite.statut`.
 
 ## journal_action
 
-Journal de toute action menée sur une opportunité. `opportunite_id` est
-obligatoire : créer un contact, une entreprise ou un compte membre en
-dehors d'une opportunité n'est pas journalisé, seul le rattachement d'un
-contact à une opportunité l'est. Couvre aussi les écritures faites hors
-interface : tout auteur, humain ou agent IA, écrit sous un compte
-identifié (ENF-05).
+Journal de ce que chacun a fait : qui, quoi, quand, et sur quel objet.
+Couvre aussi les écritures faites hors interface : tout auteur, humain ou
+agent IA, écrit sous un compte identifié (ENF-05). Les changements de
+statut n'y figurent pas : `historique_statut` les journalise déjà, et le
+fil affiché réunit les deux tables.
+
+| Colonne | Explication |
+| --- | --- |
+| `opportunite_id` | Opportunité concernée. Obligatoire pour un positionnement, une présentation de profil et une note. Facultative pour les actions sur un contact, une entreprise ou un profil extérieur, qui peuvent ne se rapporter à aucune opportunité. |
+| `contact_id` / `entreprise_cliente_id` / `profil_exterieur_id` | Objet touché par l'action. Chaque type d'action exige le sien (`chk_journal_cible`) : une ligne « contact créé ou modifié » dit de quel contact il s'agit. |
+| `type_action` | `positionnement`, `presentation_profil`, `note`, `profil_exterieur_contacte`, `profil_exterieur_modifie`, `contact_cree_modifie` ou `entreprise_cree_modifiee`. |
 
 ---
 
