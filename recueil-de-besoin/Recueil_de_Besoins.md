@@ -3,7 +3,7 @@
 ## _Gestion de la Relation Client_
 
 **Projet KOLONI — CRM interne**
-Version 0.3 — Document de travail
+Version 0.4 — Document de travail
 
 ---
 
@@ -124,7 +124,7 @@ Le client a transmis par mail, pour inspiration, la liste des colonnes de sa tab
 ### 3.1 Fonctionnalités indispensables
 
 - Se connecter à l'application (un compte par personne, rôle administrateur ou membre) ; aucune page ni donnée n'est consultable sans connexion.
-- Publier une opportunité via un formulaire structuré (template fourni par le client). Une opportunité peut être publiée incomplète : elle démarre en Signal et passe en Matching une fois qualifiée (interlocuteur, besoin, TJM et mode de candidature connus). Le remplissage des champs ne suffit pas : la qualification est un acte explicite, posé par l'apporteur ou un administrateur, qui atteste que l'opportunité est qualifiée.
+- Publier une opportunité via un formulaire structuré (template fourni par le client). Une opportunité peut être publiée incomplète : elle démarre en Signal et passe en Matching une fois qualifiée (interlocuteur, besoin, TJM et mode de candidature connus). Le remplissage des champs ne suffit pas : la qualification est un acte explicite, posé par l'apporteur ou un administrateur, qui atteste que l'opportunité est qualifiée. Une opportunité ne peut pas dépasser Signal sans avoir été qualifiée, sauf pour passer en Perdu ou en En pause.
 - Consulter la liste des opportunités et se positionner sur l'une d'entre elles. Plusieurs membres peuvent se positionner sur une même opportunité tant qu'elle est en Signal ou en Matching ; se positionner signale un intérêt et ne réserve pas l'opportunité. L'apporteur (ou le moteur) choisit le ou les profils présentés au client, et le passage en Proposé ne masque pas l'opportunité.
 - À profil équivalent, un membre passe devant un profil extérieur au moment du choix. Les membres disposent d'un délai (2 jours à ce jour, règle en cours de rédaction au sein du collectif) avant que l'opportunité ne s'ouvre à l'extérieur du collectif ; l'outil affiche la date à partir de laquelle elle s'ouvre. Cette ouverture dépend en outre du niveau de diffusion et de l'accord de l'apporteur.
 - Rechercher et filtrer les opportunités (technologie ou domaine, statut, ville, mode, client final, société du contact, date du signal).
@@ -132,7 +132,7 @@ Le client a transmis par mail, pour inspiration, la liste des colonnes de sa tab
 - Ajouter une note à une opportunité : tout membre peut en écrire une, et les notes sont lisibles par tous.
 - Faire évoluer le statut d'une opportunité parmi les 7 statuts définis, avec horodatage automatique du changement. Les transitions sont libres : un statut peut être sauté, on peut revenir en arrière ou rouvrir une opportunité, qui conserve son historique. Raison obligatoire au passage en Perdu, date de relance obligatoire au passage en En pause.
 - Conserver un historique complet et daté des changements de statut d'une opportunité.
-- Consigner dans un journal d'actions ce que chacun a fait sur une opportunité (positionnement, présentation d'un profil, note, profil extérieur contacté, contact ou entreprise cliente ajouté, changement de statut).
+- Consigner dans un journal d'actions ce que chacun a fait (positionnement, présentation d'un profil, note, profil extérieur contacté ou modifié, contact ou entreprise cliente ajouté ou modifié). Les changements de statut sont consignés dans l'historique des statuts ; le fil d'une opportunité réunit les deux.
 - Ne jamais supprimer une opportunité, y compris signée ou perdue (conservation en base, pas de suppression physique).
 - Clôturer une opportunité signée en renseignant le preneur, le TJM preneur, le nombre de jours et la date de clôture.
 - Gérer les contacts associés à une opportunité (une même personne pouvant être liée à plusieurs opportunités dans le temps), rattachés à une entreprise cliente.
@@ -224,6 +224,7 @@ _Tout membre peut créer et modifier les contacts et les entreprises clientes : 
 | Niveau de diffusion | Choisi par l'apporteur. **Libre** : relais LinkedIn et posts publics bienvenus. **Réseau perso** : recommandation de personne à personne, sans publication ni contact d'autres ESN. **Interne strict** : membres du collectif uniquement. Sans choix, Réseau perso s'applique. |
 | Date d'ouverture à l'extérieur | Date à partir de laquelle l'opportunité peut s'ouvrir hors collectif : date de publication augmentée du délai laissé aux membres (2 jours à ce jour, règle en cours de rédaction au sein du collectif). Affichée à titre d'information ; sans objet pour une opportunité en « Interne strict ». |
 | Statut | Un des 7 statuts définis (voir ci-dessous). |
+| Qualifiée par, date de qualification | Membre (apporteur ou administrateur) qui a validé la qualification, et date de cette validation. Obligatoires au-delà du statut « Signal », sauf pour « Perdu » et « En pause ». |
 | Date du signal | Date de détection de l'opportunité. |
 | Date de clôture | Date de signature ou de perte de l'opportunité. |
 | Date de relance | Obligatoire au passage en « En pause ». |
@@ -252,10 +253,10 @@ _Les transitions entre statuts sont libres : un statut peut être sauté, on peu
 | Membre | Membre qui s'est positionné. |
 | Opportunité | Opportunité concernée. |
 | Date de positionnement | Date à laquelle le membre a signalé son intérêt. |
-| État | Positionné (candidat) / présenté au client / retenu / écarté. |
+| État | Positionné (candidat) / présenté au client / retenu / écarté / retiré. |
 | Commentaire | Précision libre (motivation, disponibilité annoncée…). |
 
-_Plusieurs membres peuvent être positionnés sur une même opportunité : un positionnement signale un intérêt et ne réserve rien. Le passage à « présenté » relève de l'apporteur ou du moteur ; le membre « retenu » devient le preneur de l'opportunité, renseigné à la clôture._
+_Plusieurs membres peuvent être positionnés sur une même opportunité : un positionnement signale un intérêt et ne réserve rien. Le passage à « présenté » relève de l'apporteur ou du moteur ; le membre « retenu » devient le preneur de l'opportunité, renseigné à la clôture. Un membre qui se désiste passe son positionnement à « retiré »._
 
 #### Note sur une opportunité
 
@@ -274,10 +275,11 @@ _Tout membre peut écrire une note sur une opportunité, y compris s'il n'y est 
 | --- | --- |
 | Auteur | Utilisateur à l'origine de l'action. |
 | Date | Date et heure de l'action. |
-| Type | Positionnement, présentation d'un profil, note, profil extérieur contacté, ajout ou modification d'un contact ou d'une entreprise cliente, changement de statut. |
+| Type | Positionnement, présentation d'un profil, note, profil extérieur contacté ou modifié, ajout ou modification d'un contact ou d'une entreprise cliente. |
+| Objet concerné | Opportunité, contact, entreprise cliente ou profil extérieur sur lequel porte l'action. |
 | Commentaire | Précision libre sur l'action (ex. « j'ai contacté telle personne »). |
 
-_Le journal couvre également les écritures faites hors de l'interface (cf. « IA-friendly », section 4) : tout auteur, humain ou agent, écrit sous un compte identifié._
+_Les changements de statut sont consignés dans l'historique des statuts, pas dans le journal ; le fil affiché d'une opportunité réunit les deux. Le journal couvre également les écritures faites hors de l'interface (cf. « IA-friendly », section 4) : tout auteur, humain ou agent, écrit sous un compte identifié._
 
 #### Entreprise cliente
 
@@ -314,12 +316,10 @@ _Un même contact peut être lié à plusieurs opportunités au fil du temps : u
 | Ville | Localisation. |
 | Disponibilité | Disponible immédiatement, à partir d'une date… |
 | TJM | Taux journalier moyen souhaité. |
-| Date de sollicitation | Date du contact. |
-| Opportunités concernées | Opportunités pour lesquelles le profil a été sollicité. |
-| Issue | Résultat de la sollicitation : présenté, retenu, écarté par le client, indisponible, sans réponse du profil, sans retour du client. |
-| Auteur de la saisie | Membre qui a contacté et enregistré le profil. |
+| Sollicitations | Pour chaque opportunité sur laquelle le profil est sollicité : le membre qui l'a sollicité, la date du contact et l'issue (présenté, retenu, écarté par le client, indisponible, sans réponse du profil, sans retour du client). |
+| Auteur de la saisie | Membre qui a enregistré la fiche du profil. |
 
-_Entité distincte du contact client. Le moteur, administrateur ou non, saisit lui-même chaque profil qu'il contacte hors collectif, sous forme de fiche technique structurée. Un profil peut être lié à plusieurs opportunités. Pas de fichier CV ni de pièce jointe dans cette version._
+_Entité distincte du contact client. Le moteur, administrateur ou non, saisit lui-même chaque profil qu'il contacte hors collectif, sous forme de fiche technique structurée. Un profil peut être lié à plusieurs opportunités. L'issue est propre à chaque opportunité : une nouvelle sollicitation n'efface pas la précédente, et la dernière fois où l'on a fait appel à un profil reste consultable. Un profil retenu comme preneur d'une opportunité doit avoir été sollicité sur cette opportunité. Pas de fichier CV ni de pièce jointe dans cette version._
 
 #### Membre (profil utilisateur)
 
@@ -331,7 +331,7 @@ _Entité distincte du contact client. Le moteur, administrateur ou non, saisit l
 | Notes | Zone de notes libres. |
 | Rôle | Administrateur ou membre. |
 | Ville | Champ texte, avec une validation a minima du format (ex. code postal). |
-| Disponibilité | En recherche ou en mission, avec date de fin de mission le cas échéant. C'est ce qui permet à un membre de se rendre visible. |
+| Disponibilité | Inconnue (valeur d'un compte neuf), en recherche, à l'écoute (en mission, mais ouvert à une proposition) ou en mission, avec une date de fin de mission ou de disponibilité pour les deux derniers états. La date de la dernière déclaration est enregistrée : à la connexion, l'outil repose la question si la disponibilité n'a jamais été déclarée ou date de plus de 30 jours. C'est ce qui permet à un membre de se rendre visible. |
 | Actif / désactivé | Un membre peut être désactivé sans que ses traces soient effacées : ses positionnements, ses notes et ses actions restent visibles. |
 
 _Compétences : hors périmètre à ce stade, décision de l'équipe projet. Une intégration en fin de projet reste envisagée si le planning le permet. Elle prendra alors la forme d'une table dédiée associant la clé primaire du freelance à chacune de ses compétences avec son niveau (note de 1 à 4), afin de rester exploitable (filtrage, matching) — et non d'un champ libre sur le profil membre._
@@ -361,7 +361,7 @@ _L'historique des clients chez qui chaque membre a déjà travaillé, pour obten
 | Hébergement | Outil développé et validé en local, puis installé sur un VPS fourni par le client (cf. section Reprise et livraison). |
 | Accès | Application accessible en ligne depuis un navigateur, sans VPN, réservée aux membres du collectif connectés (un compte par personne, rôle administrateur ou membre). Aucune page ni donnée n'est consultable sans connexion. |
 | Sécurité et données personnelles | Connexion obligatoire, droits d'action par rôle, aucun export public. |
-| Conservation des données | Aucune suppression : les opportunités signées ou perdues restent consultables en base. Rien n'est archivé ni purgé. |
+| Conservation des données | Aucune suppression : les opportunités signées ou perdues restent consultables en base. Rien n'est archivé ni purgé. Seule exception : la correction d'un rattachement saisi par erreur (technologie ou contact d'une opportunité). |
 | Documentation | Documentation technique complète et détaillée, en français, pour assurer la maintenabilité de l'outil par le client. |
 | Passage à l'échelle | L'outil doit pouvoir accueillir davantage de membres que les ~50 membres actuels du collectif. |
 
@@ -458,7 +458,7 @@ Freelance du collectif Koloni, susceptible de se positionner sur une opportunit�
 
 ### UC6 — Se positionner sur une opportunité
 >
-> En tant que membre, je veux pouvoir me positionner sur une opportunité en Signal ou en Matching, afin de signaler mon intérêt à l'apporteur. Plusieurs membres peuvent se positionner sur une même opportunité : se positionner ne la réserve pas, c'est l'apporteur (ou le moteur) qui choisit le ou les profils présentés au client.
+> En tant que membre, je veux pouvoir me positionner sur une opportunité en Signal ou en Matching, afin de signaler mon intérêt à l'apporteur. Plusieurs membres peuvent se positionner sur une même opportunité : se positionner ne la réserve pas, c'est l'apporteur (ou le moteur) qui choisit le ou les profils présentés au client. Si je me désiste, je retire mon positionnement.
 
 ### UC7 — Ajouter une note à une opportunité
 >
@@ -482,7 +482,7 @@ Freelance du collectif Koloni, susceptible de se positionner sur une opportunit�
 
 ### UC12 — Consulter le journal d'actions d'une opportunité
 >
-> En tant que membre, je veux consulter le journal d'actions d'une opportunité, afin de savoir qui a fait quoi et quand : positionnements, profils présentés, notes, profils extérieurs contactés, contacts ajoutés, changements de statut.
+> En tant que membre, je veux consulter le journal d'actions d'une opportunité, afin de savoir qui a fait quoi et quand : positionnements, profils présentés, notes, profils extérieurs contactés, contacts ajoutés. Les changements de statut figurent dans l'historique des statuts (UC11).
 
 ### UC13 — Enregistrer un profil contacté hors collectif
 >
@@ -494,7 +494,7 @@ Freelance du collectif Koloni, susceptible de se positionner sur une opportunit�
 
 ### UC15 — Gérer son profil membre
 >
-> En tant que membre, je veux tenir à jour mes coordonnées et ma disponibilité (en recherche ou en mission, avec ma date de fin de mission), afin de me rendre visible auprès de la cellule commerce au bon moment.
+> En tant que membre, je veux tenir à jour mes coordonnées et ma disponibilité (en recherche, à l'écoute ou en mission, avec la date associée), afin de me rendre visible auprès de la cellule commerce au bon moment.
 
 ### UC16 — Gérer les comptes utilisateurs
 >

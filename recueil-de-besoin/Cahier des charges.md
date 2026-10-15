@@ -3,8 +3,8 @@
 ## _CRM interne — Gestion de la relation client_
 
 **Projet KOLONI**
-Version 0.1 — Document de travail
-Document de référence : Recueil de besoins, version 0.3
+Version 0.2 — Document de travail
+Document de référence : Recueil de besoins, version 0.4
 
 ---
 
@@ -131,7 +131,7 @@ Chaque exigence est rattachée à un cas d'utilisation (UC) du recueil de besoin
 | Réf. | Exigence | UC | Priorité | Release |
 | --- | --- | --- | :---: | :---: |
 | EF-04 | Publication d'une opportunité via un formulaire structuré (source, besoin, conditions, lieu, timing, candidature, diffusion), même incomplète. Elle démarre au statut Signal. Le client final ne bloque jamais la publication. | UC2 | O | V1 |
-| EF-05 | Qualification explicite Signal → Matching, posée par l'apporteur ou un administrateur. Le remplissage des champs ne suffit pas. | UC3 | O | V1 |
+| EF-05 | Qualification explicite Signal → Matching, posée par l'apporteur ou un administrateur. Le remplissage des champs ne suffit pas. Perdu et En pause restent possibles avant qualification. | UC3 | O | V1 |
 | EF-06 | Consultation de la liste et du détail d'une opportunité (notes, historique, journal). Aucune information n'est masquée entre membres. | UC4 | O | V1 |
 | EF-07 | Changement de statut parmi les 7 statuts, transitions libres (saut, retour en arrière, réouverture), horodatage automatique. Raison obligatoire au passage en Perdu, date de relance obligatoire au passage en En pause. | UC9 | O | V1 |
 | EF-08 | Historique complet et daté des changements de statut, avec l'auteur de chaque changement. | UC11 | O | V1 |
@@ -146,24 +146,24 @@ Chaque exigence est rattachée à un cas d'utilisation (UC) du recueil de besoin
 
 | Réf. | Exigence | UC | Priorité | Release |
 | --- | --- | --- | :---: | :---: |
-| EF-15 | Positionnement de plusieurs membres sur une opportunité en Signal ou en Matching. Le positionnement signale un intérêt et ne réserve rien. | UC6 | O | V2 |
+| EF-15 | Positionnement de plusieurs membres sur une opportunité en Signal ou en Matching. Le positionnement signale un intérêt et ne réserve rien. Un membre qui se désiste retire son positionnement. | UC6 | O | V2 |
 | EF-16 | Choix, par l'apporteur ou le moteur, du ou des profils présentés au client. Le passage en Proposé ne masque pas l'opportunité. | UC6 | O | V2 |
 | EF-17 | Notes datées et signées, écrites par tout membre (positionné ou non), lisibles par tous. | UC7 | O | V2 |
-| EF-18 | Journal d'actions : positionnement, présentation d'un profil, note, profil extérieur contacté, ajout ou modification d'un contact ou d'une entreprise, changement de statut. Chaque entrée porte l'auteur, la date et un commentaire. | UC12 | O | V2 |
+| EF-18 | Journal d'actions : positionnement, présentation d'un profil, note, profil extérieur contacté ou modifié, ajout ou modification d'un contact ou d'une entreprise. Chaque entrée porte l'auteur, la date, un commentaire et l'objet concerné. Les changements de statut figurent dans l'historique des statuts (EF-08). | UC12 | O | V2 |
 
 ### 3.4 Contacts, entreprises et profils extérieurs
 
 | Réf. | Exigence | UC | Priorité | Release |
 | --- | --- | --- | :---: | :---: |
 | EF-19 | Gestion des contacts liés à une opportunité et des entreprises clientes. Un contact peut être lié à plusieurs opportunités. Tout membre peut les créer et les modifier. | UC8 | O | V1 |
-| EF-20 | Enregistrement d'un profil contacté hors collectif sous forme de fiche structurée, lié à une ou plusieurs opportunités, avec l'issue de la sollicitation. | UC13 | O | V3 |
+| EF-20 | Enregistrement d'un profil contacté hors collectif sous forme de fiche structurée, lié à une ou plusieurs opportunités, avec, pour chacune, le membre qui l'a sollicité, la date et l'issue de la sollicitation. | UC13 | O | V3 |
 | EF-21 | Consultation de la base des profils contactés hors collectif. | UC14 | O | V3 |
 
 ### 3.5 Profil membre
 
 | Réf. | Exigence | UC | Priorité | Release |
 | --- | --- | --- | :---: | :---: |
-| EF-22 | Gestion de son propre profil : nom, prénom et mail obligatoires ; téléphone, ville (format validé a minima), disponibilité avec date de fin de mission, notes. | UC15 | O | V3 |
+| EF-22 | Gestion de son propre profil : nom, prénom et mail obligatoires ; téléphone, ville (format validé a minima), disponibilité (inconnue, en recherche, à l'écoute, en mission) avec la date associée, notes. La disponibilité est redemandée à la connexion si elle n'a jamais été déclarée ou date de plus de 30 jours. | UC15 | O | V3 |
 
 ### 3.6 Données
 
@@ -182,7 +182,7 @@ Le modèle de données est à concevoir par l'équipe (aucun schéma existant). 
 | ENF-05 | IA-friendly | Schéma lisible : noms explicites, commentaires sur les tables et les colonnes, contraintes déclarées. Le journal d'actions et les contrôles obligatoires couvrent aussi les écritures faites hors de l'interface, sous un compte identifié. |
 | ENF-06 | Accès | Application accessible en ligne depuis un navigateur, sans VPN, réservée aux membres connectés. |
 | ENF-07 | Sécurité | Connexion obligatoire, droits d'action par rôle, aucun export public. |
-| ENF-08 | Conservation | Aucune suppression, aucun archivage, aucune purge. |
+| ENF-08 | Conservation | Aucune suppression, aucun archivage, aucune purge. Seule exception : la correction d'un rattachement saisi par erreur (technologie ou contact d'une opportunité). |
 | ENF-09 | Passage à l'échelle | Capacité à accueillir davantage que les 50 membres actuels. |
 | ENF-10 | Hébergement | Développement et validation en local, puis installation sur un VPS fourni par le client. |
 | ENF-11 | Données de test | Données fictives uniquement (fichier `Contacts_fictifs.csv` fourni par le client ; opportunités fictives créées par l'équipe à partir du template). |
