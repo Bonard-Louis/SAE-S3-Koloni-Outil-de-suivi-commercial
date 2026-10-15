@@ -59,7 +59,7 @@ propres opportunités, apporteur ou moteur.
 | `role` | `administrateur` (droits étendus sur tout) ou `membre`. Ne préjuge pas des rôles « apporteur »/« moteur », portés par opportunité. |
 | `disponibilite` | `inconnu` (valeur d'un compte neuf, rien déclaré), `en_recherche`, `a_l_ecoute` (en mission mais ouvert à une proposition) ou `en_mission` ; sert de signal de visibilité aux autres membres. |
 | `date_disponibilite` | Fin de mission (`en_mission`) ou date de disponibilité (`a_l_ecoute`). Uniquement pour ces deux états (contrainte `chk_membre_date_disponibilite`). |
-| `dispo_confirmee_le` | Date de la dernière déclaration de disponibilité, enregistrée par l'application. Vide = jamais déclarée. À la connexion, l'outil repose la question si elle est vide ou a plus de 30 jours. |
+| `dispo_confirmee_le` | Date de la dernière déclaration de disponibilité, enregistrée par l'application. Vide = jamais déclarée. |
 | `actif` | `FALSE` = compte désactivé. Ne supprime jamais la ligne : les traces (positionnements, notes, journal) restent visibles (EF-02). |
 | `ville` | Champ texte unique ; `chk_membre_ville_format` rejette une chaîne vide ou faite uniquement d'espaces, comme validation a minima demandée par le recueil. |
 
@@ -91,6 +91,14 @@ distincte du contact client. Pas de CV ni pièce jointe (V0).
 | Colonne | Explication |
 | --- | --- |
 | `auteur_id` | Membre (humain ou agent IA sous compte identifié) ayant enregistré la fiche du profil. La date et l'issue d'une sollicitation ne sont plus sur le profil : elles sont dans `profil_exterieur_opportunite`, une ligne par opportunité. |
+| `membre_id` | Compte membre de cette personne, renseigné le jour où le profil adhère au collectif ; vide sinon. Un membre ne correspond qu'à un seul profil. Le lien est posé par une personne, jamais déduit du nom : deux homonymes restent deux lignes tant qu'on ne les relie pas. |
+
+La vue `consultant` donne une seule liste de personnes sans fusionner les
+tables : elle réunit les membres (`origine = 'membre'`) et les profils extérieurs
+qui ne sont pas reliés à un compte (`origine = 'exterieur'`). Les
+identifiants viennent de deux tables, une personne se reconnaît donc par le
+couple (`origine`, `id`). La disponibilité d'un membre est un état, celle
+d'un profil extérieur reste un texte libre.
 
 ## opportunite
 
@@ -102,7 +110,7 @@ opportunité au statut Signé : pas d'objet Mission distinct.
 | Colonne | Explication |
 | --- | --- |
 | `apporteur_id` | Membre qui amène l'opportunité. |
-| `saisi_par_id` | Membre qui a créé la fiche dans l'outil, si différent de l'apporteur. |
+| `saisi_par_id` | Membre qui a créé la fiche, si différent de l'apporteur. |
 | `moteur_id` | Membre qui recherche un profil hors collectif, le cas échéant. |
 | `preneur_membre_id` / `preneur_profil_exterieur_id` | Freelance retenu : membre du collectif OU profil extérieur, jamais les deux (`chk_opp_preneur_exclusif`). Renseigné à la clôture. |
 | `client_final_nom` | Texte libre, souvent inconnu (besoin passant par une ESN). Ne bloque jamais la publication (EF-04). Distinct de la société du contact (`entreprise_cliente`, liée via `contact`). |
@@ -183,8 +191,7 @@ changement, en même temps que la mise à jour de `opportunite.statut`.
 Journal de ce que chacun a fait : qui, quoi, quand, et sur quel objet.
 Couvre aussi les écritures faites hors interface : tout auteur, humain ou
 agent IA, écrit sous un compte identifié (ENF-05). Les changements de
-statut n'y figurent pas : `historique_statut` les journalise déjà, et le
-fil affiché réunit les deux tables.
+statut n'y figurent pas : `historique_statut` les journalise déjà.
 
 | Colonne | Explication |
 | --- | --- |

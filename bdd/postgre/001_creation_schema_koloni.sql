@@ -53,11 +53,11 @@ COMMENT ON COLUMN membre.disponibilite IS
 COMMENT ON COLUMN membre.date_disponibilite IS
     'Date de fin de mission (en_mission) ou date à partir de laquelle le membre est disponible (a_l_ecoute). Renseignée uniquement pour ces deux états (cf. chk_membre_date_disponibilite).';
 COMMENT ON COLUMN membre.dispo_confirmee_le IS
-    'Date à laquelle le membre a déclaré sa disponibilité pour la dernière fois, enregistrée par l''application. NULL = jamais déclarée. À la connexion, l''outil repose la question si cette date est absente ou a plus de 30 jours.';
+    'Date de la dernière déclaration de disponibilité par le membre, enregistrée par l''application. NULL = jamais déclarée.';
 COMMENT ON COLUMN membre.actif IS
     'FALSE = compte désactivé (ex-membre du collectif). Ne jamais supprimer la ligne : conserve l''historique de ses actions.';
 COMMENT ON COLUMN membre.mot_de_passe_hash IS
-    'Mot de passe haché (scrypt, format PHC, produit par nuxt-auth-utils), jamais en clair. NULL = connexion impossible.';
+    'Mot de passe haché (scrypt, format PHC), jamais en clair. NULL = connexion impossible.';
 
 -- -----------------------------------------------------------------------------
 -- TECHNOLOGIE
@@ -147,6 +147,7 @@ CREATE TABLE profil_exterieur (
     disponibilite       VARCHAR(100),
     tjm                 NUMERIC(8,2),
     auteur_id           BIGINT        NOT NULL REFERENCES membre(id) ON DELETE RESTRICT,
+    membre_id           BIGINT        UNIQUE REFERENCES membre(id) ON DELETE RESTRICT,
     date_creation       TIMESTAMPTZ   NOT NULL DEFAULT now(),
 
     CONSTRAINT chk_profil_ext_linkedin
@@ -169,6 +170,8 @@ COMMENT ON COLUMN profil_exterieur.disponibilite IS
     'Texte libre : disponible immédiatement, à partir d''une date...';
 COMMENT ON COLUMN profil_exterieur.tjm IS
     'Taux journalier moyen souhaité par le profil.';
+COMMENT ON COLUMN profil_exterieur.membre_id IS
+    'Compte membre de cette personne, renseigné le jour où le profil extérieur adhère au collectif. NULL tant qu''il n''est pas membre. Un membre ne correspond qu''à un seul profil extérieur. Relié, le profil n''apparaît plus qu''une fois dans la vue consultant.';
 COMMENT ON COLUMN profil_exterieur.auteur_id IS
     'Membre qui a saisi la fiche de ce profil (moteur, administrateur ou non). La date et l''issue d''une sollicitation se trouvent dans profil_exterieur_opportunite, une ligne par opportunité.';
 
@@ -267,7 +270,7 @@ COMMENT ON COLUMN opportunite.client_final_nom IS
 COMMENT ON COLUMN opportunite.apporteur_id IS
     'Membre qui amène l''opportunité. La relation client passe par lui, le moteur ou directement le candidat, selon mode_candidature.';
 COMMENT ON COLUMN opportunite.saisi_par_id IS
-    'Membre qui a créé la fiche dans l''outil, uniquement renseigné quand il diffère de l''apporteur.';
+    'Membre qui a créé la fiche, uniquement renseigné quand il diffère de l''apporteur.';
 COMMENT ON COLUMN opportunite.moteur_id IS
     'Personne qui recherche un profil hors collectif pour cette opportunité, le cas échéant.';
 COMMENT ON COLUMN opportunite.preneur_membre_id IS
@@ -392,6 +395,22 @@ ORDER BY profil_exterieur_id, date_sollicitation DESC, opportunite_id DESC;
 
 COMMENT ON VIEW profil_exterieur_derniere_sollicitation IS
     'Une ligne par profil extérieur déjà sollicité : sa sollicitation la plus récente (date, opportunité, issue).';
+
+-- Consultants : membres et profils extérieurs réunis dans une seule liste, sans fusionner les tables.
+-- Un profil extérieur relié à un compte membre (membre_id) n'est repris que par sa ligne de membre.
+-- Les identifiants viennent de deux tables : une personne se reconnaît par (origine, id).
+CREATE VIEW consultant AS
+SELECT 'membre' AS origine, m.id, m.nom, m.prenom, m.ville, m.lien_linkedin,
+       m.disponibilite, m.actif
+FROM membre m
+UNION ALL
+SELECT 'exterieur', p.id, p.nom, p.prenom, p.ville, p.lien_linkedin,
+       p.disponibilite, TRUE
+FROM profil_exterieur p
+WHERE p.membre_id IS NULL;
+
+COMMENT ON VIEW consultant IS
+    'Tous les consultants en une liste : membres du collectif (origine membre) et profils extérieurs pas encore membres (origine exterieur). La disponibilité d''un membre est un état (inconnu, en_recherche, a_l_ecoute, en_mission) ; celle d''un profil extérieur est un texte libre.';
 
 CREATE TABLE opportunite_contact (
     opportunite_id  BIGINT NOT NULL REFERENCES opportunite(id) ON DELETE RESTRICT,
