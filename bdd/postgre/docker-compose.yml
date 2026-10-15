@@ -6,14 +6,15 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-koloni}
-      POSTGRES_USER: ${POSTGRES_USER:-koloni_app}
+      POSTGRES_USER: ${POSTGRES_USER:-koloni_proprietaire}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Définir POSTGRES_PASSWORD dans .env}
+      KOLONI_APP_PASSWORD: ${KOLONI_APP_PASSWORD:?Définir KOLONI_APP_PASSWORD dans .env}
     ports:
       - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - koloni_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-koloni_app} -d ${POSTGRES_DB:-koloni}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-koloni_proprietaire} -d ${POSTGRES_DB:-koloni}"]
       interval: 5s
       timeout: 5s
       retries: 5
