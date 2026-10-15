@@ -417,13 +417,13 @@ CREATE TABLE positionnement (
 
     CONSTRAINT uq_positionnement_membre_opportunite UNIQUE (membre_id, opportunite_id),
     CONSTRAINT chk_positionnement_etat
-        CHECK (etat IN ('positionne', 'presente', 'retenu', 'ecarte'))
+        CHECK (etat IN ('positionne', 'presente', 'retenu', 'ecarte', 'retire'))
 );
 
 COMMENT ON TABLE positionnement IS
-    'Intérêt signalé par un membre sur une opportunité en signal ou matching. Ne réserve rien : plusieurs membres peuvent se positionner sur la même opportunité.';
+    'Intérêt signalé par un membre sur une opportunité en signal ou matching. Ne réserve rien : plusieurs membres peuvent se positionner sur la même opportunité. Jamais supprimé : un membre qui se désiste passe à l''état retire.';
 COMMENT ON COLUMN positionnement.etat IS
-    'positionne (candidat) / presente au client / retenu (devient le preneur) / ecarte.';
+    'positionne (candidat) / presente au client / retenu (devient le preneur) / ecarte / retire (le membre s''est désisté, la ligne est conservée).';
 
 CREATE INDEX idx_positionnement_opportunite ON positionnement(opportunite_id);
 
