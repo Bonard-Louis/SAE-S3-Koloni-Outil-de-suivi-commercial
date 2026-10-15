@@ -29,6 +29,9 @@ INSERT INTO technologie (id, nom) VALUES
   (9, 'Airflow'),
   (10, 'Qlik Sense');
 
+-- Auteur des créations d'entreprises et de contacts : le journal l'exige (SET LOCAL, valable jusqu'à la fin de la transaction)
+SELECT set_config('app.current_membre_id', '1', true);
+
 -- ENTREPRISES CLIENTES
 INSERT INTO entreprise_cliente (id, nom, secteur, taille, ville) VALUES
   (1, 'Xi Factice Médias', 'Médias', 'ETI', 'Nantes'),
@@ -44,7 +47,11 @@ INSERT INTO entreprise_cliente (id, nom, secteur, taille, ville) VALUES
   (11, 'Kappa Fictive Télécom', 'Télécommunications', 'Grand groupe', 'Toulouse');
 
 -- CONTACTS (côté client)
-INSERT INTO contact (id, nom, prenom, role, entreprise_cliente_id, mail, telephone) VALUES
+-- Le lien LinkedIn fictif est calculé à l'insertion (prénom et nom, sans accents), pour ne pas journaliser une fausse modification
+INSERT INTO contact (id, nom, prenom, role, entreprise_cliente_id, mail, telephone, lien_linkedin)
+SELECT v.id, v.nom, v.prenom, v.role, v.entreprise_cliente_id, v.mail, v.telephone,
+       'https://www.linkedin.com/in/' || translate(lower(v.prenom || '-' || v.nom), 'éèêëàâîïôöùûüç', 'eeeeaaiioouuuc')
+FROM (VALUES
   (1, 'Démo', 'Ursule', 'Responsable BI', 1, 'ursule.demo@example.com', NULL),
   (2, 'Test', 'Valentin', 'Responsable achats IT', 2, 'valentin.test@example.com', NULL),
   (3, 'Factice', 'William', 'Responsable achats IT', 2, 'william.factice@example.com', '0610203451'),
@@ -73,10 +80,17 @@ INSERT INTO contact (id, nom, prenom, role, entreprise_cliente_id, mail, telepho
   (26, 'Exemple', 'Bruno', 'Fondatrice', 2, 'bruno.exemple@example.com', NULL),
   (27, 'Fictif', 'Chloé', 'Directeur associé', 3, 'chloe.fictif@example.com', '0610206739'),
   (28, 'Démo', 'Denis', 'Responsable partenariats', 8, 'denis.demo@example.com', NULL),
-  (29, 'Imaginaire', 'Béatrice', 'Responsable BI', 5, 'b.imaginaire@example.com', NULL);
+  (29, 'Imaginaire', 'Béatrice', 'Responsable BI', 5, 'b.imaginaire@example.com', NULL)
+) AS v(id, nom, prenom, role, entreprise_cliente_id, mail, telephone);
+
+-- La suite n'impose plus d'auteur : chaque note, positionnement, sollicitation et opportunité porte le sien
+SELECT set_config('app.current_membre_id', '', true);
 
 -- PROFILS EXTÉRIEURS (freelances contactés hors collectif)
-INSERT INTO profil_exterieur (id, nom, prenom, moyen_contact, niveau, experiences_cles, ville, disponibilite, tjm, auteur_id) VALUES
+INSERT INTO profil_exterieur (id, nom, prenom, moyen_contact, niveau, experiences_cles, ville, disponibilite, tjm, auteur_id, lien_linkedin)
+SELECT v.id, v.nom, v.prenom, v.moyen_contact, v.niveau, v.experiences_cles, v.ville, v.disponibilite, v.tjm, v.auteur_id,
+       'https://www.linkedin.com/in/' || translate(lower(v.prenom || '-' || v.nom), 'éèêëàâîïôöùûüç', 'eeeeaaiioouuuc')
+FROM (VALUES
   (1, 'Specimen', 'Gaëlle', 'gaelle.specimen@example.com', 'senior', 'Consultant BI depuis 4 ans, missions chez des clients du secteur industrie.', 'Toulouse', 'Disponible à partir du 1er novembre 2026', 590, 2),
   (2, 'Prototype', 'Henri', 'henri.prototype@example.com', 'expert', 'Data engineer depuis 5 ans, missions chez des clients du secteur retail.', 'Montpellier', 'Disponible dans 2 mois', 740, 3),
   (3, 'Imaginaire', 'Inès', 'ines.imaginaire@example.com', 'operationnel', 'Data engineer depuis 6 ans, missions chez des clients du secteur télécom.', 'Bordeaux', 'En mission jusquen janvier 2027', 480, 4),
@@ -91,7 +105,8 @@ INSERT INTO profil_exterieur (id, nom, prenom, moyen_contact, niveau, experience
   (12, 'Imaginaire', 'Rachel', 'rachel.imaginaire@example.com', 'operationnel', 'Data engineer depuis 6 ans, missions chez des clients du secteur banque.', 'Bordeaux', 'Disponible immédiatement', 450, 3),
   (13, 'Exemple', 'Sophie', 'sophie.exemple@example.com', 'senior', 'Data engineer depuis 7 ans, missions chez des clients du secteur industrie.', 'Nantes', 'Disponible à partir du 1er novembre 2026', 590, 4),
   (14, 'Fictif', 'Thomas', 'thomas.fictif@example.com', 'expert', 'Analytics engineer depuis 8 ans, missions chez des clients du secteur retail.', 'Saint-Denis (La Réunion)', 'Disponible dans 2 mois', 740, 5),
-  (15, 'Factice', 'Élodie', 'e.factice@example.com', 'operationnel', 'Analytics engineer depuis 9 ans, missions chez des clients du secteur télécom.', 'Lyon', 'En mission jusquen janvier 2027', 480, 1);
+  (15, 'Factice', 'Élodie', 'e.factice@example.com', 'operationnel', 'Analytics engineer depuis 9 ans, missions chez des clients du secteur télécom.', 'Lyon', 'En mission jusquen janvier 2027', 480, 1)
+) AS v(id, nom, prenom, moyen_contact, niveau, experiences_cles, ville, disponibilite, tjm, auteur_id);
 
 INSERT INTO profil_exterieur_technologie (profil_exterieur_id, technologie_id) VALUES
   (1, 2),
@@ -173,6 +188,9 @@ INSERT INTO opportunite_technologie (opportunite_id, technologie_id, est_princip
   (9, 10, FALSE),
   (10, 4, TRUE);
 
+-- Auteur des rattachements de contacts à une opportunité
+SELECT set_config('app.current_membre_id', '1', true);
+
 INSERT INTO opportunite_contact (opportunite_id, contact_id) VALUES
   (1, 5),
   (1, 10),
@@ -192,6 +210,8 @@ INSERT INTO opportunite_contact (opportunite_id, contact_id) VALUES
   (9, 24),
   (10, 2),
   (10, 3);
+
+SELECT set_config('app.current_membre_id', '', true);
 
 INSERT INTO profil_exterieur_opportunite (profil_exterieur_id, opportunite_id, sollicite_par_id, date_sollicitation, issue) VALUES
   (1, 2, 2, '2026-09-03', 'retenu'),
@@ -220,16 +240,11 @@ INSERT INTO note (opportunite_id, auteur_id, date_redaction, contenu) VALUES
   (8, 3, '2026-10-01 10:30:00+02', 'Projet reporté, à relancer au printemps.'),
   (9, 1, '2026-10-02 10:35:00+02', 'Relance prévue après la clôture budgétaire.');
 
-INSERT INTO journal_action (opportunite_id, profil_exterieur_id, auteur_id, date_action, type_action, commentaire) VALUES
-  (1, NULL, 3, '2026-10-01 11:10:00+02', 'positionnement', 'Positionnement de Camille.'),
-  (2, NULL, 5, '2026-10-02 11:17:00+02', 'positionnement', 'Positionnement d''Élodie.'),
-  (2, 2, 3, '2026-10-03 11:24:00+02', 'profil_exterieur_contacte', 'Profil extérieur sollicité pour la mission.'),
-  (5, NULL, 1, '2026-10-01 11:31:00+02', 'note', 'Note de cadrage ajoutée.');
+-- Le journal d'actions n'est pas écrit ici : les triggers le remplissent à chaque insertion ci-dessus.
 
--- Liens LinkedIn fictifs, dérivés du prénom et du nom
-UPDATE membre SET lien_linkedin = 'https://www.linkedin.com/in/' || lower(translate(prenom || '-' || nom, 'éèêëàâîïôöùûüç', 'eeeeaaiioouuuc'));
-UPDATE profil_exterieur SET lien_linkedin = 'https://www.linkedin.com/in/' || lower(translate(prenom || '-' || nom, 'éèêëàâîïôöùûüç', 'eeeeaaiioouuuc'));
-UPDATE contact SET lien_linkedin = 'https://www.linkedin.com/in/' || lower(translate(prenom || '-' || nom, 'éèêëàâîïôöùûüç', 'eeeeaaiioouuuc'));
+-- Liens LinkedIn fictifs des membres, dérivés du prénom et du nom sans accents
+-- (ceux des contacts et des profils extérieurs sont calculés à leur insertion)
+UPDATE membre SET lien_linkedin = 'https://www.linkedin.com/in/' || translate(lower(prenom || '-' || nom), 'éèêëàâîïôöùûüç', 'eeeeaaiioouuuc');
 
 -- Resynchronisation des séquences après insertion d'identifiants explicites
 SELECT setval(pg_get_serial_sequence('membre', 'id'), (SELECT max(id) FROM membre));

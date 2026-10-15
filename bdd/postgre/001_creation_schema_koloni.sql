@@ -649,4 +649,164 @@ CREATE TRIGGER trg_opportunite_verifie_qualificateur
     FOR EACH ROW
     EXECUTE FUNCTION fn_opportunite_verifie_qualificateur();
 
+-- -----------------------------------------------------------------------------
+-- TRIGGERS : alimentation automatique du journal d'actions
+-- -----------------------------------------------------------------------------
+-- L'auteur est le membre posé par SET LOCAL app.current_membre_id dans la transaction. 
+-- Pour une note, un positionnement ou une sollicitation, la ligne porte déjà son auteur, 
+-- qui sert de repli. Pour un contact, une entreprise ou un profil extérieur, 
+-- rien n'en porte : l'écriture est refusée sans auteur.
+-- Les changements de statut ne passent pas par ici : historique_statut s'en charge.
+
+CREATE FUNCTION fn_membre_courant(p_repli BIGINT DEFAULT NULL) RETURNS BIGINT AS $$
+DECLARE
+    v_membre_id BIGINT;
+BEGIN
+    -- NULLIF : sur une connexion déjà utilisée, la variable vaut '' et non NULL
+    v_membre_id := COALESCE(NULLIF(current_setting('app.current_membre_id', true), '')::BIGINT, p_repli);
+
+    IF v_membre_id IS NULL THEN
+        RAISE EXCEPTION
+            'app.current_membre_id doit être défini avant cette écriture (SET LOCAL app.current_membre_id = ...)';
+    END IF;
+
+    RETURN v_membre_id;
+END;
+$$ LANGUAGE plpgsql STABLE;
+
+COMMENT ON FUNCTION fn_membre_courant(BIGINT) IS
+    'Membre qui agit : celui de la transaction (SET LOCAL app.current_membre_id), à défaut le repli passé par le trigger. Lève une exception si aucun des deux n''est connu.';
+
+-- Positionnement : ajout, puis changement d'état (présenté, retenu, écarté, retiré)
+CREATE FUNCTION fn_journal_positionnement() RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        INSERT INTO journal_action (opportunite_id, auteur_id, type_action, commentaire)
+        VALUES (NEW.opportunite_id, fn_membre_courant(NEW.membre_id), 'positionnement', 'Positionnement ajouté');
+    ELSIF NEW.etat IS DISTINCT FROM OLD.etat THEN
+        INSERT INTO journal_action (opportunite_id, auteur_id, type_action, commentaire)
+        VALUES (NEW.opportunite_id, fn_membre_courant(NEW.membre_id),
+                CASE WHEN NEW.etat = 'presente' THEN 'presentation_profil' ELSE 'positionnement' END,
+                CASE WHEN NEW.etat = 'presente' THEN 'Profil présenté' ELSE 'Positionnement : ' || NEW.etat END);
+    END IF;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_journal_positionnement
+    AFTER INSERT OR UPDATE OF etat ON positionnement
+    FOR EACH ROW
+    EXECUTE FUNCTION fn_journal_positionnement();
+
+-- Note ajoutée sur une opportunité
+CREATE FUNCTION fn_journal_note() RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO journal_action (opportunite_id, auteur_id, type_action, commentaire)
+    VALUES (NEW.opportunite_id, fn_membre_courant(NEW.auteur_id), 'note', 'Note ajoutée');
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_journal_note
+    AFTER INSERT ON note
+    FOR EACH ROW
+    EXECUTE FUNCTION fn_journal_note();
+
+-- Profil extérieur sollicité pour une opportunité
+CREATE FUNCTION fn_journal_sollicitation() RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO journal_action (opportunite_id, profil_exterieur_id, auteur_id, type_action, commentaire)
+    VALUES (NEW.opportunite_id, NEW.profil_exterieur_id, fn_membre_courant(NEW.sollicite_par_id),
+            'profil_exterieur_contacte', 'Profil extérieur sollicité');
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_journal_sollicitation
+    AFTER INSERT ON profil_exterieur_opportunite
+    FOR EACH ROW
+    EXECUTE FUNCTION fn_journal_sollicitation();
+
+-- Fiche d'un profil extérieur modifiée (une modification qui ne change rien n'est pas journalisée)
+CREATE FUNCTION fn_journal_profil_exterieur() RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW IS DISTINCT FROM OLD THEN
+        INSERT INTO journal_action (profil_exterieur_id, auteur_id, type_action, commentaire)
+        VALUES (NEW.id, fn_membre_courant(), 'profil_exterieur_modifie', 'Profil extérieur modifié');
+    END IF;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_journal_profil_exterieur
+    AFTER UPDATE ON profil_exterieur
+    FOR EACH ROW
+    EXECUTE FUNCTION fn_journal_profil_exterieur();
+
+-- Contact créé ou modifié (hors opportunité : opportunite_id reste vide)
+CREATE FUNCTION fn_journal_contact() RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        INSERT INTO journal_action (contact_id, auteur_id, type_action, commentaire)
+        VALUES (NEW.id, fn_membre_courant(), 'contact_cree_modifie', 'Contact créé');
+    ELSIF NEW IS DISTINCT FROM OLD THEN
+        INSERT INTO journal_action (contact_id, auteur_id, type_action, commentaire)
+        VALUES (NEW.id, fn_membre_courant(), 'contact_cree_modifie', 'Contact modifié');
+    END IF;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_journal_contact
+    AFTER INSERT OR UPDATE ON contact
+    FOR EACH ROW
+    EXECUTE FUNCTION fn_journal_contact();
+
+-- Contact rattaché à une opportunité, ou retiré de celle-ci (correction d'un rattachement)
+CREATE FUNCTION fn_journal_opportunite_contact() RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        INSERT INTO journal_action (opportunite_id, contact_id, auteur_id, type_action, commentaire)
+        VALUES (NEW.opportunite_id, NEW.contact_id, fn_membre_courant(), 'contact_cree_modifie',
+                'Contact rattaché à l''opportunité');
+    ELSE
+        INSERT INTO journal_action (opportunite_id, contact_id, auteur_id, type_action, commentaire)
+        VALUES (OLD.opportunite_id, OLD.contact_id, fn_membre_courant(), 'contact_cree_modifie',
+                'Contact retiré de l''opportunité');
+    END IF;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_journal_opportunite_contact
+    AFTER INSERT OR DELETE ON opportunite_contact
+    FOR EACH ROW
+    EXECUTE FUNCTION fn_journal_opportunite_contact();
+
+-- Entreprise cliente créée ou modifiée
+CREATE FUNCTION fn_journal_entreprise_cliente() RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        INSERT INTO journal_action (entreprise_cliente_id, auteur_id, type_action, commentaire)
+        VALUES (NEW.id, fn_membre_courant(), 'entreprise_cree_modifiee', 'Entreprise créée');
+    ELSIF NEW IS DISTINCT FROM OLD THEN
+        INSERT INTO journal_action (entreprise_cliente_id, auteur_id, type_action, commentaire)
+        VALUES (NEW.id, fn_membre_courant(), 'entreprise_cree_modifiee', 'Entreprise modifiée');
+    END IF;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_journal_entreprise_cliente
+    AFTER INSERT OR UPDATE ON entreprise_cliente
+    FOR EACH ROW
+    EXECUTE FUNCTION fn_journal_entreprise_cliente();
+
 COMMIT;

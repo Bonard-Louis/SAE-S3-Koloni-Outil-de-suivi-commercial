@@ -192,6 +192,26 @@ fil affiché réunit les deux tables.
 | `contact_id` / `entreprise_cliente_id` / `profil_exterieur_id` | Objet touché par l'action. Chaque type d'action exige le sien (`chk_journal_cible`) : une ligne « contact créé ou modifié » dit de quel contact il s'agit. |
 | `type_action` | `positionnement`, `presentation_profil`, `note`, `profil_exterieur_contacte`, `profil_exterieur_modifie`, `contact_cree_modifie` ou `entreprise_cree_modifiee`. |
 
+Le journal se remplit tout seul, par des triggers : l'application n'a pas
+à l'écrire, et une écriture SQL directe (script, agent IA) y laisse
+aussi sa trace.
+
+| Événement | Type d'action |
+| --- | --- |
+| Positionnement ajouté, ou changement de son état | `positionnement` (`presentation_profil` si l'état devient « présenté ») |
+| Note ajoutée | `note` |
+| Profil extérieur sollicité pour une opportunité | `profil_exterieur_contacte` |
+| Fiche d'un profil extérieur modifiée | `profil_exterieur_modifie` |
+| Contact créé ou modifié, rattaché à une opportunité ou retiré d'une opportunité | `contact_cree_modifie` |
+| Entreprise cliente créée ou modifiée | `entreprise_cree_modifiee` |
+
+L'auteur est le membre posé par `SET LOCAL app.current_membre_id` dans la
+transaction. Pour une note, un positionnement ou une sollicitation, la
+ligne porte déjà son auteur, qui sert de repli. Pour un contact, une
+entreprise ou un profil extérieur, rien n'en porte : l'écriture est
+refusée si l'auteur manque. Une modification qui ne change aucune valeur
+n'est pas journalisée.
+
 ---
 
 ## Ce que ce script ne fait pas (volontairement)
