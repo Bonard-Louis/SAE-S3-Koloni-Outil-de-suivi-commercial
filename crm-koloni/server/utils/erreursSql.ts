@@ -26,6 +26,7 @@ const MESSAGES: Record<string, string> = {
   chk_contact_moyen_contact: 'Renseigner au moins un mail, un téléphone ou un lien LinkedIn',
   chk_membre_linkedin: 'Lien LinkedIn invalide',
   chk_opp_lien_annonce: 'Le lien de l\'annonce doit commencer par https://',
+  chk_opp_client_final_inconnu: 'Le secteur et la taille du client final ne s\'indiquent que si son entreprise n\'est pas choisie',
   chk_contact_linkedin: 'Lien LinkedIn invalide',
   chk_profil_ext_linkedin: 'Lien LinkedIn invalide'
 }

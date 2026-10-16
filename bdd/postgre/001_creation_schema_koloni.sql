@@ -214,7 +214,7 @@ CREATE TABLE opportunite (
     temperature                   VARCHAR(10),
     type_mission                  VARCHAR(50),
     niveau_recherche              VARCHAR(20),
-    client_final_nom              VARCHAR(255),
+    client_final_id               BIGINT        REFERENCES entreprise_cliente(id) ON DELETE RESTRICT,
     client_final_secteur          VARCHAR(150),
     client_final_taille           VARCHAR(50),
     apporteur_id                  BIGINT        NOT NULL REFERENCES membre(id) ON DELETE RESTRICT,
@@ -261,6 +261,9 @@ CREATE TABLE opportunite (
         CHECK (niveau_diffusion IN ('libre', 'reseau_perso', 'interne_strict')),
     CONSTRAINT chk_opp_lien_annonce
         CHECK (lien_annonce_exterieure IS NULL OR lien_annonce_exterieure LIKE 'https://%'),
+    -- Le secteur et la taille ne servent que si l'entreprise n'est pas connue : sinon ils viennent de l'entreprise liée
+    CONSTRAINT chk_opp_client_final_inconnu
+        CHECK (client_final_id IS NULL OR (client_final_secteur IS NULL AND client_final_taille IS NULL)),
     CONSTRAINT chk_opp_statut
         CHECK (statut IN ('signal', 'matching', 'propose', 'en_discussion',
                            'signe', 'perdu', 'en_pause')),
@@ -295,8 +298,12 @@ COMMENT ON COLUMN opportunite.source IS
     'Qui porte le besoin côté client : client, commercial (ESN) ou contact.';
 COMMENT ON COLUMN opportunite.temperature IS
     'Niveau de maturité de l''opportunité : chaud, tiede, ou NULL si non renseigné (cf. chk_opp_temperature). Facultatif, non requis pour la qualification Signal → Matching.';
-COMMENT ON COLUMN opportunite.client_final_nom IS
-    'Entreprise où se déroule la mission, si connue. Facultatif (souvent inconnu si le besoin passe par une ESN) : ne bloque jamais la publication. Distinct de la société du contact (cf. table contact).';
+COMMENT ON COLUMN opportunite.client_final_secteur IS
+    'Secteur d''activité du client final, uniquement quand son entreprise n''est pas connue (client_final_id vide). Sinon le secteur est celui de l''entreprise liée (cf. chk_opp_client_final_inconnu).';
+COMMENT ON COLUMN opportunite.client_final_taille IS
+    'Taille du client final, uniquement quand son entreprise n''est pas connue (client_final_id vide). Sinon la taille est celle de l''entreprise liée (cf. chk_opp_client_final_inconnu).';
+COMMENT ON COLUMN opportunite.client_final_id IS
+    'Entreprise où se déroule la mission, choisie parmi les entreprises clientes (cf. entreprise_cliente), si elle est connue. Facultatif (souvent inconnue si le besoin passe par une ESN) : ne bloque jamais la publication. Distinct de la société du contact (cf. table contact).';
 COMMENT ON COLUMN opportunite.apporteur_id IS
     'Membre qui amène l''opportunité. La relation client passe par lui, le moteur ou directement le candidat, selon mode_candidature.';
 COMMENT ON COLUMN opportunite.saisi_par_id IS
@@ -345,7 +352,7 @@ COMMENT ON COLUMN opportunite.date_qualification IS
 CREATE INDEX idx_opportunite_statut ON opportunite(statut);
 CREATE INDEX idx_opportunite_ville ON opportunite(ville);
 CREATE INDEX idx_opportunite_mode ON opportunite(mode);
-CREATE INDEX idx_opportunite_client_final ON opportunite(client_final_nom);
+CREATE INDEX idx_opportunite_client_final ON opportunite(client_final_id);
 CREATE INDEX idx_opportunite_date_signal ON opportunite(date_signal);
 CREATE INDEX idx_opportunite_date_relance ON opportunite(date_relance) WHERE statut = 'en_pause';
 CREATE INDEX idx_opportunite_apporteur ON opportunite(apporteur_id);

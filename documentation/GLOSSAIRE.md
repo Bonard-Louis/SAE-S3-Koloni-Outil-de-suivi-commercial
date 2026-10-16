@@ -88,8 +88,8 @@ technologie.
 
 Société (ESN ou client direct) réutilisable d'une opportunité à l'autre.
 Sert notamment au filtre « société du contact ». Distincte du client
-final d'une opportunité (cf. `opportunite.client_final_nom`), qui peut
-être inconnu et n'est stocké qu'en texte libre. Le nom est unique quelle
+final d'une opportunité (cf. `opportunite.client_final_id`), qui peut
+être inconnu et se choisit parmi ces entreprises. Le nom est unique quelle
 que soit la casse et les espaces autour (`uq_entreprise_cliente_nom_minuscule`).
 
 ## contact
@@ -132,7 +132,7 @@ opportunité au statut Signé : pas d'objet Mission distinct.
 | `saisi_par_id` | Membre qui a créé la fiche, si différent de l'apporteur. |
 | `moteur_id` | Membre qui recherche un profil hors collectif, le cas échéant. |
 | `preneur_membre_id` / `preneur_profil_exterieur_id` | Freelance retenu : membre du collectif OU profil extérieur, jamais les deux (`chk_opp_preneur_exclusif`). Renseigné à la clôture. |
-| `client_final_nom` | Texte libre, souvent inconnu (besoin passant par une ESN). Ne bloque jamais la publication (EF-04). Distinct de la société du contact (`entreprise_cliente`, liée via `contact`). |
+| `client_final_id` | Entreprise où se déroule la mission, choisie parmi les entreprises clientes (`entreprise_cliente`). Facultatif, souvent inconnu (besoin passant par une ESN) : ne bloque jamais la publication (EF-04). Distinct de la société du contact (liée via `contact`). `client_final_secteur` et `client_final_taille` ne servent que quand l'entreprise n'est pas connue : dès qu'elle est liée, ils doivent rester vides (`chk_opp_client_final_inconnu`) et le secteur comme la taille viennent de l'entreprise. |
 | `niveau_diffusion` | `libre`, `reseau_perso` (par défaut, EF-10) ou `interne_strict`. |
 | `lien_annonce_exterieure` | Lien du post qui ouvre l'opportunité à l'extérieur du collectif. Facultatif, doit commencer par `https://` (`chk_opp_lien_annonce`). |
 | `statut` | Un des 7 statuts. Transitions libres (saut, retour arrière, réouverture) : aucune contrainte de séquence en base, seul `historique_statut` journalise les changements. |
@@ -148,7 +148,7 @@ chez le client. Rien n'est stocké. Elle ne contient ni les opportunités en
 sont pas encore qualifiées.
 
 Index posés uniquement sur les critères de filtre listés section 3.1 du
-recueil : `statut`, `ville`, `mode`, `client_final_nom`, `date_signal`,
+recueil : `statut`, `ville`, `mode`, `client_final_id`, `date_signal`,
 et un index partiel sur `date_relance` pour la vue « en pause à
 relancer ». Le filtre par technologie s'appuie sur la table de liaison
 `opportunite_technologie`. Le filtre par société du contact s'appuie sur

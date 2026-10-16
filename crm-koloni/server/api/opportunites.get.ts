@@ -30,12 +30,13 @@ export default defineEventHandler(async (event) => {
       ) AS technologies,
       o.ville,
       o.mode,
-      o.client_final_nom AS client_final,
+      ec.nom AS client_final,
       m.prenom || ' ' || left(m.nom, 1) || '.' AS apporteur,
       o.temperature,
       to_char(o.date_signal, 'YYYY-MM-DD') AS date_signal
     FROM opportunite o
     JOIN membre m ON m.id = o.apporteur_id
+    LEFT JOIN entreprise_cliente ec ON ec.id = o.client_final_id
     ORDER BY o.date_signal DESC, o.id DESC
   `
 
