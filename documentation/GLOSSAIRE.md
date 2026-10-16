@@ -117,7 +117,7 @@ opportunité au statut Signé : pas d'objet Mission distinct.
 | `niveau_diffusion` | `libre`, `reseau_perso` (par défaut, EF-10) ou `interne_strict`. |
 | `lien_annonce_exterieure` | Lien du post qui ouvre l'opportunité à l'extérieur du collectif. Facultatif, doit commencer par `https://` (`chk_opp_lien_annonce`). |
 | `statut` | Un des 7 statuts. Transitions libres (saut, retour arrière, réouverture) : aucune contrainte de séquence en base, seul `historique_statut` journalise les changements. |
-| `raison_perte` | Obligatoire dès que `statut = perdu` (`chk_opp_raison_perte_obligatoire`). |
+| `raison_perte` | Obligatoire et non vide dès que `statut = perdu` (`chk_opp_raison_perte_obligatoire`). |
 | `date_relance` | Obligatoire dès que `statut = en_pause` (`chk_opp_date_relance_obligatoire`). |
 | `qualifiee_par_id` / `date_qualification` | Validation explicite de la qualification Signal → Matching. Renseignées ensemble (`chk_opp_qualification_complete`) et obligatoires au-delà de Signal, sauf `perdu` et `en_pause` qui restent possibles avant qualification (`chk_opp_qualifiee`). Le qualificateur est l'apporteur de l'opportunité ou un administrateur actif (trigger `trg_opportunite_verifie_qualificateur`). |
 
@@ -190,8 +190,17 @@ positionné ou non ; lisible par tous.
 
 Liste datée et signée des changements de statut d'une opportunité
 (EF-07/EF-08). `ancien_statut` est `NULL` pour l'entrée initiale
-(Signal). À alimenter par l'application (ou l'agent IA) à chaque
-changement, en même temps que la mise à jour de `opportunite.statut`.
+(Signal). Alimentée automatiquement par un trigger à chaque changement de
+`opportunite.statut`, sous l'auteur posé par `SET LOCAL app.current_membre_id`.
+
+| Colonne | Explication |
+| --- | --- |
+| `motif` | Raison de la perte saisie à ce changement, uniquement pour un passage en `perdu`. |
+| `date_relance` | Date de relance saisie à ce changement, uniquement pour un passage en `en_pause`. |
+
+Rouvrir puis reperdre une opportunité écrase `opportunite.raison_perte`, et
+sortir d'une pause efface `opportunite.date_relance` : chaque motif et chaque
+date de relance restent ici, sur la ligne du changement qui les a posés.
 
 ## journal_action
 

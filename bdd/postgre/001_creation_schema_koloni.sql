@@ -237,7 +237,7 @@ CREATE TABLE opportunite (
         CHECK (statut IN ('signal', 'matching', 'propose', 'en_discussion',
                            'signe', 'perdu', 'en_pause')),
     CONSTRAINT chk_opp_raison_perte_obligatoire
-        CHECK (statut <> 'perdu' OR raison_perte IS NOT NULL),
+        CHECK (statut <> 'perdu' OR btrim(coalesce(raison_perte, '')) <> ''),
     CONSTRAINT chk_opp_date_relance_obligatoire
         CHECK (statut <> 'en_pause' OR date_relance IS NOT NULL),
     CONSTRAINT chk_opp_cloture_obligatoire
@@ -488,6 +488,8 @@ CREATE TABLE historique_statut (
     opportunite_id    BIGINT      NOT NULL REFERENCES opportunite(id) ON DELETE RESTRICT,
     ancien_statut     VARCHAR(20),
     nouveau_statut    VARCHAR(20) NOT NULL,
+    motif             TEXT,
+    date_relance      DATE,
     auteur_id         BIGINT      NOT NULL REFERENCES membre(id) ON DELETE RESTRICT,
     date_changement   TIMESTAMPTZ NOT NULL DEFAULT now(),
 
@@ -503,6 +505,10 @@ COMMENT ON TABLE historique_statut IS
     'Historique daté et complet des changements de statut d''une opportunité, avec l''auteur de chaque changement. Alimentée automatiquement par le trigger trg_opportunite_historique_statut, y compris pour les écritures faites hors interface.';
 COMMENT ON COLUMN historique_statut.ancien_statut IS
     'NULL pour la toute première ligne (création de l''opportunité au statut signal).';
+COMMENT ON COLUMN historique_statut.motif IS
+    'Raison de la perte saisie à ce changement, uniquement pour un passage en perdu. Copiée par le trigger : rouvrir puis reperdre une opportunité écrase opportunite.raison_perte, mais chaque motif reste ici.';
+COMMENT ON COLUMN historique_statut.date_relance IS
+    'Date de relance saisie à ce changement, uniquement pour un passage en en_pause. Copiée par le trigger : chaque pause garde sa propre date.';
 
 CREATE INDEX idx_historique_statut_opportunite ON historique_statut(opportunite_id);
 
@@ -581,8 +587,11 @@ BEGIN
                 'app.current_membre_id doit être défini avant tout changement de statut (SET LOCAL app.current_membre_id = ...)';
         END IF;
 
-        INSERT INTO historique_statut (opportunite_id, ancien_statut, nouveau_statut, auteur_id)
-        VALUES (NEW.id, OLD.statut, NEW.statut, v_auteur_id);
+        INSERT INTO historique_statut (opportunite_id, ancien_statut, nouveau_statut, motif, date_relance, auteur_id)
+        VALUES (NEW.id, OLD.statut, NEW.statut,
+                CASE WHEN NEW.statut = 'perdu' THEN NEW.raison_perte END,
+                CASE WHEN NEW.statut = 'en_pause' THEN NEW.date_relance END,
+                v_auteur_id);
     END IF;
 
     RETURN NEW;
@@ -604,8 +613,11 @@ BEGIN
     -- Auteur = membre connecté ; à défaut, celui qui a saisi l'opportunité, puis son apporteur
     v_auteur_id := COALESCE(NULLIF(current_setting('app.current_membre_id', true), '')::BIGINT, NEW.saisi_par_id, NEW.apporteur_id);
 
-    INSERT INTO historique_statut (opportunite_id, ancien_statut, nouveau_statut, auteur_id)
-    VALUES (NEW.id, NULL, NEW.statut, v_auteur_id);
+    INSERT INTO historique_statut (opportunite_id, ancien_statut, nouveau_statut, motif, date_relance, auteur_id)
+    VALUES (NEW.id, NULL, NEW.statut,
+            CASE WHEN NEW.statut = 'perdu' THEN NEW.raison_perte END,
+            CASE WHEN NEW.statut = 'en_pause' THEN NEW.date_relance END,
+            v_auteur_id);
 
     RETURN NEW;
 END;
