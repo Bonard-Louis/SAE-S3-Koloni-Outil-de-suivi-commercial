@@ -126,7 +126,7 @@ Le client a transmis par mail, pour inspiration, la liste des colonnes de sa tab
 - Se connecter à l'application (un compte par personne, rôle administrateur ou membre) ; aucune page ni donnée n'est consultable sans connexion.
 - Publier une opportunité via un formulaire structuré (template fourni par le client). Une opportunité peut être publiée incomplète : elle démarre en Signal et passe en Matching une fois qualifiée (interlocuteur, besoin, TJM et mode de candidature connus). Le remplissage des champs ne suffit pas : la qualification est un acte explicite, posé par l'apporteur ou un administrateur, qui atteste que l'opportunité est qualifiée. Une opportunité ne peut pas dépasser Signal sans avoir été qualifiée, sauf pour passer en Perdu ou en En pause.
 - Consulter la liste des opportunités et se positionner sur l'une d'entre elles. Plusieurs membres peuvent se positionner sur une même opportunité tant qu'elle est en Signal ou en Matching ; se positionner signale un intérêt et ne réserve pas l'opportunité. L'apporteur (ou le moteur) choisit le ou les profils présentés au client, et le passage en Proposé ne masque pas l'opportunité.
-- À profil équivalent, un membre passe devant un profil extérieur au moment du choix. Les membres disposent d'un délai (2 jours à ce jour, règle en cours de rédaction au sein du collectif) avant que l'opportunité ne s'ouvre à l'extérieur du collectif ; l'outil affiche la date à partir de laquelle elle s'ouvre. Cette ouverture dépend en outre du niveau de diffusion et de l'accord de l'apporteur.
+- À profil équivalent, un membre passe devant un profil extérieur au moment du choix. Les membres disposent d'un délai (2 jours à ce jour, règle en cours de rédaction au sein du collectif) avant que l'opportunité ne s'ouvre à l'extérieur du collectif, ce délai étant compté en jours calendaires à partir de la date de qualification ; l'outil affiche la date à partir de laquelle elle s'ouvre. Une opportunité en Interne strict ne s'ouvre jamais à l'extérieur. Cette ouverture dépend en outre du niveau de diffusion et de l'accord de l'apporteur.
 - Rechercher et filtrer les opportunités (technologie ou domaine, statut, ville, mode, client final, société du contact, date du signal).
 - Consulter une vue des opportunités signées, une vue des opportunités perdues avec la raison de la perte, et une vue des opportunités en pause dont la date de relance est atteinte.
 - Ajouter une note à une opportunité : tout membre peut en écrire une, et les notes sont lisibles par tous.
@@ -137,6 +137,7 @@ Le client a transmis par mail, pour inspiration, la liste des colonnes de sa tab
 - Clôturer une opportunité signée en renseignant le preneur, le TJM preneur, le nombre de jours et la date de clôture.
 - Gérer les contacts associés à une opportunité (une même personne pouvant être liée à plusieurs opportunités dans le temps), rattachés à une entreprise cliente.
 - Enregistrer et consulter les profils contactés hors collectif, sous forme de fiche technique structurée.
+- Consulter une liste unique des consultants, qui réunit les membres du collectif et les profils contactés hors collectif. Un profil extérieur qui adhère au collectif est relié à son compte et n'apparaît plus qu'une fois ; ce lien est posé par une personne, jamais déduit du nom. Dans l'interface, ces personnes sont regroupées sous « Consultants » et les contacts côté client sous « Contacts clients ».
 - Gérer son propre profil membre (informations personnelles, disponibilité, notes).
 - Gérer les comptes utilisateurs (création, rôle, désactivation d'un membre sans effacer ses traces), réservé aux administrateurs.
 - Distinguer les droits d'action administrateur / membre.
@@ -222,7 +223,8 @@ _Tout membre peut créer et modifier les contacts et les entreprises clientes : 
 | Timing | Urgence de la mission (urgent / < 1 mois / > 1 mois). |
 | Mode de candidature | Via apporteur / contact direct recruteur / via moteur, avec précision (nom, mail, canal). |
 | Niveau de diffusion | Choisi par l'apporteur. **Libre** : relais LinkedIn et posts publics bienvenus. **Réseau perso** : recommandation de personne à personne, sans publication ni contact d'autres ESN. **Interne strict** : membres du collectif uniquement. Sans choix, Réseau perso s'applique. |
-| Date d'ouverture à l'extérieur | Date à partir de laquelle l'opportunité peut s'ouvrir hors collectif : date de publication augmentée du délai laissé aux membres (2 jours à ce jour, règle en cours de rédaction au sein du collectif). Affichée à titre d'information ; sans objet pour une opportunité en « Interne strict ». |
+| Date d'ouverture à l'extérieur | Date à partir de laquelle l'opportunité peut s'ouvrir hors collectif : date de qualification augmentée du délai laissé aux membres (2 jours calendaires à ce jour, règle en cours de rédaction au sein du collectif). Calculée, affichée à titre d'information ; sans objet pour une opportunité en « Interne strict » ou pas encore qualifiée. |
+| Lien de l'annonce à l'extérieur | Lien du post qui ouvre l'opportunité à l'extérieur du collectif, renseigné quand elle est relayée. Facultatif. |
 | Statut | Un des 7 statuts définis (voir ci-dessous). |
 | Qualifiée par, date de qualification | Membre (apporteur ou administrateur) qui a validé la qualification, et date de cette validation. Obligatoires au-delà du statut « Signal », sauf pour « Perdu » et « En pause ». |
 | Date du signal | Date de détection de l'opportunité. |
@@ -490,7 +492,7 @@ Freelance du collectif Koloni, susceptible de se positionner sur une opportunit�
 
 ### UC14 — Consulter la base de profils contactés hors collectif
 >
-> En tant que membre, je veux consulter les profils déjà contactés hors collectif, afin de repérer un profil qualifié à recontacter en priorité plutôt que de repartir d'une recherche à zéro.
+> En tant que membre, je veux consulter les profils déjà contactés hors collectif, afin de repérer un profil qualifié à recontacter en priorité plutôt que de repartir d'une recherche à zéro. Je les retrouve dans une liste unique avec les membres du collectif, où une personne n'apparaît qu'une fois.
 
 ### UC15 — Gérer son profil membre
 >

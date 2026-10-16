@@ -136,7 +136,7 @@ Chaque exigence est rattachée à un cas d'utilisation (UC) du recueil de besoin
 | EF-07 | Changement de statut parmi les 7 statuts, transitions libres (saut, retour en arrière, réouverture), horodatage automatique. Raison obligatoire au passage en Perdu, date de relance obligatoire au passage en En pause. | UC9 | O | V1 |
 | EF-08 | Historique complet et daté des changements de statut, avec l'auteur de chaque changement. | UC11 | O | V1 |
 | EF-09 | Aucune suppression physique d'une opportunité, y compris signée ou perdue. | — | O | V1 |
-| EF-10 | Niveau de diffusion (Libre, Réseau perso, Interne strict ; Réseau perso par défaut) et affichage de la date d'ouverture à l'extérieur du collectif, calculée à partir du délai laissé aux membres (2 jours à ce jour). | UC2 | O | V1 |
+| EF-10 | Niveau de diffusion (Libre, Réseau perso, Interne strict ; Réseau perso par défaut) et affichage de la date d'ouverture à l'extérieur du collectif, calculée à partir de la date de qualification et du délai laissé aux membres (2 jours calendaires à ce jour), sans objet en Interne strict ou tant que l'opportunité n'est pas qualifiée. Lien de l'annonce à l'extérieur facultatif. | UC2 | O | V1 |
 | EF-11 | Clôture d'une opportunité signée : preneur, TJM preneur, nombre de jours, date de clôture. | UC10 | O | V2 |
 | EF-12 | Recherche et filtres : technologie ou domaine, statut, ville, mode, client final, société du contact, date du signal. | UC5 | O | V3 |
 | EF-13 | Vues dédiées : opportunités signées, opportunités perdues avec raison de la perte, opportunités en pause dont la date de relance est atteinte. | UC5 | O | V3 |
@@ -157,7 +157,7 @@ Chaque exigence est rattachée à un cas d'utilisation (UC) du recueil de besoin
 | --- | --- | --- | :---: | :---: |
 | EF-19 | Gestion des contacts liés à une opportunité et des entreprises clientes. Un contact peut être lié à plusieurs opportunités. Tout membre peut les créer et les modifier. | UC8 | O | V1 |
 | EF-20 | Enregistrement d'un profil contacté hors collectif sous forme de fiche structurée, lié à une ou plusieurs opportunités, avec, pour chacune, le membre qui l'a sollicité, la date et l'issue de la sollicitation. | UC13 | O | V3 |
-| EF-21 | Consultation de la base des profils contactés hors collectif. | UC14 | O | V3 |
+| EF-21 | Consultation de la base des profils contactés hors collectif, dans une liste unique des consultants avec les membres du collectif. Un profil extérieur relié à un compte membre n'apparaît qu'une fois. | UC14 | O | V3 |
 
 ### 3.5 Profil membre
 
