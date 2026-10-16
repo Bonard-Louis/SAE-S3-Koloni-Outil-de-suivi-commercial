@@ -60,19 +60,43 @@ COMMENT ON COLUMN membre.mot_de_passe_hash IS
     'Mot de passe haché (scrypt, format PHC), jamais en clair. NULL = connexion impossible.';
 
 -- -----------------------------------------------------------------------------
+-- FAMILLE DE TECHNOLOGIES
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE famille_technologie (
+    id    BIGSERIAL PRIMARY KEY,
+    nom   VARCHAR(50) NOT NULL,
+
+    -- Pas de nom vide, ni d'espace au début ou à la fin
+    CONSTRAINT chk_famille_technologie_nom
+        CHECK (btrim(nom) <> '' AND nom = btrim(nom))
+);
+
+-- Unique quelle que soit la casse et les espaces autour : « BI » et « bi » sont la même famille
+CREATE UNIQUE INDEX uq_famille_technologie_nom_minuscule ON famille_technologie (lower(btrim(nom)));
+
+COMMENT ON TABLE famille_technologie IS
+    'Famille de technologies (ETL, BI, Data warehouse…) : c''est le « domaine » du filtre des opportunités. Liste de référence partagée par les technologies.';
+
+-- -----------------------------------------------------------------------------
 -- TECHNOLOGIE
 -- -----------------------------------------------------------------------------
 
 CREATE TABLE technologie (
-    id    BIGSERIAL PRIMARY KEY,
-    nom   VARCHAR(100) NOT NULL
+    id          BIGSERIAL PRIMARY KEY,
+    nom         VARCHAR(100) NOT NULL,
+    famille_id  BIGINT REFERENCES famille_technologie(id) ON DELETE RESTRICT
 );
 
 -- Unique quelle que soit la casse et les espaces autour : « Python », « python » et « Python  » sont la même technologie
 CREATE UNIQUE INDEX uq_technologie_nom_minuscule ON technologie (lower(btrim(nom)));
 
+CREATE INDEX idx_technologie_famille ON technologie(famille_id);
+
 COMMENT ON TABLE technologie IS
     'Liste de valeurs réutilisable (ex. Talend, Power BI, Python), utilisée par les opportunités et les profils extérieurs, et servant de filtre.';
+COMMENT ON COLUMN technologie.famille_id IS
+    'Famille de la technologie (cf. famille_technologie), utilisée pour filtrer les opportunités par domaine. Une seule famille par technologie. Facultative.';
 
 -- -----------------------------------------------------------------------------
 -- ENTREPRISE CLIENTE

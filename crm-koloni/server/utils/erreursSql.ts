@@ -15,6 +15,8 @@ const MESSAGES: Record<string, string> = {
   uq_technologie_nom_minuscule: 'Cette technologie existe déjà',
   uq_entreprise_cliente_nom_minuscule: 'Cette entreprise existe déjà',
   uq_contact_linkedin_minuscule: 'Un contact existe déjà avec ce lien LinkedIn',
+  uq_famille_technologie_nom_minuscule: 'Cette famille de technologies existe déjà',
+  chk_famille_technologie_nom: 'Le nom de la famille ne peut pas être vide ni commencer ou finir par un espace',
   uq_positionnement_membre_opportunite: 'Ce membre est déjà positionné sur cette opportunité',
   chk_opp_raison_perte_obligatoire: 'La raison de la perte est obligatoire',
   chk_opp_date_relance_obligatoire: 'La date de relance est obligatoire pour une opportunité en pause',

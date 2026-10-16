@@ -33,18 +33,19 @@ Références :
 ## Plan du script (dans l'ordre de création)
 
 1. `membre` — profil utilisateur du collectif
-2. `technologie` — liste de référence partagée
-3. `entreprise_cliente` — sociétés (ESN ou client direct)
-4. `contact` — interlocuteur chez le client, lié à une entreprise
-5. `profil_exterieur` — profil contacté hors collectif
-6. `opportunite` — cœur du modèle, avec ses index de recherche/filtre
-7. Tables de liaison n-n : `opportunite_technologie`,
+2. `famille_technologie` — familles de technologies (le « domaine » du filtre)
+3. `technologie` — liste de référence partagée
+4. `entreprise_cliente` — sociétés (ESN ou client direct)
+5. `contact` — interlocuteur chez le client, lié à une entreprise
+6. `profil_exterieur` — profil contacté hors collectif
+7. `opportunite` — cœur du modèle, avec ses index de recherche/filtre
+8. Tables de liaison n-n : `opportunite_technologie`,
    `profil_exterieur_technologie`, `profil_exterieur_opportunite`,
    `opportunite_contact`
-8. `positionnement` — intérêt d'un membre sur une opportunité
-9. `note` — fil de notes sur une opportunité
-10. `historique_statut` — traçabilité datée des changements de statut
-11. `journal_action` — qui a fait quoi, y compris hors interface
+9. `positionnement` — intérêt d'un membre sur une opportunité
+10. `note` — fil de notes sur une opportunité
+11. `historique_statut` — traçabilité datée des changements de statut
+12. `journal_action` — qui a fait quoi, y compris hors interface
 
 ---
 
@@ -63,6 +64,14 @@ propres opportunités, apporteur ou moteur.
 | `actif` | `FALSE` = compte désactivé. Ne supprime jamais la ligne : les traces (positionnements, notes, journal) restent visibles (EF-02). |
 | `ville` | Champ texte unique ; `chk_membre_ville_format` rejette une chaîne vide ou faite uniquement d'espaces, comme validation a minima demandée par le recueil. |
 
+## famille_technologie
+
+Famille de technologies (ETL, BI, Data warehouse…) : c'est le « domaine »
+du filtre des opportunités (EF-12). Liste de référence partagée par les
+technologies. Le nom est unique quelle que soit la casse et les espaces
+autour (`uq_famille_technologie_nom_minuscule`) : « BI » et « bi » sont la
+même famille. Renommer une famille se fait en une seule ligne.
+
 ## technologie
 
 Liste de référence des technologies (ex. Talend, Power BI, Python),
@@ -70,6 +79,10 @@ réutilisée par `opportunite` et `profil_exterieur`, et servant aux
 filtres. Le nom est unique quelle que soit la casse et les espaces autour
 (`uq_technologie_nom_minuscule`) : « Python » et « python » sont la même
 technologie.
+
+| Colonne | Explication |
+| --- | --- |
+| `famille_id` | Famille de la technologie (`famille_technologie`), utilisée pour filtrer les opportunités par domaine. Une seule famille par technologie, facultative. |
 
 ## entreprise_cliente
 

@@ -17,17 +17,25 @@ INSERT INTO membre (id, nom, prenom, mail, telephone, notes, role, ville, dispon
   (6, 'Modèle', 'Fabien', 'fabien.modele@example.com', '0601020306', 'Consultant BI freelance (ancien membre du collectif)', 'membre', 'Rennes', 'inconnu', NULL, NULL, FALSE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg');
 
 -- TECHNOLOGIES
-INSERT INTO technologie (id, nom) VALUES
-  (1, 'Talend'),
-  (2, 'Power BI'),
-  (3, 'Python'),
-  (4, 'SQL'),
-  (5, 'dbt'),
-  (6, 'Snowflake'),
-  (7, 'Azure Data Factory'),
-  (8, 'Tableau'),
-  (9, 'Airflow'),
-  (10, 'Qlik Sense');
+INSERT INTO famille_technologie (id, nom) VALUES
+  (1, 'ETL'),
+  (2, 'BI'),
+  (3, 'Langage'),
+  (4, 'Data warehouse'),
+  (5, 'Transformation'),
+  (6, 'Orchestration');
+
+INSERT INTO technologie (id, nom, famille_id) VALUES
+  (1, 'Talend', 1),
+  (2, 'Power BI', 2),
+  (3, 'Python', 3),
+  (4, 'SQL', 3),
+  (5, 'dbt', 5),
+  (6, 'Snowflake', 4),
+  (7, 'Azure Data Factory', 1),
+  (8, 'Tableau', 2),
+  (9, 'Airflow', 6),
+  (10, 'Qlik Sense', 2);
 
 -- Auteur des créations d'entreprises et de contacts : le journal l'exige (SET LOCAL, valable jusqu'à la fin de la transaction)
 SELECT set_config('app.current_membre_id', '1', true);
@@ -247,6 +255,7 @@ UPDATE membre SET lien_linkedin = 'https://www.linkedin.com/in/' || translate(lo
 
 -- Resynchronisation des séquences après insertion d'identifiants explicites
 SELECT setval(pg_get_serial_sequence('membre', 'id'), (SELECT max(id) FROM membre));
+SELECT setval(pg_get_serial_sequence('famille_technologie', 'id'), (SELECT max(id) FROM famille_technologie));
 SELECT setval(pg_get_serial_sequence('technologie', 'id'), (SELECT max(id) FROM technologie));
 SELECT setval(pg_get_serial_sequence('entreprise_cliente', 'id'), (SELECT max(id) FROM entreprise_cliente));
 SELECT setval(pg_get_serial_sequence('contact', 'id'), (SELECT max(id) FROM contact));
