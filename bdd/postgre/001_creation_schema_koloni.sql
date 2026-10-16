@@ -206,6 +206,7 @@ CREATE TABLE opportunite (
     mode_candidature              VARCHAR(30),
     mode_candidature_precision    VARCHAR(255),
     niveau_diffusion              VARCHAR(20)   NOT NULL DEFAULT 'reseau_perso',
+    lien_annonce_exterieure       VARCHAR(500),
     statut                        VARCHAR(20)   NOT NULL DEFAULT 'signal',
     date_signal                   DATE          NOT NULL DEFAULT CURRENT_DATE,
     date_cloture                  DATE,
@@ -230,6 +231,8 @@ CREATE TABLE opportunite (
                ('via_apporteur', 'contact_direct_recruteur', 'via_moteur')),
     CONSTRAINT chk_opp_niveau_diffusion
         CHECK (niveau_diffusion IN ('libre', 'reseau_perso', 'interne_strict')),
+    CONSTRAINT chk_opp_lien_annonce
+        CHECK (lien_annonce_exterieure IS NULL OR lien_annonce_exterieure LIKE 'https://%'),
     CONSTRAINT chk_opp_statut
         CHECK (statut IN ('signal', 'matching', 'propose', 'en_discussion',
                            'signe', 'perdu', 'en_pause')),
@@ -294,6 +297,8 @@ COMMENT ON COLUMN opportunite.nombre_jours IS
     'Nombre de jours effectif de la mission, renseigné à la clôture (distinct de duree_annoncee_mois, issue du template).';
 COMMENT ON COLUMN opportunite.niveau_diffusion IS
     'Choisi par l''apporteur : libre (relais public bienvenu), reseau_perso (défaut, recommandation de personne à personne), interne_strict (membres du collectif uniquement).';
+COMMENT ON COLUMN opportunite.lien_annonce_exterieure IS
+    'Lien du post qui ouvre l''opportunité à l''extérieur du collectif, renseigné quand elle est relayée. Facultatif ; doit commencer par https:// (cf. chk_opp_lien_annonce).';
 COMMENT ON COLUMN opportunite.statut IS
     'Un des 7 statuts du cycle de vie. Transitions libres (saut, retour arrière, réouverture) : voir table historique_statut pour la traçabilité datée.';
 COMMENT ON COLUMN opportunite.date_signal IS

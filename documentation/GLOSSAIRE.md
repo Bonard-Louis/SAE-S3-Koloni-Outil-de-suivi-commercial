@@ -115,6 +115,7 @@ opportunité au statut Signé : pas d'objet Mission distinct.
 | `preneur_membre_id` / `preneur_profil_exterieur_id` | Freelance retenu : membre du collectif OU profil extérieur, jamais les deux (`chk_opp_preneur_exclusif`). Renseigné à la clôture. |
 | `client_final_nom` | Texte libre, souvent inconnu (besoin passant par une ESN). Ne bloque jamais la publication (EF-04). Distinct de la société du contact (`entreprise_cliente`, liée via `contact`). |
 | `niveau_diffusion` | `libre`, `reseau_perso` (par défaut, EF-10) ou `interne_strict`. |
+| `lien_annonce_exterieure` | Lien du post qui ouvre l'opportunité à l'extérieur du collectif. Facultatif, doit commencer par `https://` (`chk_opp_lien_annonce`). |
 | `statut` | Un des 7 statuts. Transitions libres (saut, retour arrière, réouverture) : aucune contrainte de séquence en base, seul `historique_statut` journalise les changements. |
 | `raison_perte` | Obligatoire dès que `statut = perdu` (`chk_opp_raison_perte_obligatoire`). |
 | `date_relance` | Obligatoire dès que `statut = en_pause` (`chk_opp_date_relance_obligatoire`). |

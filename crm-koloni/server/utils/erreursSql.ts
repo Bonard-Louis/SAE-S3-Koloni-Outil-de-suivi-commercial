@@ -21,6 +21,7 @@ const MESSAGES: Record<string, string> = {
   chk_opp_preneur_exclusif: 'Le preneur est soit un membre, soit un profil extérieur, pas les deux',
   chk_contact_moyen_contact: 'Renseigner au moins un mail, un téléphone ou un lien LinkedIn',
   chk_membre_linkedin: 'Lien LinkedIn invalide',
+  chk_opp_lien_annonce: 'Le lien de l\'annonce doit commencer par https://',
   chk_contact_linkedin: 'Lien LinkedIn invalide',
   chk_profil_ext_linkedin: 'Lien LinkedIn invalide'
 }
