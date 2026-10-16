@@ -68,8 +68,8 @@ CREATE TABLE technologie (
     nom   VARCHAR(100) NOT NULL
 );
 
--- Unique quelle que soit la casse : « Python » et « python » sont la même technologie
-CREATE UNIQUE INDEX uq_technologie_nom_minuscule ON technologie (lower(nom));
+-- Unique quelle que soit la casse et les espaces autour : « Python », « python » et « Python  » sont la même technologie
+CREATE UNIQUE INDEX uq_technologie_nom_minuscule ON technologie (lower(btrim(nom)));
 
 COMMENT ON TABLE technologie IS
     'Liste de valeurs réutilisable (ex. Talend, Power BI, Python), utilisée par les opportunités et les profils extérieurs, et servant de filtre.';
@@ -87,13 +87,13 @@ CREATE TABLE entreprise_cliente (
     date_creation  TIMESTAMPTZ  NOT NULL DEFAULT now()
 );
 
--- Unique quelle que soit la casse : « Capgemini » et « capgemini » sont la même société
-CREATE UNIQUE INDEX uq_entreprise_cliente_nom_minuscule ON entreprise_cliente (lower(nom));
+-- Unique quelle que soit la casse et les espaces autour : « Capgemini », « capgemini » et « Capgemini  » sont la même société
+CREATE UNIQUE INDEX uq_entreprise_cliente_nom_minuscule ON entreprise_cliente (lower(btrim(nom)));
 
 COMMENT ON TABLE entreprise_cliente IS
     'Société (ESN ou client direct) à laquelle sont rattachés les contacts. Réutilisable d''une opportunité à l''autre, sert au filtre "société du contact".';
 COMMENT ON COLUMN entreprise_cliente.nom IS
-    'Unique quelle que soit la casse : évite la création de doublons lors de la saisie répétée d''une même société par différents membres.';
+    'Unique quelle que soit la casse et les espaces autour : évite la création de doublons lors de la saisie répétée d''une même société par différents membres.';
 
 -- -----------------------------------------------------------------------------
 -- CONTACT
@@ -130,6 +130,10 @@ COMMENT ON COLUMN contact.entreprise_cliente_id IS
     'Nullable : le contact peut être saisi avant que son entreprise soit connue. À renseigner dès que possible, recommandé mais non bloquant.';
 
 CREATE INDEX idx_contact_entreprise ON contact(entreprise_cliente_id);
+
+-- Un même profil LinkedIn ne peut pas désigner deux contacts, quelle que soit la casse du lien.
+-- Plusieurs contacts sans lien LinkedIn restent possibles.
+CREATE UNIQUE INDEX uq_contact_linkedin_minuscule ON contact (lower(lien_linkedin)) WHERE lien_linkedin IS NOT NULL;
 
 -- -----------------------------------------------------------------------------
 -- PROFIL EXTERIEUR (contacté hors collectif)

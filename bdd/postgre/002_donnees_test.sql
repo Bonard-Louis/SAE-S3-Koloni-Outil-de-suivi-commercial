@@ -79,8 +79,7 @@ FROM (VALUES
   (25, 'Imaginaire', 'Aurélie', 'Directeur associé', 11, 'aurelie.imaginaire@example.com', NULL),
   (26, 'Exemple', 'Bruno', 'Fondatrice', 2, 'bruno.exemple@example.com', NULL),
   (27, 'Fictif', 'Chloé', 'Directeur associé', 3, 'chloe.fictif@example.com', '0610206739'),
-  (28, 'Démo', 'Denis', 'Responsable partenariats', 8, 'denis.demo@example.com', NULL),
-  (29, 'Imaginaire', 'Béatrice', 'Responsable BI', 5, 'b.imaginaire@example.com', NULL)
+  (28, 'Démo', 'Denis', 'Responsable partenariats', 8, 'denis.demo@example.com', NULL)
 ) AS v(id, nom, prenom, role, entreprise_cliente_id, mail, telephone);
 
 -- La suite n'impose plus d'auteur : chaque note, positionnement, sollicitation et opportunité porte le sien

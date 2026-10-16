@@ -14,6 +14,7 @@ const MESSAGES: Record<string, string> = {
   uq_membre_mail_minuscule: 'Un compte existe déjà avec cette adresse mail',
   uq_technologie_nom_minuscule: 'Cette technologie existe déjà',
   uq_entreprise_cliente_nom_minuscule: 'Cette entreprise existe déjà',
+  uq_contact_linkedin_minuscule: 'Un contact existe déjà avec ce lien LinkedIn',
   uq_positionnement_membre_opportunite: 'Ce membre est déjà positionné sur cette opportunité',
   chk_opp_raison_perte_obligatoire: 'La raison de la perte est obligatoire',
   chk_opp_date_relance_obligatoire: 'La date de relance est obligatoire pour une opportunité en pause',

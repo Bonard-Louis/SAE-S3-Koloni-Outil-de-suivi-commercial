@@ -67,20 +67,26 @@ propres opportunités, apporteur ou moteur.
 
 Liste de référence des technologies (ex. Talend, Power BI, Python),
 réutilisée par `opportunite` et `profil_exterieur`, et servant aux
-filtres.
+filtres. Le nom est unique quelle que soit la casse et les espaces autour
+(`uq_technologie_nom_minuscule`) : « Python » et « python » sont la même
+technologie.
 
 ## entreprise_cliente
 
 Société (ESN ou client direct) réutilisable d'une opportunité à l'autre.
 Sert notamment au filtre « société du contact ». Distincte du client
 final d'une opportunité (cf. `opportunite.client_final_nom`), qui peut
-être inconnu et n'est stocké qu'en texte libre.
+être inconnu et n'est stocké qu'en texte libre. Le nom est unique quelle
+que soit la casse et les espaces autour (`uq_entreprise_cliente_nom_minuscule`).
 
 ## contact
 
 Interlocuteur chez le client. Peut être lié à plusieurs opportunités dans
 le temps (cf. `opportunite_contact`). Modifiable par tout membre (droits
 ouverts par défaut — cf. question 1 du client, section 12 du recueil).
+Un même lien LinkedIn ne peut désigner qu'un seul contact, quelle que soit
+la casse (`uq_contact_linkedin_minuscule`) ; plusieurs contacts sans lien
+restent possibles.
 
 ## profil_exterieur
 
