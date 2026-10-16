@@ -206,7 +206,6 @@ CREATE TABLE opportunite (
     mode_candidature              VARCHAR(30),
     mode_candidature_precision    VARCHAR(255),
     niveau_diffusion              VARCHAR(20)   NOT NULL DEFAULT 'reseau_perso',
-    date_ouverture_exterieur      DATE,
     statut                        VARCHAR(20)   NOT NULL DEFAULT 'signal',
     date_signal                   DATE          NOT NULL DEFAULT CURRENT_DATE,
     date_cloture                  DATE,
@@ -295,8 +294,6 @@ COMMENT ON COLUMN opportunite.nombre_jours IS
     'Nombre de jours effectif de la mission, renseigné à la clôture (distinct de duree_annoncee_mois, issue du template).';
 COMMENT ON COLUMN opportunite.niveau_diffusion IS
     'Choisi par l''apporteur : libre (relais public bienvenu), reseau_perso (défaut, recommandation de personne à personne), interne_strict (membres du collectif uniquement).';
-COMMENT ON COLUMN opportunite.date_ouverture_exterieur IS
-    'Date de publication + délai laissé aux membres (2 jours à ce jour) avant ouverture hors collectif. Informative uniquement, sans objet en niveau_diffusion = interne_strict.';
 COMMENT ON COLUMN opportunite.statut IS
     'Un des 7 statuts du cycle de vie. Transitions libres (saut, retour arrière, réouverture) : voir table historique_statut pour la traçabilité datée.';
 COMMENT ON COLUMN opportunite.date_signal IS
@@ -411,6 +408,20 @@ WHERE p.membre_id IS NULL;
 
 COMMENT ON VIEW consultant IS
     'Tous les consultants en une liste : membres du collectif (origine membre) et profils extérieurs pas encore membres (origine exterieur). La disponibilité d''un membre est un état (inconnu, en_recherche, a_l_ecoute, en_mission) ; celle d''un profil extérieur est un texte libre.';
+
+-- Date à partir de laquelle une opportunité peut s'ouvrir hors du collectif : la date de qualification
+-- plus le délai laissé aux membres (2 jours calendaires à ce jour, règle encore en cours de rédaction
+-- chez le client). Rien n'est stocké. La date de qualification est lue à l'heure de Paris : sans cela,
+-- le jour dépendrait du fuseau de la session. Une opportunité en interne strict ne s'ouvre jamais à
+-- l'extérieur, et une opportunité non qualifiée n'a pas encore de date.
+CREATE VIEW opportunite_ouverture AS
+SELECT id,
+       (date_qualification AT TIME ZONE 'Europe/Paris')::date + 2 AS date_ouverture_exterieur
+FROM opportunite
+WHERE niveau_diffusion <> 'interne_strict' AND date_qualification IS NOT NULL;
+
+COMMENT ON VIEW opportunite_ouverture IS
+    'Date d''ouverture à l''extérieur du collectif, calculée : date de qualification + 2 jours calendaires. Absente pour une opportunité en interne_strict ou pas encore qualifiée.';
 
 CREATE TABLE opportunite_contact (
     opportunite_id  BIGINT NOT NULL REFERENCES opportunite(id) ON DELETE RESTRICT,

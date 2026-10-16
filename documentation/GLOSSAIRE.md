@@ -115,11 +115,17 @@ opportunité au statut Signé : pas d'objet Mission distinct.
 | `preneur_membre_id` / `preneur_profil_exterieur_id` | Freelance retenu : membre du collectif OU profil extérieur, jamais les deux (`chk_opp_preneur_exclusif`). Renseigné à la clôture. |
 | `client_final_nom` | Texte libre, souvent inconnu (besoin passant par une ESN). Ne bloque jamais la publication (EF-04). Distinct de la société du contact (`entreprise_cliente`, liée via `contact`). |
 | `niveau_diffusion` | `libre`, `reseau_perso` (par défaut, EF-10) ou `interne_strict`. |
-| `date_ouverture_exterieur` | Date de publication + délai laissé aux membres. Champ informatif, sans objet si `interne_strict`. Délai de calcul encore en cours de définition côté client : stocké tel quel, non dérivé automatiquement. |
 | `statut` | Un des 7 statuts. Transitions libres (saut, retour arrière, réouverture) : aucune contrainte de séquence en base, seul `historique_statut` journalise les changements. |
 | `raison_perte` | Obligatoire dès que `statut = perdu` (`chk_opp_raison_perte_obligatoire`). |
 | `date_relance` | Obligatoire dès que `statut = en_pause` (`chk_opp_date_relance_obligatoire`). |
 | `qualifiee_par_id` / `date_qualification` | Validation explicite de la qualification Signal → Matching. Renseignées ensemble (`chk_opp_qualification_complete`) et obligatoires au-delà de Signal, sauf `perdu` et `en_pause` qui restent possibles avant qualification (`chk_opp_qualifiee`). Le qualificateur est l'apporteur de l'opportunité ou un administrateur actif (trigger `trg_opportunite_verifie_qualificateur`). |
+
+La vue `opportunite_ouverture` donne la date à partir de laquelle une
+opportunité peut s'ouvrir hors du collectif : date de qualification (lue à
+l'heure de Paris) + 2 jours calendaires, délai encore en cours de rédaction
+chez le client. Rien n'est stocké. Elle ne contient ni les opportunités en
+`interne_strict`, qui ne s'ouvrent jamais à l'extérieur, ni celles qui ne
+sont pas encore qualifiées.
 
 Index posés uniquement sur les critères de filtre listés section 3.1 du
 recueil : `statut`, `ville`, `mode`, `client_final_nom`, `date_signal`,
