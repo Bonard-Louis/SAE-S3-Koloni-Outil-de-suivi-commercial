@@ -490,6 +490,10 @@ COMMENT ON COLUMN positionnement.etat IS
 
 CREATE INDEX idx_positionnement_opportunite ON positionnement(opportunite_id);
 
+-- Un seul membre est retenu par opportunité : le retenu devient le preneur.
+-- Changer de retenu se fait en deux instructions (écarter l'ancien, puis retenir le nouveau).
+CREATE UNIQUE INDEX uq_positionnement_un_retenu ON positionnement (opportunite_id) WHERE etat = 'retenu';
+
 -- -----------------------------------------------------------------------------
 -- NOTE
 -- -----------------------------------------------------------------------------

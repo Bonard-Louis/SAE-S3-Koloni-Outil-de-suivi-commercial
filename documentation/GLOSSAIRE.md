@@ -198,7 +198,7 @@ passage à `presente` relève de l'apporteur ou du moteur ; le membre
 
 | Colonne | Explication |
 | --- | --- |
-| `etat` | `positionne` (candidat) / `presente` (au client) / `retenu` / `ecarte`. |
+| `etat` | `positionne` (candidat) / `presente` (au client) / `retenu` / `ecarte` / `retire` (le membre s'est désisté). Un seul positionnement `retenu` par opportunité (`uq_positionnement_un_retenu`) : pour changer de retenu, écarter l'ancien puis retenir le nouveau, en deux instructions. |
 
 ## note
 

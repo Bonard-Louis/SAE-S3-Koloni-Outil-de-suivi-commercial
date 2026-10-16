@@ -18,6 +18,7 @@ const MESSAGES: Record<string, string> = {
   uq_famille_technologie_nom_minuscule: 'Cette famille de technologies existe déjà',
   chk_famille_technologie_nom: 'Le nom de la famille ne peut pas être vide ni commencer ou finir par un espace',
   uq_positionnement_membre_opportunite: 'Ce membre est déjà positionné sur cette opportunité',
+  uq_positionnement_un_retenu: 'Un autre membre est déjà retenu sur cette opportunité',
   chk_opp_raison_perte_obligatoire: 'La raison de la perte est obligatoire',
   chk_opp_date_relance_obligatoire: 'La date de relance est obligatoire pour une opportunité en pause',
   chk_opp_signe_complet: 'Le preneur, son TJM et le nombre de jours sont obligatoires pour une opportunité signée',
