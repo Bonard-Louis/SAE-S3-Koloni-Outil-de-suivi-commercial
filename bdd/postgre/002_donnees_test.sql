@@ -9,12 +9,12 @@ BEGIN;
 -- MEMBRES
 -- Mot de passe de tous les membres fictifs : CoucouKol0n1 (tests uniquement)
 INSERT INTO membre (id, nom, prenom, mail, telephone, notes, role, ville, disponibilite, date_disponibilite, dispo_confirmee_le, actif, mot_de_passe_hash) VALUES
-  (1, 'Exemple', 'Alice', 'alice.exemple@example.com', '0601020301', 'Data analyst freelance', 'administrateur', 'Bordeaux', 'en_recherche', NULL, '2026-10-01', TRUE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg'),
-  (2, 'Fictif', 'Bastien', 'bastien.fictif@example.com', '0601020302', 'Analytics engineer freelance', 'membre', 'Grenoble', 'en_mission', '2026-12-18', '2026-08-20', TRUE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg'),
-  (3, 'Démo', 'Camille', 'camille.demo@example.com', '0601020303', 'Analytics engineer freelance', 'membre', 'Nantes', 'en_recherche', NULL, '2026-10-05', TRUE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg'),
-  (4, 'Test', 'Damien', 'damien.test@example.com', '0601020304', 'Data analyst freelance', 'membre', 'Strasbourg', 'a_l_ecoute', '2027-03-31', '2026-10-02', TRUE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg'),
-  (5, 'Factice', 'Élodie', 'elodie.factice@example.com', '0601020305', 'Analytics engineer freelance', 'membre', 'Lyon', 'en_recherche', NULL, '2026-10-06', TRUE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg'),
-  (6, 'Modèle', 'Fabien', 'fabien.modele@example.com', '0601020306', 'Consultant BI freelance (ancien membre du collectif)', 'membre', 'Rennes', 'inconnu', NULL, NULL, FALSE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg');
+  (1, 'Exemple', 'Alice', 'alice.exemple@example.com', '0639980301', 'Data analyst freelance', 'administrateur', 'Bordeaux', 'en_recherche', NULL, '2026-10-01', TRUE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg'),
+  (2, 'Fictif', 'Bastien', 'bastien.fictif@example.com', '0639980302', 'Analytics engineer freelance', 'membre', 'Grenoble', 'en_mission', '2026-12-18', '2026-08-20', TRUE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg'),
+  (3, 'Démo', 'Camille', 'camille.demo@example.com', '0639980303', 'Analytics engineer freelance', 'membre', 'Nantes', 'en_recherche', NULL, '2026-10-05', TRUE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg'),
+  (4, 'Test', 'Damien', 'damien.test@example.com', '0639980304', 'Data analyst freelance', 'membre', 'Strasbourg', 'a_l_ecoute', '2027-03-31', '2026-10-02', TRUE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg'),
+  (5, 'Factice', 'Élodie', 'elodie.factice@example.com', '0639980305', 'Analytics engineer freelance', 'membre', 'Lyon', 'en_recherche', NULL, '2026-10-06', TRUE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg'),
+  (6, 'Modèle', 'Fabien', 'fabien.modele@example.com', '0639980306', 'Consultant BI freelance (ancien membre du collectif)', 'membre', 'Rennes', 'inconnu', NULL, NULL, FALSE, '$scrypt$n=16384,r=8,p=1$DL6Gl8JLEOmEo4pE79bxPQ$0zrAQZZdzQt1ZL+Bqryu7929gh8UXWYWeJQT2MAMaejWLxoxTDApIk6PxjbBYzqVvs4G4vALyzWjcna6a7q3Qg');
 
 -- TECHNOLOGIES
 INSERT INTO famille_technologie (id, nom) VALUES
@@ -62,31 +62,31 @@ SELECT v.id, v.nom, v.prenom, v.role, v.entreprise_cliente_id, v.mail, v.telepho
 FROM (VALUES
   (1, 'Démo', 'Ursule', 'Responsable BI', 1, 'ursule.demo@example.com', NULL),
   (2, 'Test', 'Valentin', 'Responsable achats IT', 2, 'valentin.test@example.com', NULL),
-  (3, 'Factice', 'William', 'Responsable achats IT', 2, 'william.factice@example.com', '0610203451'),
+  (3, 'Factice', 'William', 'Responsable achats IT', 2, 'william.factice@example.com', '0639983451'),
   (4, 'Modèle', 'Yasmine', 'Responsable BI', 3, 'yasmine.modele@example.com', NULL),
   (5, 'Specimen', 'Zoé', 'DSI', 4, 'zoe.specimen@example.com', NULL),
-  (6, 'Prototype', 'Adrien', 'Directrice data', 5, 'adrien.prototype@example.com', '0610203862'),
+  (6, 'Prototype', 'Adrien', 'Directrice data', 5, 'adrien.prototype@example.com', '0639983862'),
   (7, 'Imaginaire', 'Béatrice', 'Responsable BI', 5, 'beatrice.imaginaire@example.com', NULL),
   (8, 'Exemple', 'Cédric', 'DSI', 6, 'cedric.exemple@example.com', NULL),
-  (9, 'Fictif', 'Diane', 'Directeur de la transformation', 7, 'diane.fictif@example.com', '0610204273'),
+  (9, 'Fictif', 'Diane', 'Directeur de la transformation', 7, 'diane.fictif@example.com', '0639984273'),
   (10, 'Démo', 'Émile', 'Head of Data', 4, 'emile.demo@example.com', NULL),
   (11, 'Test', 'Florence', 'DSI', 8, 'florence.test@example.com', NULL),
-  (12, 'Factice', 'Guillaume', 'DSI', 4, 'guillaume.factice@example.com', '0610204684'),
+  (12, 'Factice', 'Guillaume', 'DSI', 4, 'guillaume.factice@example.com', '0639984684'),
   (13, 'Modèle', 'Hélène', 'CTO', 9, 'helene.modele@example.com', NULL),
   (14, 'Specimen', 'Isabelle', 'DSI', 6, 'isabelle.specimen@example.com', NULL),
-  (15, 'Prototype', 'Jérôme', 'Responsable achats IT', 4, 'jerome.prototype@example.com', '0610205095'),
+  (15, 'Prototype', 'Jérôme', 'Responsable achats IT', 4, 'jerome.prototype@example.com', '0639985095'),
   (16, 'Imaginaire', 'Laura', 'Responsable BI', 3, 'laura.imaginaire@example.com', NULL),
   (17, 'Exemple', 'Marc', 'Responsable achats IT', 8, 'marc.exemple@example.com', NULL),
-  (18, 'Fictif', 'Nathalie', 'Head of Data', 4, 'nathalie.fictif@example.com', '0610205506'),
+  (18, 'Fictif', 'Nathalie', 'Head of Data', 4, 'nathalie.fictif@example.com', '0639985506'),
   (19, 'Démo', 'Olivier', 'DSI', 5, 'olivier.demo@example.com', NULL),
   (20, 'Test', 'Pauline', 'Directrice data', 7, 'pauline.test@example.com', NULL),
-  (21, 'Factice', 'Romain', 'Responsable partenariats', 7, 'romain.factice@example.com', '0610205917'),
+  (21, 'Factice', 'Romain', 'Responsable partenariats', 7, 'romain.factice@example.com', '0639985917'),
   (22, 'Modèle', 'Sandrine', 'Fondatrice', 9, 'sandrine.modele@example.com', NULL),
   (23, 'Specimen', 'Théo', 'Directeur associé', 8, 'theo.specimen@example.com', NULL),
-  (24, 'Prototype', 'Vanessa', 'Fondatrice', 10, 'vanessa.prototype@example.com', '0610206328'),
+  (24, 'Prototype', 'Vanessa', 'Fondatrice', 10, 'vanessa.prototype@example.com', '0639986328'),
   (25, 'Imaginaire', 'Aurélie', 'Directeur associé', 11, 'aurelie.imaginaire@example.com', NULL),
   (26, 'Exemple', 'Bruno', 'Fondatrice', 2, 'bruno.exemple@example.com', NULL),
-  (27, 'Fictif', 'Chloé', 'Directeur associé', 3, 'chloe.fictif@example.com', '0610206739'),
+  (27, 'Fictif', 'Chloé', 'Directeur associé', 3, 'chloe.fictif@example.com', '0639986739'),
   (28, 'Démo', 'Denis', 'Responsable partenariats', 8, 'denis.demo@example.com', NULL)
 ) AS v(id, nom, prenom, role, entreprise_cliente_id, mail, telephone);
 
