@@ -24,7 +24,7 @@ Puis remplacer les valeurs de `POSTGRES_PASSWORD` et de `KOLONI_APP_PASSWORD` da
 | `KOLONI_APP_PASSWORD` | aucun (obligatoire) | Mot de passe du rôle `koloni_app`, celui de l'application. |
 | `POSTGRES_PORT` | `5432` | Port publié sur la machine. À changer si un autre Postgres utilise déjà le 5432. |
 
-L'application se connecte avec le rôle `koloni_app`, qui peut lire, ajouter et modifier, mais jamais supprimer (sauf corriger le rattachement d'une technologie ou d'un contact à une opportunité). L'historique des statuts et le journal sont remplis automatiquement par des triggers, et en ajout seul : l'application ne peut ni les modifier ni les supprimer. Les droits sont définis dans `003_roles.sql`.
+L'application se connecte avec le rôle `koloni_app`, qui peut lire, ajouter et modifier, mais jamais supprimer (sauf corriger le rattachement d'une technologie ou d'un contact à une opportunité). L'historique des statuts et le journal sont remplis automatiquement par des triggers, et en ajout seul : l'application ne peut ni les modifier ni les supprimer. Les droits sont définis dans `007_roles.sql`.
 
 ## Lancer la base
 
@@ -83,7 +83,7 @@ docker compose down -v
 docker compose up -d --build
 ```
 
-Même chose après toute modification de `001_creation_schema_koloni.sql`, de `002_donnees_test.sql` ou de `003_roles.sql`.
+Même chose après toute modification d'un des scripts SQL (`001` à `007`).
 
 ## Contenu du dossier
 
@@ -92,9 +92,13 @@ Même chose après toute modification de `001_creation_schema_koloni.sql`, de `0
 | `Dockerfile` | Image `postgres:16-alpine` qui embarque les scripts SQL. |
 | `docker-compose.yml` | Service, port, volume de données et healthcheck. |
 | `.env.example` | Modèle des variables d'environnement. |
-| `001_creation_schema_koloni.sql` | Création du schéma (tables, contraintes, triggers). |
-| `002_donnees_test.sql` | Données de test fictives (membres, contacts, opportunités…). |
-| `003_roles.sql` | Rôle `koloni_app` de l'application et ses droits (jamais de suppression). |
+| `001_tables_de_base.sql` | Membres, références (familles, technologies, entreprises), contacts et profils extérieurs. |
+| `002_opportunites.sql` | Opportunité, tables de liaison, positionnements et notes. |
+| `003_historique_et_journal.sql` | Historique des statuts et journal d'actions. |
+| `004_vues.sql` | Vues : consultants, ouverture à l'extérieur, dernière sollicitation d'un profil extérieur. |
+| `005_triggers.sql` | Fonctions et triggers (historique, contrôles, alimentation du journal). |
+| `006_donnees_test.sql` | Données de test fictives (membres, contacts, opportunités…). |
+| `007_roles.sql` | Rôle `koloni_app` de l'application et ses droits (jamais de suppression). |
 
 Les scripts `*.sql` sont exécutés dans l'ordre alphabétique de leur nom.
 

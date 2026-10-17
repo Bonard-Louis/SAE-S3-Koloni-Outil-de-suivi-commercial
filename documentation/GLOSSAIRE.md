@@ -1,8 +1,8 @@
 # Glossaire du schéma KOLONI
 
-Documentation de `001_creation_schema_koloni.sql`. Le script SQL ne
-contient aucun commentaire (ni `COMMENT ON` en base, ni `--` dans le
-fichier) : toute l'explication du schéma vit exclusivement ici.
+Documentation du schéma, créé par les scripts `001` à `005` du dossier
+`bdd/postgre/`. Le schéma est aussi commenté en base (`COMMENT ON` sur les
+tables et les colonnes) : ce glossaire reprend et complète ces explications.
 
 Base cible : PostgreSQL 14+.
 
@@ -28,9 +28,15 @@ Références :
   le CDC sont modélisées. Pas de table ni de mécanisme technique
   supplémentaire (ex. pas de table de suivi des migrations en base : le
   versionnement (CDC 7.1) repose sur les fichiers `.sql` numérotés du
-  dossier `migrations/`, appliqués dans l'ordre).
+  dossier `bdd/postgre/`, appliqués dans l'ordre).
 
-## Plan du script (dans l'ordre de création)
+## Plan du schéma (dans l'ordre de création)
+
+Cinq scripts, exécutés dans l'ordre : `001_tables_de_base.sql` (tables 1 à 6),
+`002_opportunites.sql` (tables 7 à 10), `003_historique_et_journal.sql`
+(tables 11 et 12), `004_vues.sql` (vues) et `005_triggers.sql` (fonctions et
+triggers). Viennent ensuite les données de test (`006_donnees_test.sql`) et
+le rôle de l'application (`007_roles.sql`).
 
 1. `membre` — profil utilisateur du collectif
 2. `famille_technologie` — familles de technologies (le « domaine » du filtre)
@@ -265,9 +271,5 @@ n'est pas journalisée.
 - Pas de trigger de mise à jour automatique d'un champ « dernière
   modification » sur `opportunite` : non demandé, l'horodatage exigé
   porte spécifiquement sur les changements de statut (`historique_statut`).
-- Pas de `COMMENT ON` ni de commentaire `--` dans le SQL : toute la
-  documentation est ici, dans ce glossaire, à consulter à côté du
-  script.
-
-Point à confirmer avec le client si la conformité stricte à ENF-05
-(commentaires en base) est requise malgré ce choix.
+- Les tables et les colonnes sont commentées en base (`COMMENT ON`), pour
+  rester lisibles par un agent IA qui lit le schéma directement (ENF-05).

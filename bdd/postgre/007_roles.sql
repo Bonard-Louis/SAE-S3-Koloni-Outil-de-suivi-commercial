@@ -1,6 +1,6 @@
 -- =============================================================================
 -- KOLONI CRM - Rôle de l'application
--- Exécuté après 001 (schéma) et 002 (données de test), avec le compte
+-- Exécuté après 001 à 005 (schéma) et 006 (données de test), avec le compte
 -- propriétaire des tables (POSTGRES_USER).
 --
 -- L'application se connecte avec un rôle qui ne possède pas les tables et qui 

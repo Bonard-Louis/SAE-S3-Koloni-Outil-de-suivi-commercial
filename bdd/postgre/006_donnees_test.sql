@@ -1,7 +1,7 @@
 -- =============================================================================
 -- KOLONI CRM - Données de test (fictives)
 -- Jeu de données issu de bdd/data/Contacts_fictifs.csv. Aucune donnée réelle.
--- À exécuter après 001_creation_schema_koloni.sql, sur une base vide.
+-- À exécuter après les scripts de schéma 001 à 005, sur une base vide.
 -- =============================================================================
 
 BEGIN;
