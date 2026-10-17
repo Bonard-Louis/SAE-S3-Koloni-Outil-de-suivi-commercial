@@ -127,10 +127,10 @@ Le client a transmis par mail, pour inspiration, la liste des colonnes de sa tab
 - Publier une opportunité via un formulaire structuré (template fourni par le client). Une opportunité peut être publiée incomplète : elle démarre en Signal et passe en Matching une fois qualifiée (interlocuteur, besoin, TJM et mode de candidature connus). Le remplissage des champs ne suffit pas : la qualification est un acte explicite, posé par l'apporteur ou un administrateur, qui atteste que l'opportunité est qualifiée. Une opportunité ne peut pas dépasser Signal sans avoir été qualifiée, sauf pour passer en Perdu ou en En pause.
 - Consulter la liste des opportunités et se positionner sur l'une d'entre elles. Plusieurs membres peuvent se positionner sur une même opportunité tant qu'elle est en Signal ou en Matching ; se positionner signale un intérêt et ne réserve pas l'opportunité. L'apporteur (ou le moteur) choisit le ou les profils présentés au client, et le passage en Proposé ne masque pas l'opportunité.
 - À profil équivalent, un membre passe devant un profil extérieur au moment du choix. Les membres disposent d'un délai (2 jours à ce jour, règle en cours de rédaction au sein du collectif) avant que l'opportunité ne s'ouvre à l'extérieur du collectif, ce délai étant compté en jours calendaires à partir de la date de qualification ; l'outil affiche la date à partir de laquelle elle s'ouvre. Une opportunité en Interne strict ne s'ouvre jamais à l'extérieur. Cette ouverture dépend en outre du niveau de diffusion et de l'accord de l'apporteur.
-- Rechercher et filtrer les opportunités (technologie ou domaine, statut, ville, mode, client final, société du contact, date du signal).
+- Rechercher et filtrer les opportunités (technologie ou famille de technologies, statut, ville, mode, client final, société du contact, date du signal).
 - Consulter une vue des opportunités signées, une vue des opportunités perdues avec la raison de la perte, et une vue des opportunités en pause dont la date de relance est atteinte.
 - Ajouter une note à une opportunité : tout membre peut en écrire une, et les notes sont lisibles par tous.
-- Faire évoluer le statut d'une opportunité parmi les 7 statuts définis, avec horodatage automatique du changement. Les transitions sont libres : un statut peut être sauté, on peut revenir en arrière ou rouvrir une opportunité, qui conserve son historique. Raison obligatoire au passage en Perdu, date de relance obligatoire au passage en En pause.
+- Faire évoluer le statut d'une opportunité parmi les 7 statuts définis, avec horodatage automatique du changement. Les transitions sont libres : un statut peut être sauté, on peut revenir en arrière ou rouvrir une opportunité, qui conserve son historique. Raison obligatoire au passage en Perdu, date de relance obligatoire au passage en En pause. Le motif de la perte et la date de relance sont conservés dans l'historique à chaque changement de statut, y compris après une réouverture.
 - Conserver un historique complet et daté des changements de statut d'une opportunité.
 - Consigner dans un journal d'actions ce que chacun a fait (positionnement, présentation d'un profil, note, profil extérieur contacté ou modifié, contact ou entreprise cliente ajouté ou modifié). Les changements de statut sont consignés dans l'historique des statuts ; le fil d'une opportunité réunit les deux.
 - Ne jamais supprimer une opportunité, y compris signée ou perdue (conservation en base, pas de suppression physique).
@@ -206,9 +206,9 @@ _Tout membre peut créer et modifier les contacts et les entreprises clientes : 
 | Source | Qui porte le besoin côté client (Client / Commercial / Contact). |
 | Température | Niveau de maturité de l'opportunité (chaud / tiède). |
 | Type de mission | Run / Build / Expertise… |
-| Technologies | Technologies demandées (ex. Talend, Power BI, Python). Liste de valeurs réutilisable, qui sert au filtre. La technologie principale peut être distinguée des technologies en bonus. |
+| Technologies | Technologies demandées (ex. Talend, Power BI, Python). Liste de valeurs réutilisable, qui sert au filtre. La technologie principale peut être distinguée des technologies en bonus. Chaque technologie appartient à une famille (ETL, BI…), qui sert au filtre par domaine. Une technologie ne peut pas être saisie deux fois, sans tenir compte des majuscules ni des espaces en début et fin de nom. |
 | Niveau recherché | Opérationnel / Senior / Expert. |
-| Client final | Entreprise où se déroule la mission, si elle est connue. Facultatif : souvent inconnue quand le besoin passe par une ESN. À défaut, un secteur et une taille d'entreprise. Ne bloque jamais une publication. Distinct de la société du contact, souvent l'ESN. |
+| Client final | Entreprise où se déroule la mission, choisie parmi les entreprises clientes, si elle est connue. Facultatif : souvent inconnue quand le besoin passe par une ESN. À défaut, un secteur et une taille d'entreprise, qui ne s'indiquent que si l'entreprise n'est pas choisie. Ne bloque jamais une publication. Distinct de la société du contact, souvent l'ESN. |
 | Apporteur | Membre qui amène l'opportunité. La relation client passe par lui, par le moteur ou directement par le candidat, selon le mode de candidature. |
 | Saisi par | Membre qui a créé l'opportunité dans l'outil, lorsqu'il diffère de l'apporteur. |
 | Moteur | Personne qui recherche un profil hors collectif, le cas échéant. |
@@ -230,9 +230,9 @@ _Tout membre peut créer et modifier les contacts et les entreprises clientes : 
 | Date du signal | Date de détection de l'opportunité. |
 | Date de clôture | Date de signature ou de perte de l'opportunité. |
 | Date de relance | Obligatoire au passage en « En pause ». |
-| Raison de la perte | Motif, obligatoire au passage en « Perdu ». |
+| Raison de la perte | Motif, obligatoire et non vide au passage en « Perdu ». |
 | Notes | Fil de notes datées et signées, lisibles par tous (cf. entité Note ci-dessous). |
-| Historique des statuts | Liste datée des changements de statut, avec l'auteur du changement. |
+| Historique des statuts | Liste datée des changements de statut, avec l'auteur du changement, le motif de la perte et la date de relance le cas échéant. |
 
 #### Les 7 statuts d'une opportunité
 
@@ -246,7 +246,7 @@ _Tout membre peut créer et modifier les contacts et les entreprises clientes : 
 | Perdu | L'opportunité n'a pas abouti (profil concurrent placé, besoin annulé…). |
 | En pause | Le client reporte sa décision ; l'opportunité sera relancée plus tard. |
 
-_Les transitions entre statuts sont libres : un statut peut être sauté, on peut revenir en arrière ou rouvrir une opportunité, qui conserve son historique. Chaque changement est journalisé avec son auteur et sa date. Une raison est obligatoire au passage en « Perdu », une date de relance au passage en « En pause »._
+_Les transitions entre statuts sont libres : un statut peut être sauté, on peut revenir en arrière ou rouvrir une opportunité, qui conserve son historique. Chaque changement est journalisé avec son auteur et sa date. Une raison est obligatoire au passage en « Perdu », une date de relance au passage en « En pause » ; l'une et l'autre restent consultables dans l'historique après une réouverture._
 
 #### Positionnement d'un membre sur une opportunité
 
@@ -258,7 +258,7 @@ _Les transitions entre statuts sont libres : un statut peut être sauté, on peu
 | État | Positionné (candidat) / présenté au client / retenu / écarté / retiré. |
 | Commentaire | Précision libre (motivation, disponibilité annoncée…). |
 
-_Plusieurs membres peuvent être positionnés sur une même opportunité : un positionnement signale un intérêt et ne réserve rien. Le passage à « présenté » relève de l'apporteur ou du moteur ; le membre « retenu » devient le preneur de l'opportunité, renseigné à la clôture. Un membre qui se désiste passe son positionnement à « retiré »._
+_Plusieurs membres peuvent être positionnés sur une même opportunité : un positionnement signale un intérêt et ne réserve rien. Le passage à « présenté » relève de l'apporteur ou du moteur ; le membre « retenu » devient le preneur de l'opportunité, renseigné à la clôture. Un seul membre peut être retenu par opportunité. Un membre qui se désiste passe son positionnement à « retiré »._
 
 #### Note sur une opportunité
 
@@ -292,7 +292,7 @@ _Les changements de statut sont consignés dans l'historique des statuts, pas da
 | Taille | Ordre de grandeur de l'effectif. |
 | Ville | Localisation principale. |
 
-_Les sociétés des contacts sont regroupées dans cette table, réutilisable d'une opportunité à l'autre. Elle sert notamment au filtre « société du contact »._
+_Les sociétés des contacts sont regroupées dans cette table, réutilisable d'une opportunité à l'autre. Elle sert notamment au filtre « société du contact ». Deux entreprises ne peuvent pas porter le même nom, sans tenir compte des majuscules ni des espaces en début et fin de nom._
 
 #### Contact lié à une opportunité
 
@@ -303,8 +303,9 @@ _Les sociétés des contacts sont regroupées dans cette table, réutilisable d'
 | Entreprise cliente | Société du contact, rattachée à la table Entreprise cliente. |
 | Mail | Adresse mail de contact. |
 | Téléphone | Optionnel selon les cas. |
+| Lien LinkedIn | Optionnel. |
 
-_Un même contact peut être lié à plusieurs opportunités au fil du temps : un même commercial revient souvent._
+_Un même contact peut être lié à plusieurs opportunités au fil du temps : un même commercial revient souvent. Au moins un moyen de contact (mail, téléphone ou lien LinkedIn) est requis. Deux contacts ne peuvent pas porter le même lien LinkedIn, sans tenir compte des majuscules._
 
 #### Profil extérieur (contacté hors collectif)
 

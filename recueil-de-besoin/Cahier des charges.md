@@ -130,15 +130,15 @@ Chaque exigence est rattachée à un cas d'utilisation (UC) du recueil de besoin
 
 | Réf. | Exigence | UC | Priorité | Release |
 | --- | --- | --- | :---: | :---: |
-| EF-04 | Publication d'une opportunité via un formulaire structuré (source, besoin, conditions, lieu, timing, candidature, diffusion), même incomplète. Elle démarre au statut Signal. Le client final ne bloque jamais la publication. | UC2 | O | V1 |
+| EF-04 | Publication d'une opportunité via un formulaire structuré (source, besoin, conditions, lieu, timing, candidature, diffusion), même incomplète. Elle démarre au statut Signal. Le client final, s'il est connu, est choisi parmi les entreprises clientes ; il ne bloque jamais la publication. | UC2 | O | V1 |
 | EF-05 | Qualification explicite Signal → Matching, posée par l'apporteur ou un administrateur. Le remplissage des champs ne suffit pas. Perdu et En pause restent possibles avant qualification. | UC3 | O | V1 |
 | EF-06 | Consultation de la liste et du détail d'une opportunité (notes, historique, journal). Aucune information n'est masquée entre membres. | UC4 | O | V1 |
-| EF-07 | Changement de statut parmi les 7 statuts, transitions libres (saut, retour en arrière, réouverture), horodatage automatique. Raison obligatoire au passage en Perdu, date de relance obligatoire au passage en En pause. | UC9 | O | V1 |
-| EF-08 | Historique complet et daté des changements de statut, avec l'auteur de chaque changement. | UC11 | O | V1 |
+| EF-07 | Changement de statut parmi les 7 statuts, transitions libres (saut, retour en arrière, réouverture), horodatage automatique. Raison obligatoire et non vide au passage en Perdu, date de relance obligatoire au passage en En pause. | UC9 | O | V1 |
+| EF-08 | Historique complet et daté des changements de statut, avec l'auteur de chaque changement, le motif de la perte et la date de relance le cas échéant, conservés après une réouverture. | UC11 | O | V1 |
 | EF-09 | Aucune suppression physique d'une opportunité, y compris signée ou perdue. | — | O | V1 |
 | EF-10 | Niveau de diffusion (Libre, Réseau perso, Interne strict ; Réseau perso par défaut) et affichage de la date d'ouverture à l'extérieur du collectif, calculée à partir de la date de qualification et du délai laissé aux membres (2 jours calendaires à ce jour), sans objet en Interne strict ou tant que l'opportunité n'est pas qualifiée. Lien de l'annonce à l'extérieur facultatif. | UC2 | O | V1 |
 | EF-11 | Clôture d'une opportunité signée : preneur, TJM preneur, nombre de jours, date de clôture. | UC10 | O | V2 |
-| EF-12 | Recherche et filtres : technologie ou domaine, statut, ville, mode, client final, société du contact, date du signal. | UC5 | O | V3 |
+| EF-12 | Recherche et filtres : technologie ou famille de technologies, statut, ville, mode, client final, société du contact, date du signal. | UC5 | O | V3 |
 | EF-13 | Vues dédiées : opportunités signées, opportunités perdues avec raison de la perte, opportunités en pause dont la date de relance est atteinte. | UC5 | O | V3 |
 | EF-14 | Vue des opportunités en colonnes par statut, dans l'esprit de Trello ou de Planner. | UC4 | S | V4 |
 
@@ -146,7 +146,7 @@ Chaque exigence est rattachée à un cas d'utilisation (UC) du recueil de besoin
 
 | Réf. | Exigence | UC | Priorité | Release |
 | --- | --- | --- | :---: | :---: |
-| EF-15 | Positionnement de plusieurs membres sur une opportunité en Signal ou en Matching. Le positionnement signale un intérêt et ne réserve rien. Un membre qui se désiste retire son positionnement. | UC6 | O | V2 |
+| EF-15 | Positionnement de plusieurs membres sur une opportunité en Signal ou en Matching. Le positionnement signale un intérêt et ne réserve rien. Un seul membre peut être retenu par opportunité. Un membre qui se désiste retire son positionnement. | UC6 | O | V2 |
 | EF-16 | Choix, par l'apporteur ou le moteur, du ou des profils présentés au client. Le passage en Proposé ne masque pas l'opportunité. | UC6 | O | V2 |
 | EF-17 | Notes datées et signées, écrites par tout membre (positionné ou non), lisibles par tous. | UC7 | O | V2 |
 | EF-18 | Journal d'actions : positionnement, présentation d'un profil, note, profil extérieur contacté ou modifié, ajout ou modification d'un contact ou d'une entreprise. Chaque entrée porte l'auteur, la date, un commentaire et l'objet concerné. Les changements de statut figurent dans l'historique des statuts (EF-08). | UC12 | O | V2 |
@@ -155,7 +155,7 @@ Chaque exigence est rattachée à un cas d'utilisation (UC) du recueil de besoin
 
 | Réf. | Exigence | UC | Priorité | Release |
 | --- | --- | --- | :---: | :---: |
-| EF-19 | Gestion des contacts liés à une opportunité et des entreprises clientes. Un contact peut être lié à plusieurs opportunités. Tout membre peut les créer et les modifier. | UC8 | O | V1 |
+| EF-19 | Gestion des contacts liés à une opportunité et des entreprises clientes. Un contact peut être lié à plusieurs opportunités. Tout membre peut les créer et les modifier. Un contact exige au moins un mail, un téléphone ou un lien LinkedIn. Une entreprise, une technologie ou un lien LinkedIn de contact ne peut pas être saisi deux fois, sans tenir compte des majuscules ni des espaces en début et fin. | UC8 | O | V1 |
 | EF-20 | Enregistrement d'un profil contacté hors collectif sous forme de fiche structurée, lié à une ou plusieurs opportunités, avec, pour chacune, le membre qui l'a sollicité, la date et l'issue de la sollicitation. | UC13 | O | V3 |
 | EF-21 | Consultation de la base des profils contactés hors collectif, dans une liste unique des consultants avec les membres du collectif. Un profil extérieur relié à un compte membre n'apparaît qu'une fois. | UC14 | O | V3 |
 
@@ -167,7 +167,7 @@ Chaque exigence est rattachée à un cas d'utilisation (UC) du recueil de besoin
 
 ### 3.6 Données
 
-Le modèle de données est à concevoir par l'équipe (aucun schéma existant). Il couvre les entités décrites en section 3.3 du recueil de besoins : Opportunité, Positionnement, Note, Journal d'actions, Entreprise cliente, Contact, Profil extérieur, Membre, ainsi que la liste de technologies réutilisable et l'historique des statuts.
+Le modèle de données est à concevoir par l'équipe (aucun schéma existant). Il couvre les entités décrites en section 3.3 du recueil de besoins : Opportunité, Positionnement, Note, Journal d'actions, Entreprise cliente, Contact, Profil extérieur, Membre, ainsi que la liste de technologies réutilisable, classée par famille de technologies, et l'historique des statuts.
 
 ---
 
