@@ -51,10 +51,17 @@ interface EntrepriseCliente {
   nom: string
 }
 
-// PersonneListee — personne affichée dans une liste de puces supprimables (ListePersonnes)
+// PersonneListee — personne affichée en puce dans ListePersonnes
 interface PersonneListee {
   id: string
   mail: string
   nom: string
   prenom: string
+  categorie?: string // label de la CategoriePersonne de la puce (ex. état d'un positionnement)
+}
+
+// CategoriePersonne — groupe de puces dans ListePersonnes, avec sa couleur
+interface CategoriePersonne {
+  label: string // texte de la case à cocher et du titre du groupe
+  color?: NuxtUiColor // couleur des puces du groupe ; défaut : la prop color de ListePersonnes
 }

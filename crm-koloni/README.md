@@ -151,23 +151,57 @@ La valeur sélectionnée se lie avec `v-model`.
 
 ### `ListePersonnes`
 
-Liste de personnes affichées en puces, avec suppression individuelle. Ne s'affiche pas si `personnes` est vide.
+Liste de personnes affichées en puces, avec retrait individuel optionnel. Ne s'affiche pas si `personnes` est vide.
 
 | Prop | Type | Description |
 | --- | --- | --- |
 | `personnes` | `PersonneListee[]` | Personnes à afficher. |
-| `label` | `string` | Titre du groupe. |
-| `color?` | `'primary' \| 'secondary'` | Couleur des puces et du compteur (`primary` par défaut). |
+| `label` | `string` | Titre du groupe, suivi du nombre total de personnes (catégories masquées comprises). |
+| `color?` | `NuxtUiColor` | Couleur du compteur, et des puces sans catégorie (`primary` par défaut). |
 | `display?` | `'nomComplet' \| 'mail'` | Champ affiché sur chaque puce (`nomComplet` par défaut). |
+| `retirable?` | `boolean \| (p: PersonneListee) => boolean` | Affiche la croix de retrait, pour toutes les puces ou selon la personne (ex. selon les droits). `false` par défaut. |
+| `categories?` | `CategoriePersonne[]` | Catégories possibles, chacune avec sa couleur (`{ label, color? }`) : les puces sont regroupées selon `personne.categorie`, avec une case à cocher de la même couleur par catégorie pour l'afficher ou la masquer. |
+| `categoriesMasquees?` | `string[]` | Labels des catégories décochées au départ. |
 
-Émet `remove` avec la personne concernée.
+Émet `retirer` avec la personne concernée, après confirmation : la croix ouvre une fenêtre « Confirmer le retrait », et l'événement n'est envoyé qu'au clic sur « Retirer ». Le composant ne supprime rien : c'est à la page de changer l'état de la personne (ex. positionnement → « Retiré ») pour conserver l'historique.
 
 ```vue
 <ListePersonnes
-  :personnes="positionnes"
-  label="Membres positionnés"
-  display="nomComplet"
-  @remove="p => retirerPositionnement(p)"
+  :personnes="positionnements"
+  label="Positionnements"
+  :categories="[
+    { label: 'Positionné', color: 'primary' },
+    { label: 'Présenté au client', color: 'info' },
+    { label: 'Retenu', color: 'success' },
+    { label: 'Écarté', color: 'error' },
+    { label: 'Retiré', color: 'neutral' }
+  ]"
+  :categories-masquees="['Écarté', 'Retiré']"
+  :retirable="p => p.id === moi.id && p.categorie !== 'Retiré'"
+  @retirer="p => passerEnRetire(p)"
+/>
+```
+
+### `FenetreConfirmation`
+
+Fenêtre (`UModal`) qui demande de confirmer une action avant de la lancer. « Annuler », Échap ou un clic à côté la ferment sans rien faire.
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `title` | `string` | Titre de la fenêtre. |
+| `description?` | `string` | Question posée. |
+| `confirmLabel?` | `string` | Texte du bouton de validation (`Confirmer` par défaut). |
+| `color?` | `NuxtUiColor` | Couleur du bouton de validation (`error` par défaut). |
+
+L'ouverture se lie avec `v-model:open`. Émet `confirmer` au clic sur le bouton de validation, puis se ferme.
+
+```vue
+<FenetreConfirmation
+  v-model:open="confirmationOuverte"
+  title="Confirmer le retrait"
+  description="Retirer Camille Démo de « Positionnements » ?"
+  confirm-label="Retirer"
+  @confirmer="retirer"
 />
 ```
 
