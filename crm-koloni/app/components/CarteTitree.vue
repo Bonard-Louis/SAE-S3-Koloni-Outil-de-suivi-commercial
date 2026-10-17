@@ -1,6 +1,8 @@
 <!--
-  TitledCard — UCard avec un en-tête standardisé (icône + titre)
-  Props : icon (nom Iconify), title (texte affiché)
+  CarteTitree — carte UCard avec un en-tête standard (icône + titre)
+  Props :
+    icon  — nom de l'icône Iconify (ex. 'i-lucide-users')
+    title — titre affiché dans l'en-tête
   Slot par défaut : contenu de la carte
 -->
 <template>

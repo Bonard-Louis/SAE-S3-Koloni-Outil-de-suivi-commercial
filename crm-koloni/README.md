@@ -119,11 +119,10 @@ Barre de pagination centrée, autour de `UPagination`.
 
 | Prop | Type | Description |
 | --- | --- | --- |
-| `page` | `number` | Page courante. |
 | `total` | `number` | Nombre total d'éléments. |
 | `itemsPerPage` | `number` | Éléments affichés par page. |
 
-Émet `update:page` (compatible `v-model:page`).
+La page courante (commence à 1) se lie avec `v-model:page`.
 
 ```vue
 <BarrePagination v-model:page="page" :total="total" :items-per-page="20" />
@@ -131,16 +130,15 @@ Barre de pagination centrée, autour de `UPagination`.
 
 ### `ListeDeroulanteLibellee`
 
-Libellé + `USelect`, dont la largeur s'ajuste automatiquement à l'option la plus longue.
+`USelect` dans un `UFormField` (libellé au-dessus), dont la largeur s'ajuste automatiquement à l'option la plus longue, placeholder compris.
 
 | Prop | Type | Description |
 | --- | --- | --- |
 | `label` | `string` | Libellé affiché au-dessus du sélecteur. |
-| `items` | `(string \| { label: string, value: string \| number \| boolean })[]` | Options proposées. |
+| `items` | `(string \| { label: string, value: string })[]` | Options proposées. |
 | `placeholder?` | `string` | Texte affiché sans sélection. |
-| `description?` | `string` | Texte explicatif sous le sélecteur. |
 
-Utilise `defineModel` (compatible `v-model`).
+La valeur sélectionnée se lie avec `v-model`.
 
 ```vue
 <ListeDeroulanteLibellee
@@ -159,7 +157,7 @@ Liste de personnes affichées en puces, avec suppression individuelle. Ne s'affi
 | --- | --- | --- |
 | `personnes` | `PersonneListee[]` | Personnes à afficher. |
 | `label` | `string` | Titre du groupe. |
-| `color?` | `'primary' \| 'secondary'` | Couleur des puces (`primary` par défaut). |
+| `color?` | `'primary' \| 'secondary'` | Couleur des puces et du compteur (`primary` par défaut). |
 | `display?` | `'nomComplet' \| 'mail'` | Champ affiché sur chaque puce (`nomComplet` par défaut). |
 
 Émet `remove` avec la personne concernée.
