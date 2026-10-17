@@ -15,7 +15,7 @@
         Ajouter un profil extérieur
       </h1>
       <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-        Enregistrez un profil contacté hors collectif sous forme de fiche structurée[cite: 6, 7, 8]
+        Enregistrez un profil contacté hors collectif sous forme de fiche structurée
       </p>
     </header>
 
@@ -125,7 +125,7 @@
 
       <CarteTitree
         icon="i-lucide-calendar"
-        title="Disponibilité & Sollicitation"
+        title="Localisation & Disponibilité"
       >
         <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <UFormField
@@ -146,30 +146,6 @@
             <UInput
               v-model="form.disponibilite"
               placeholder="Immédiate, À partir du..."
-              class="w-full"
-            />
-          </UFormField>
-
-          <UFormField
-            label="Date de sollicitation"
-            name="dateSollicitation"
-            required
-          >
-            <UInput
-              v-model="form.dateSollicitation"
-              type="date"
-              class="w-full"
-            />
-          </UFormField>
-
-          <UFormField
-            label="Issue de la sollicitation"
-            name="issue"
-          >
-            <USelect
-              v-model="form.issue"
-              :items="ISSUES"
-              placeholder="Sélectionner l'issue"
               class="w-full"
             />
           </UFormField>
@@ -200,15 +176,6 @@
 const router = useRouter()
 const toast = useToast()
 
-const ISSUES = [
-  'Présenté',
-  'Retenu',
-  'Écarté par le client',
-  'Indisponible',
-  'Sans réponse du profil',
-  'Sans retour du client'
-]
-
 const form = reactive({
   prenom: '',
   nom: '',
@@ -217,9 +184,7 @@ const form = reactive({
   experiencesCles: '',
   ville: '',
   disponibilite: '',
-  tjm: undefined as number | undefined,
-  dateSollicitation: new Date().toISOString().split('T')[0],
-  issue: undefined as string | undefined
+  tjm: undefined as number | undefined
 })
 
 const technologiesInput = ref('')

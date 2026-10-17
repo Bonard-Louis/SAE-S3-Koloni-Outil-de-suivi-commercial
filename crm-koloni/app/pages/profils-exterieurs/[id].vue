@@ -123,7 +123,7 @@
 
       <CarteTitree
         icon="i-lucide-calendar"
-        title="Disponibilité & Sollicitation"
+        title="Localisation & Disponibilité"
       >
         <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <UFormField
@@ -143,29 +143,6 @@
             <UInput
               v-model="form.disponibilite"
               placeholder="Immédiate, À partir du..."
-              class="w-full"
-            />
-          </UFormField>
-
-          <UFormField
-            label="Date de sollicitation"
-            name="dateSollicitation"
-          >
-            <UInput
-              v-model="form.dateSollicitation"
-              type="date"
-              class="w-full"
-            />
-          </UFormField>
-
-          <UFormField
-            label="Issue de la sollicitation"
-            name="issue"
-          >
-            <USelect
-              v-model="form.issue"
-              :items="ISSUES"
-              placeholder="Sélectionner l'issue"
               class="w-full"
             />
           </UFormField>
@@ -196,15 +173,6 @@
 const route = useRoute()
 const toast = useToast()
 
-const ISSUES = [
-  'Présenté',
-  'Retenu',
-  'Écarté par le client',
-  'Indisponible',
-  'Sans réponse du profil',
-  'Sans retour du client'
-]
-
 interface ProfilExterieur {
   id: string
   nom: string
@@ -216,8 +184,6 @@ interface ProfilExterieur {
   ville?: string
   disponibilite?: string
   tjm?: number
-  dateSollicitation: string
-  issue?: string
 }
 
 const profils = ref<ProfilExterieur[]>([
@@ -230,9 +196,7 @@ const profils = ref<ProfilExterieur[]>([
     niveau: 'Senior',
     ville: 'Paris',
     disponibilite: 'Immédiate',
-    tjm: 600,
-    dateSollicitation: '2026-09-25',
-    issue: 'Présenté'
+    tjm: 600
   }
 ])
 
@@ -246,9 +210,7 @@ const form = reactive({
   experiencesCles: '',
   ville: '',
   disponibilite: '',
-  tjm: undefined as number | undefined,
-  dateSollicitation: '',
-  issue: undefined as string | undefined
+  tjm: undefined as number | undefined
 })
 
 const technologiesInput = ref('')
@@ -263,8 +225,6 @@ watch(profil, (p) => {
     form.ville = p.ville ?? ''
     form.disponibilite = p.disponibilite ?? ''
     form.tjm = p.tjm
-    form.dateSollicitation = p.dateSollicitation
-    form.issue = p.issue
     technologiesInput.value = p.technologies.join(', ')
   }
 }, { immediate: true })
