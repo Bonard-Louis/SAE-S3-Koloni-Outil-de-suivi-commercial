@@ -11,9 +11,9 @@
       <header class="flex items-center gap-2">
         <UIcon
           :name="icon"
-          class="size-4 text-primary-500"
+          class="size-4 text-primary"
         />
-        <h2 class="font-semibold text-gray-900 dark:text-white">
+        <h2 class="font-semibold text-highlighted">
           {{ title }}
         </h2>
       </header>

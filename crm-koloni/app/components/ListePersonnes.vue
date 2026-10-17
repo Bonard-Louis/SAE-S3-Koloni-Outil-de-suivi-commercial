@@ -22,7 +22,7 @@
   >
     <header class="flex flex-wrap items-center gap-x-4 gap-y-2">
       <div class="flex items-center gap-2">
-        <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <p class="text-sm font-medium text-toned">
           {{ label }}
         </p>
         <UBadge

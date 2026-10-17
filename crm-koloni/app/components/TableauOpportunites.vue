@@ -14,7 +14,7 @@
     :data="opportunites"
     :columns="colonnesTableau"
     :ui="{
-      th: 'text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500 py-1',
+      th: 'text-[10px] uppercase tracking-wide text-dimmed py-1',
       td: 'py-2 align-middle'
     }"
   />
@@ -36,7 +36,7 @@ const NuxtLink = resolveComponent('NuxtLink')
 
 // Pour chaque statut : couleur du badge et couleur de la barre à gauche de la ligne
 const STATUTS: Record<StatutOpportunite, { couleur: NuxtUiColor, barre: string }> = {
-  'Signal': { couleur: 'neutral', barre: 'bg-gray-400' },
+  'Signal': { couleur: 'neutral', barre: 'bg-neutral-400' },
   'Matching': { couleur: 'info', barre: 'bg-info-500' },
   'Proposé': { couleur: 'warning', barre: 'bg-warning-500' },
   'En discussion': { couleur: 'warning', barre: 'bg-warning-500' },
@@ -50,7 +50,7 @@ const COULEURS_TEMPERATURE: Record<Temperature, NuxtUiColor> = {
   Tiède: 'info'
 }
 
-const CLASSE_TITRE = 'font-medium text-sm text-gray-900 dark:text-white truncate'
+const CLASSE_TITRE = 'font-medium text-sm text-highlighted truncate'
 
 // Colonnes de pastilles affichées, dans l'ordre de OPPORTUNITE_BADGE_COLUMNS
 const colonnesPastilles = computed(() =>
@@ -67,7 +67,7 @@ const colonnesTableau = computed<TableColumn<Opportunite>[]>(() => [
     meta: { class: { th: 'w-1 p-0', td: 'w-1 p-0 pr-2' } },
     cell: ({ row }) => h('div', {
       // Gris si le statut venant de la base de donnée n'est pas reconnu
-      class: ['w-1 rounded-sm self-stretch', STATUTS[row.original.statut]?.barre ?? 'bg-gray-400'],
+      class: ['w-1 rounded-sm self-stretch', STATUTS[row.original.statut]?.barre ?? 'bg-neutral-400'],
       style: 'min-height: 2rem'
     })
   },
