@@ -30,19 +30,43 @@
         title="Informations générales"
       >
         <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <UFormField label="Prénom" name="prenom" required>
-            <UInput v-model="form.prenom" class="w-full" />
+          <UFormField
+            label="Prénom"
+            name="prenom"
+            required
+          >
+            <UInput
+              v-model="form.prenom"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Nom" name="nom" required>
-            <UInput v-model="form.nom" class="w-full" />
+          <UFormField
+            label="Nom"
+            name="nom"
+            required
+          >
+            <UInput
+              v-model="form.nom"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Poste / Fonction" name="role">
-            <UInput v-model="form.role" placeholder="Ex. Commercial" class="w-full" />
+          <UFormField
+            label="Poste / Fonction"
+            name="role"
+          >
+            <UInput
+              v-model="form.role"
+              placeholder="Ex. Commercial"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Entreprise" name="entreprise">
+          <UFormField
+            label="Entreprise"
+            name="entreprise"
+          >
             <USelect
               v-model="form.entreprise"
               :items="entreprisesDisponibles"
@@ -51,12 +75,25 @@
             />
           </UFormField>
 
-          <UFormField label="Adresse email" name="mail">
-            <UInput v-model="form.mail" type="email" class="w-full" />
+          <UFormField
+            label="Adresse email"
+            name="mail"
+          >
+            <UInput
+              v-model="form.mail"
+              type="email"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Téléphone" name="telephone">
-            <UInput v-model="form.telephone" class="w-full" />
+          <UFormField
+            label="Téléphone"
+            name="telephone"
+          >
+            <UInput
+              v-model="form.telephone"
+              class="w-full"
+            />
           </UFormField>
         </section>
       </CarteTitree>
@@ -72,7 +109,10 @@
       </footer>
     </UForm>
 
-    <div v-else class="text-gray-500 dark:text-gray-400 py-4">
+    <div
+      v-else
+      class="text-gray-500 dark:text-gray-400 py-4"
+    >
       Contact introuvable.
     </div>
   </UContainer>

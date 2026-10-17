@@ -29,19 +29,45 @@
         title="Informations du contact"
       >
         <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <UFormField label="Prénom" name="prenom" required>
-            <UInput v-model="form.prenom" placeholder="Prénom" class="w-full" />
+          <UFormField
+            label="Prénom"
+            name="prenom"
+            required
+          >
+            <UInput
+              v-model="form.prenom"
+              placeholder="Prénom"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Nom" name="nom" required>
-            <UInput v-model="form.nom" placeholder="Nom" class="w-full" />
+          <UFormField
+            label="Nom"
+            name="nom"
+            required
+          >
+            <UInput
+              v-model="form.nom"
+              placeholder="Nom"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Poste / Fonction" name="role">
-            <UInput v-model="form.role" placeholder="Ex. DSI, Commercial..." class="w-full" />
+          <UFormField
+            label="Poste / Fonction"
+            name="role"
+          >
+            <UInput
+              v-model="form.role"
+              placeholder="Ex. DSI, Commercial..."
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Entreprise cliente" name="entreprise">
+          <UFormField
+            label="Entreprise cliente"
+            name="entreprise"
+          >
             <USelect
               v-model="form.entreprise"
               :items="entreprisesDisponibles"
@@ -50,12 +76,27 @@
             />
           </UFormField>
 
-          <UFormField label="Adresse email" name="mail">
-            <UInput v-model="form.mail" type="email" placeholder="nom@entreprise.fr" class="w-full" />
+          <UFormField
+            label="Adresse email"
+            name="mail"
+          >
+            <UInput
+              v-model="form.mail"
+              type="email"
+              placeholder="nom@entreprise.fr"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Téléphone" name="telephone">
-            <UInput v-model="form.telephone" placeholder="06 00 00 00 00" class="w-full" />
+          <UFormField
+            label="Téléphone"
+            name="telephone"
+          >
+            <UInput
+              v-model="form.telephone"
+              placeholder="06 00 00 00 00"
+              class="w-full"
+            />
           </UFormField>
         </section>
       </CarteTitree>

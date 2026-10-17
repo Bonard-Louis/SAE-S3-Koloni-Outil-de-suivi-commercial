@@ -12,7 +12,7 @@
             placeholder="Recherche"
             class="max-w-xl w-full"
           />
-          
+
           <UButton
             label="Ajouter un profil"
             icon="i-lucide-user-plus"
@@ -20,7 +20,6 @@
             class="justify-center"
           />
         </div>
-
 
         <div class="flex flex-wrap items-end justify-between gap-3">
           <div class="flex flex-wrap items-end gap-3">

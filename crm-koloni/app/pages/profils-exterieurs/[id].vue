@@ -30,16 +30,38 @@
         title="Identité & Contact"
       >
         <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <UFormField label="Prénom" name="prenom" required>
-            <UInput v-model="form.prenom" class="w-full" />
+          <UFormField
+            label="Prénom"
+            name="prenom"
+            required
+          >
+            <UInput
+              v-model="form.prenom"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Nom" name="nom" required>
-            <UInput v-model="form.nom" class="w-full" />
+          <UFormField
+            label="Nom"
+            name="nom"
+            required
+          >
+            <UInput
+              v-model="form.nom"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Moyen de contact" name="moyenContact" class="col-span-full">
-            <UInput v-model="form.moyenContact" placeholder="Mail, téléphone, LinkedIn..." class="w-full" />
+          <UFormField
+            label="Moyen de contact"
+            name="moyenContact"
+            class="col-span-full"
+          >
+            <UInput
+              v-model="form.moyenContact"
+              placeholder="Mail, téléphone, LinkedIn..."
+              class="w-full"
+            />
           </UFormField>
         </section>
       </CarteTitree>
@@ -49,12 +71,22 @@
         title="Compétences & Expériences"
       >
         <section class="space-y-4">
-          <UFormField label="Technologies (séparées par une virgule)" name="technologies">
-            <UInput v-model="technologiesInput" placeholder="Ex. Python, dbt, Snowflake" class="w-full" />
+          <UFormField
+            label="Technologies (séparées par une virgule)"
+            name="technologies"
+          >
+            <UInput
+              v-model="technologiesInput"
+              placeholder="Ex. Python, dbt, Snowflake"
+              class="w-full"
+            />
           </UFormField>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <UFormField label="Niveau" name="niveau">
+            <UFormField
+              label="Niveau"
+              name="niveau"
+            >
               <USelect
                 v-model="form.niveau"
                 :items="['Opérationnel', 'Senior', 'Expert']"
@@ -63,13 +95,28 @@
               />
             </UFormField>
 
-            <UFormField label="TJM souhaité (€)" name="tjm">
-              <UInput v-model="form.tjm" type="number" placeholder="Ex. 550" class="w-full" />
+            <UFormField
+              label="TJM souhaité (€)"
+              name="tjm"
+            >
+              <UInput
+                v-model="form.tjm"
+                type="number"
+                placeholder="Ex. 550"
+                class="w-full"
+              />
             </UFormField>
           </div>
 
-          <UFormField label="Expériences clés" name="experiencesCles">
-            <UTextarea v-model="form.experiencesCles" :rows="3" class="w-full" />
+          <UFormField
+            label="Expériences clés"
+            name="experiencesCles"
+          >
+            <UTextarea
+              v-model="form.experiencesCles"
+              :rows="3"
+              class="w-full"
+            />
           </UFormField>
         </section>
       </CarteTitree>
@@ -79,19 +126,42 @@
         title="Disponibilité & Sollicitation"
       >
         <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <UFormField label="Ville" name="ville">
-            <UInput v-model="form.ville" class="w-full" />
+          <UFormField
+            label="Ville"
+            name="ville"
+          >
+            <UInput
+              v-model="form.ville"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Disponibilité" name="disponibilite">
-            <UInput v-model="form.disponibilite" placeholder="Immédiate, À partir du..." class="w-full" />
+          <UFormField
+            label="Disponibilité"
+            name="disponibilite"
+          >
+            <UInput
+              v-model="form.disponibilite"
+              placeholder="Immédiate, À partir du..."
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Date de sollicitation" name="dateSollicitation">
-            <UInput v-model="form.dateSollicitation" type="date" class="w-full" />
+          <UFormField
+            label="Date de sollicitation"
+            name="dateSollicitation"
+          >
+            <UInput
+              v-model="form.dateSollicitation"
+              type="date"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Issue de la sollicitation" name="issue">
+          <UFormField
+            label="Issue de la sollicitation"
+            name="issue"
+          >
             <USelect
               v-model="form.issue"
               :items="ISSUES"
@@ -113,14 +183,16 @@
       </footer>
     </UForm>
 
-    <div v-else class="text-gray-500 dark:text-gray-400 py-4">
+    <div
+      v-else
+      class="text-gray-500 dark:text-gray-400 py-4"
+    >
       Profil extérieur introuvable.
     </div>
   </UContainer>
 </template>
 
 <script setup lang="ts">
-
 const route = useRoute()
 const toast = useToast()
 

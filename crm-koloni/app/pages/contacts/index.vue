@@ -5,7 +5,6 @@
       title="Contacts"
     >
       <div class="flex flex-col gap-4">
-        
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <UInput
             v-model="recherche"
@@ -13,7 +12,7 @@
             placeholder="Recherche"
             class="max-w-xl w-full"
           />
-          
+
           <UButton
             label="Ajouter un contact"
             icon="i-lucide-user-plus"

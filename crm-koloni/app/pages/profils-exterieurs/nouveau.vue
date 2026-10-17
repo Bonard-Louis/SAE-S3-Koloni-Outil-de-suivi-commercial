@@ -29,16 +29,40 @@
         title="Identité & Contact"
       >
         <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <UFormField label="Prénom" name="prenom" required>
-            <UInput v-model="form.prenom" placeholder="Prénom" class="w-full" />
+          <UFormField
+            label="Prénom"
+            name="prenom"
+            required
+          >
+            <UInput
+              v-model="form.prenom"
+              placeholder="Prénom"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Nom" name="nom" required>
-            <UInput v-model="form.nom" placeholder="Nom" class="w-full" />
+          <UFormField
+            label="Nom"
+            name="nom"
+            required
+          >
+            <UInput
+              v-model="form.nom"
+              placeholder="Nom"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Moyen de contact" name="moyenContact" class="col-span-full">
-            <UInput v-model="form.moyenContact" placeholder="Mail, téléphone, LinkedIn..." class="w-full" />
+          <UFormField
+            label="Moyen de contact"
+            name="moyenContact"
+            class="col-span-full"
+          >
+            <UInput
+              v-model="form.moyenContact"
+              placeholder="Mail, téléphone, LinkedIn..."
+              class="w-full"
+            />
           </UFormField>
         </section>
       </CarteTitree>
@@ -48,12 +72,22 @@
         title="Compétences & Expériences"
       >
         <section class="space-y-4">
-          <UFormField label="Technologies (séparées par une virgule)" name="technologies">
-            <UInput v-model="technologiesInput" placeholder="Ex. Python, dbt, Snowflake" class="w-full" />
+          <UFormField
+            label="Technologies (séparées par une virgule)"
+            name="technologies"
+          >
+            <UInput
+              v-model="technologiesInput"
+              placeholder="Ex. Python, dbt, Snowflake"
+              class="w-full"
+            />
           </UFormField>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <UFormField label="Niveau d'expérience" name="niveau">
+            <UFormField
+              label="Niveau d'expérience"
+              name="niveau"
+            >
               <USelect
                 v-model="form.niveau"
                 :items="['Opérationnel', 'Senior', 'Expert']"
@@ -62,13 +96,29 @@
               />
             </UFormField>
 
-            <UFormField label="TJM souhaité (€)" name="tjm">
-              <UInput v-model="form.tjm" type="number" placeholder="Ex. 500" class="w-full" />
+            <UFormField
+              label="TJM souhaité (€)"
+              name="tjm"
+            >
+              <UInput
+                v-model="form.tjm"
+                type="number"
+                placeholder="Ex. 500"
+                class="w-full"
+              />
             </UFormField>
           </div>
 
-          <UFormField label="Expériences clés" name="experiencesCles">
-            <UTextarea v-model="form.experiencesCles" :rows="3" placeholder="Résumé des expériences..." class="w-full" />
+          <UFormField
+            label="Expériences clés"
+            name="experiencesCles"
+          >
+            <UTextarea
+              v-model="form.experiencesCles"
+              :rows="3"
+              placeholder="Résumé des expériences..."
+              class="w-full"
+            />
           </UFormField>
         </section>
       </CarteTitree>
@@ -78,19 +128,44 @@
         title="Disponibilité & Sollicitation"
       >
         <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <UFormField label="Ville" name="ville">
-            <UInput v-model="form.ville" placeholder="Ex. Toulouse, Paris..." class="w-full" />
+          <UFormField
+            label="Ville"
+            name="ville"
+          >
+            <UInput
+              v-model="form.ville"
+              placeholder="Ex. Toulouse, Paris..."
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Disponibilité" name="disponibilite">
-            <UInput v-model="form.disponibilite" placeholder="Immédiate, À partir du..." class="w-full" />
+          <UFormField
+            label="Disponibilité"
+            name="disponibilite"
+          >
+            <UInput
+              v-model="form.disponibilite"
+              placeholder="Immédiate, À partir du..."
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Date de sollicitation" name="dateSollicitation" required>
-            <UInput v-model="form.dateSollicitation" type="date" class="w-full" />
+          <UFormField
+            label="Date de sollicitation"
+            name="dateSollicitation"
+            required
+          >
+            <UInput
+              v-model="form.dateSollicitation"
+              type="date"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Issue de la sollicitation" name="issue">
+          <UFormField
+            label="Issue de la sollicitation"
+            name="issue"
+          >
             <USelect
               v-model="form.issue"
               :items="ISSUES"
