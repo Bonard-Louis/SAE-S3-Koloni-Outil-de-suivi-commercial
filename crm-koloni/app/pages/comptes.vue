@@ -103,7 +103,8 @@ async function enregistrer() {
   if (!compteSelectionne.value) return
   enregistrement.value = true
   try {
-    await $fetch(`/api/comptes/${compteSelectionne.value.id}`, {
+    // Cast en string : sinon TypeScript confond l'URL avec les routes fixes /api/comptes/compteurs (GET seulement)
+    await $fetch(`/api/comptes/${compteSelectionne.value.id}` as string, {
       method: 'PATCH',
       body: { role: role.value, actif: actif.value }
     })
