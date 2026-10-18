@@ -32,6 +32,25 @@ interface BadgeItem {
   to?: string // si présent : pastille cliquable (NuxtLink)
 }
 
+// Contact — personne rattachée à une entreprise cliente (cahier des charges §3.3)
+interface Contact {
+  id: string
+  nom: string
+  prenom: string
+  role?: string // fonction chez le client (colonne « Poste »)
+  entrepriseId?: string // facultative : le contact peut être saisi avant que son entreprise soit connue
+  entreprise?: string // nom de l'entreprise
+  mail?: string
+  telephone?: string
+  lienLinkedin?: string
+}
+
+// EntrepriseCliente — société cliente proposée dans la liste déroulante d'un contact
+interface EntrepriseCliente {
+  id: string
+  nom: string
+}
+
 // PersonneListee — personne affichée dans une liste de puces supprimables (ListePersonnes)
 interface PersonneListee {
   id: string

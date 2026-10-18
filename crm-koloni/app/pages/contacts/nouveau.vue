@@ -69,7 +69,7 @@
             name="entreprise"
           >
             <USelect
-              v-model="form.entreprise"
+              v-model="form.entrepriseId"
               :items="entreprisesDisponibles"
               placeholder="Sélectionner une entreprise"
               class="w-full"
@@ -95,6 +95,19 @@
             <UInput
               v-model="form.telephone"
               placeholder="06 00 00 00 00"
+              class="w-full"
+            />
+          </UFormField>
+
+          <UFormField
+            label="Lien LinkedIn"
+            name="lienLinkedin"
+            description="Au moins un mail, un téléphone ou un lien LinkedIn"
+            class="col-span-full"
+          >
+            <UInput
+              v-model="form.lienLinkedin"
+              placeholder="https://www.linkedin.com/in/..."
               class="w-full"
             />
           </UFormField>
@@ -125,15 +138,17 @@
 const router = useRouter()
 const toast = useToast()
 
-const entreprisesDisponibles = ['Capgemini', 'EDF', 'Orange', 'SNCF', 'Airbus']
+const { data: entreprises } = await useFetch<EntrepriseCliente[]>('/api/entreprises', { default: () => [] })
+const entreprisesDisponibles = computed(() => entreprises.value.map(e => ({ label: e.nom, value: e.id })))
 
 const form = reactive({
   prenom: '',
   nom: '',
   role: '',
-  entreprise: undefined as string | undefined,
+  entrepriseId: undefined as string | undefined,
   mail: '',
-  telephone: ''
+  telephone: '',
+  lienLinkedin: ''
 })
 
 const creation = ref(false)
@@ -143,13 +158,19 @@ async function creerContact() {
     toast.add({ title: 'Le prénom et le nom sont obligatoires.', color: 'error' })
     return
   }
+  if (!form.mail.trim() && !form.telephone.trim() && !form.lienLinkedin.trim()) {
+    toast.add({ title: 'Renseignez au moins un mail, un téléphone ou un lien LinkedIn.', color: 'error' })
+    return
+  }
 
   creation.value = true
   try {
+    await $fetch('/api/contacts', { method: 'POST', body: form })
     toast.add({ title: 'Contact créé avec succès', color: 'success' })
-    router.push('/contacts')
-  } catch {
-    toast.add({ title: 'Erreur lors de la création', color: 'error' })
+    await router.push('/contacts')
+  } catch (error) {
+    const message = (error as { data?: { statusMessage?: string } }).data?.statusMessage
+    toast.add({ title: 'Création impossible', description: message, color: 'error' })
   } finally {
     creation.value = false
   }
