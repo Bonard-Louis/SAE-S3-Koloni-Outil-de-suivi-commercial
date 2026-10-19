@@ -5,12 +5,20 @@
       title="Opportunités"
     >
       <div class="flex flex-col gap-4">
-        <UInput
-          v-model="recherche"
-          icon="i-lucide-search"
-          placeholder="Recherche"
-          class="max-w-xl"
-        />
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <UInput
+            v-model="recherche"
+            icon="i-lucide-search"
+            placeholder="Recherche"
+            class="max-w-xl"
+          />
+          <UButton
+            label="Ajouter une opportunité"
+            icon="material-symbols-light:docs-add-on"
+            to="/opportunites/nouveau"
+            class="justify-center"
+          />
+        </div>
 
         <div class="flex flex-wrap items-end justify-between gap-3">
           <div class="flex flex-wrap items-end gap-3">
