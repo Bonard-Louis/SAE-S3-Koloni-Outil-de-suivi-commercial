@@ -43,7 +43,7 @@ const items = computed<NavigationMenuItem[]>(() => [
   { label: 'Dashboard', icon: 'i-lucide-layout-dashboard', to: '/' },
   { label: 'Opportunités', icon: 'i-lucide-briefcase', to: '/opportunites' },
   { label: 'Contacts', icon: 'i-lucide-users', to: '/contacts' },
-  { label: 'Profils extérieurs', icon: 'i-lucide-user-search', to: '/profils-exterieurs' },
+  { label: 'Consultants', icon: 'i-lucide-user-search', to: '/profils-exterieurs' },
   ...(isAdmin.value ? [{ label: 'Comptes', icon: 'i-lucide-shield', to: '/comptes' }] : [])
 ])
 
