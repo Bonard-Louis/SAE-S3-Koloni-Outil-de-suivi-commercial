@@ -34,6 +34,7 @@
       class="space-y-5"
       @submit="creer"
     >
+      <!-- Ce qu'est l'opportunité : d'où elle vient, quand et pour qui -->
       <CarteTitree
         icon="i-lucide-briefcase"
         title="Source et besoin"
@@ -65,6 +66,18 @@
           </UFormField>
 
           <UFormField
+            label="Date du signal"
+            name="dateSignal"
+            required
+          >
+            <UInput
+              v-model="form.dateSignal"
+              type="date"
+              class="w-full"
+            />
+          </UFormField>
+
+          <UFormField
             label="Type de mission"
             name="typeMission"
           >
@@ -72,7 +85,7 @@
               v-model="form.typeMission"
               :items="typesMission"
               create-item="always"
-              placeholder="Choisir ou saisir un type"
+              placeholder="Sélectionner ou saisir un type"
               class="w-full"
             />
           </UFormField>
@@ -90,6 +103,18 @@
           </UFormField>
 
           <UFormField
+            label="Température"
+            name="temperature"
+          >
+            <USelect
+              v-model="form.temperature"
+              :items="temperatures"
+              placeholder="Sélectionner une température"
+              class="w-full"
+            />
+          </UFormField>
+
+          <UFormField
             label="Client final"
             name="clientFinal"
           >
@@ -102,6 +127,7 @@
             />
           </UFormField>
 
+          <!-- Client final inconnu : on décrit au moins son secteur et sa taille (la base refuse les deux à la fois) -->
           <template v-if="!form.clientFinal">
             <UFormField
               label="Secteur du client"
@@ -123,6 +149,10 @@
                 class="w-full"
               />
             </UFormField>
+            <!-- Une seule aide pour les deux champs, sur toute la largeur, au style des aides de UFormField -->
+            <p class="md:col-span-2 -mt-2 text-sm text-muted">
+              {{ AIDE_CLIENT_INCONNU }}
+            </p>
           </template>
 
           <UFormField
@@ -135,14 +165,14 @@
               :items="membres"
               value-key="id"
               label-key="label"
-              placeholder="Choisir un apporteur"
+              placeholder="Sélectionner un apporteur"
               :loading="chargementOptions"
               class="w-full"
             />
           </UFormField>
 
           <UFormField
-            label="Moteur (facultatif)"
+            label="Moteur"
             name="moteurId"
           >
             <USelectMenu
@@ -150,7 +180,7 @@
               :items="membres"
               value-key="id"
               label-key="label"
-              placeholder="Choisir un moteur"
+              placeholder="Sélectionner un moteur"
               :loading="chargementOptions"
               clear
               class="w-full"
@@ -159,6 +189,7 @@
         </section>
       </CarteTitree>
 
+      <!-- Ce que demande la mission : technologies, rémunération, durée, lieu et urgence -->
       <CarteTitree
         icon="i-lucide-list-checks"
         title="Conditions de la mission"
@@ -179,15 +210,80 @@
             />
           </UFormField>
 
+          <!-- Grisée tant qu'aucune technologie n'est choisie : l'aide dit pourquoi -->
           <UFormField
             label="Technologie principale"
             name="technologiePrincipale"
+            :help="form.technologies.length === 0 ? 'Choisissez d\'abord des technologies.' : undefined"
           >
             <USelect
               v-model="form.technologiePrincipale"
               :items="form.technologies"
-              placeholder="Aucune"
+              placeholder="Sélectionner la technologie principale"
               :disabled="form.technologies.length === 0"
+              class="w-full"
+            />
+          </UFormField>
+
+          <UFormField
+            label="Timing"
+            name="timing"
+          >
+            <USelect
+              v-model="form.timing"
+              :items="timings"
+              placeholder="Sélectionner un timing"
+              class="w-full"
+            />
+          </UFormField>
+
+          <UFormField
+            label="TJM annoncé (€)"
+            name="tjmAnnonce"
+          >
+            <UInputNumber
+              v-model="form.tjmAnnonce"
+              :min="0"
+              :step="10"
+              placeholder="Ex. 550"
+              class="w-full"
+            />
+          </UFormField>
+
+          <UFormField
+            label="TJM client (€)"
+            name="tjmClient"
+          >
+            <UInputNumber
+              v-model="form.tjmClient"
+              :min="0"
+              :step="10"
+              placeholder="Ex. 700"
+              class="w-full"
+            />
+          </UFormField>
+
+          <UFormField
+            label="Durée annoncée (mois)"
+            name="dureeAnnonceeMois"
+          >
+            <UInputNumber
+              v-model="form.dureeAnnonceeMois"
+              :min="0.5"
+              :step="0.5"
+              placeholder="Ex. 6"
+              class="w-full"
+            />
+          </UFormField>
+
+          <UFormField
+            label="Charge"
+            name="charge"
+          >
+            <USelect
+              v-model="form.charge"
+              :items="charges"
+              placeholder="Sélectionner une charge"
               class="w-full"
             />
           </UFormField>
@@ -210,91 +306,7 @@
             <USelect
               v-model="form.mode"
               :items="modes"
-              :placeholder="PLACEHOLDER_LISTE"
-              class="w-full"
-            />
-          </UFormField>
-
-          <UFormField
-            label="Température"
-            name="temperature"
-          >
-            <USelect
-              v-model="form.temperature"
-              :items="temperatures"
-              :placeholder="PLACEHOLDER_LISTE"
-              class="w-full"
-            />
-          </UFormField>
-
-          <UFormField
-            label="TJM annoncé (€)"
-            name="tjmAnnonce"
-          >
-            <UInputNumber
-              v-model="form.tjmAnnonce"
-              :min="0"
-              :step="10"
-              class="w-full"
-            />
-          </UFormField>
-
-          <UFormField
-            label="TJM client (€)"
-            name="tjmClient"
-          >
-            <UInputNumber
-              v-model="form.tjmClient"
-              :min="0"
-              :step="10"
-              class="w-full"
-            />
-          </UFormField>
-
-          <UFormField
-            label="Durée annoncée (mois)"
-            name="dureeAnnonceeMois"
-          >
-            <UInputNumber
-              v-model="form.dureeAnnonceeMois"
-              :min="0.5"
-              :step="0.5"
-              class="w-full"
-            />
-          </UFormField>
-
-          <UFormField
-            label="Charge"
-            name="charge"
-          >
-            <USelect
-              v-model="form.charge"
-              :items="charges"
-              :placeholder="PLACEHOLDER_LISTE"
-              class="w-full"
-            />
-          </UFormField>
-
-          <UFormField
-            label="Timing"
-            name="timing"
-          >
-            <USelect
-              v-model="form.timing"
-              :items="timings"
-              :placeholder="PLACEHOLDER_LISTE"
-              class="w-full"
-            />
-          </UFormField>
-
-          <UFormField
-            label="Date du signal"
-            name="dateSignal"
-            required
-          >
-            <UInput
-              v-model="form.dateSignal"
-              type="date"
+              placeholder="Sélectionner un mode"
               class="w-full"
             />
           </UFormField>
@@ -313,7 +325,7 @@
             <USelect
               v-model="form.modeCandidature"
               :items="modesCandidature"
-              :placeholder="PLACEHOLDER_LISTE"
+              placeholder="Sélectionner un mode de candidature"
               class="w-full"
             />
           </UFormField>
@@ -341,7 +353,9 @@
             />
           </UFormField>
 
+          <!-- Une opportunité en interne strict ne s'ouvre jamais à l'extérieur (EF-10) : pas de lien d'annonce -->
           <UFormField
+            v-if="form.niveauDiffusion !== 'interne_strict'"
             label="Lien de l'annonce extérieure"
             name="lienAnnonceExterieure"
             class="md:col-span-2"
@@ -426,7 +440,9 @@ const technologiesDisponibles = computed(() => options.value?.technologies ?? []
 
 // Grille à deux colonnes des trois cartes du formulaire
 const CLASSE_GRILLE = 'grid grid-cols-1 md:grid-cols-2 gap-4'
-const PLACEHOLDER_LISTE = 'Sélectionner'
+
+// Aide affichée sous le secteur et la taille (une fois pour les deux), qui ne servent que sans client final
+const AIDE_CLIENT_INCONNU = 'À renseigner si le client final n\'est pas connu.'
 
 // Options des listes déroulantes, déduites des codes partagés avec le serveur (shared/utils/opportunites.ts)
 const sources = optionsDe(LIBELLES_SOURCE)
@@ -463,6 +479,11 @@ watch(entreprises, (liste) => {
   if (form.clientFinal && !liste.includes(form.clientFinal)) {
     form.clientFinal = undefined
   }
+})
+
+// Le champ du lien disparaît en interne strict : on vide aussi sa valeur, pour ne pas l'envoyer
+watch(() => form.niveauDiffusion, (niveau) => {
+  if (niveau === 'interne_strict') form.lienAnnonceExterieure = ''
 })
 
 async function creer() {
