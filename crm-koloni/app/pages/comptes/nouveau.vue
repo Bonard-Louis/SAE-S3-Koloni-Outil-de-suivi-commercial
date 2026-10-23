@@ -11,10 +11,10 @@
     </div>
 
     <header class="mb-8">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+      <h1 class="text-2xl font-bold text-highlighted">
         Ajouter un membre
       </h1>
-      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+      <p class="mt-1 text-sm text-muted">
         Créez un compte pour un membre du collectif.
       </p>
     </header>
@@ -29,29 +29,74 @@
         title="Informations du membre"
       >
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <UFormField label="Prénom" name="prenom" required>
-            <UInput v-model="form.prenom" class="w-full" />
+          <UFormField
+            label="Prénom"
+            name="prenom"
+            required
+          >
+            <UInput
+              v-model="form.prenom"
+              class="w-full"
+            />
           </UFormField>
-          <UFormField label="Nom" name="nom" required>
-            <UInput v-model="form.nom" class="w-full" />
+          <UFormField
+            label="Nom"
+            name="nom"
+            required
+          >
+            <UInput
+              v-model="form.nom"
+              class="w-full"
+            />
           </UFormField>
-          <UFormField label="Adresse email" name="mail" required>
-            <UInput v-model="form.mail" type="email" class="w-full" />
+          <UFormField
+            label="Adresse email"
+            name="mail"
+            required
+          >
+            <UInput
+              v-model="form.mail"
+              type="email"
+              class="w-full"
+            />
           </UFormField>
-          <UFormField label="Mot de passe temporaire" name="password" required>
-            <UInput v-model="form.password" type="password" class="w-full" />
+          <UFormField
+            label="Mot de passe temporaire"
+            name="password"
+            required
+          >
+            <UInput
+              v-model="form.password"
+              type="password"
+              class="w-full"
+            />
           </UFormField>
-          <UFormField label="Rôle" name="role">
-            <USelect v-model="form.role" :items="roles" class="w-full" />
+          <UFormField
+            label="Rôle"
+            name="role"
+          >
+            <USelect
+              v-model="form.role"
+              :items="roles"
+              class="w-full"
+            />
           </UFormField>
         </div>
       </CarteTitree>
 
       <footer class="flex items-center justify-end gap-3 pt-4">
-        <UButton to="/comptes" color="neutral" variant="ghost">
+        <UButton
+          to="/comptes"
+          color="neutral"
+          variant="ghost"
+        >
           Annuler
         </UButton>
-        <UButton type="submit" :loading="creation" icon="i-lucide-check">
+        <UButton
+          type="submit"
+          :loading="creation"
+          icon="i-lucide-check"
+        >
           Créer le membre
         </UButton>
       </footer>

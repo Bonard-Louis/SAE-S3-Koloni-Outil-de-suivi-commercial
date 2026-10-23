@@ -11,10 +11,10 @@
     </div>
 
     <header class="mb-8">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+      <h1 class="text-2xl font-bold text-highlighted">
         Ajouter une opportunité
       </h1>
-      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+      <p class="mt-1 text-sm text-muted">
         Renseignez le besoin, les conditions de la mission et les modalités de candidature.
       </p>
     </header>
@@ -38,8 +38,13 @@
         icon="i-lucide-briefcase"
         title="Source et besoin"
       >
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <UFormField label="Titre" name="titre" required class="md:col-span-2">
+        <section :class="CLASSE_GRILLE">
+          <UFormField
+            label="Titre"
+            name="titre"
+            required
+            class="md:col-span-2"
+          >
             <UInput
               v-model="form.titre"
               placeholder="Ex. Migration de données"
@@ -47,7 +52,10 @@
             />
           </UFormField>
 
-          <UFormField label="Source du besoin" name="source">
+          <UFormField
+            label="Source du besoin"
+            name="source"
+          >
             <USelect
               v-model="form.source"
               :items="sources"
@@ -56,7 +64,10 @@
             />
           </UFormField>
 
-          <UFormField label="Type de mission" name="typeMission">
+          <UFormField
+            label="Type de mission"
+            name="typeMission"
+          >
             <UInputMenu
               v-model="form.typeMission"
               :items="typesMission"
@@ -66,7 +77,10 @@
             />
           </UFormField>
 
-          <UFormField label="Niveau recherché" name="niveauRecherche">
+          <UFormField
+            label="Niveau recherché"
+            name="niveauRecherche"
+          >
             <USelect
               v-model="form.niveauRecherche"
               :items="niveaux"
@@ -75,7 +89,10 @@
             />
           </UFormField>
 
-          <UFormField label="Client final" name="clientFinal">
+          <UFormField
+            label="Client final"
+            name="clientFinal"
+          >
             <UInputMenu
               v-model="form.clientFinal"
               :items="entreprises"
@@ -86,15 +103,33 @@
           </UFormField>
 
           <template v-if="!form.clientFinal">
-            <UFormField label="Secteur du client" name="clientFinalSecteur">
-              <UInput v-model="form.clientFinalSecteur" placeholder="Ex. Banque, industrie" class="w-full" />
+            <UFormField
+              label="Secteur du client"
+              name="clientFinalSecteur"
+            >
+              <UInput
+                v-model="form.clientFinalSecteur"
+                placeholder="Ex. Banque, industrie"
+                class="w-full"
+              />
             </UFormField>
-            <UFormField label="Taille du client" name="clientFinalTaille">
-              <UInput v-model="form.clientFinalTaille" placeholder="Ex. PME, grand compte" class="w-full" />
+            <UFormField
+              label="Taille du client"
+              name="clientFinalTaille"
+            >
+              <UInput
+                v-model="form.clientFinalTaille"
+                placeholder="Ex. PME, grand compte"
+                class="w-full"
+              />
             </UFormField>
           </template>
 
-          <UFormField label="Apporteur" name="apporteurId" required>
+          <UFormField
+            label="Apporteur"
+            name="apporteurId"
+            required
+          >
             <USelectMenu
               v-model="form.apporteurId"
               :items="membres"
@@ -106,7 +141,10 @@
             />
           </UFormField>
 
-          <UFormField label="Moteur (facultatif)" name="moteurId">
+          <UFormField
+            label="Moteur (facultatif)"
+            name="moteurId"
+          >
             <USelectMenu
               v-model="form.moteurId"
               :items="membres"
@@ -125,8 +163,12 @@
         icon="i-lucide-list-checks"
         title="Conditions de la mission"
       >
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <UFormField label="Technologies" name="technologies" class="md:col-span-2">
+        <section :class="CLASSE_GRILLE">
+          <UFormField
+            label="Technologies"
+            name="technologies"
+            class="md:col-span-2"
+          >
             <UInputMenu
               v-model="form.technologies"
               :items="technologiesDisponibles"
@@ -137,7 +179,10 @@
             />
           </UFormField>
 
-          <UFormField label="Technologie principale" name="technologiePrincipale">
+          <UFormField
+            label="Technologie principale"
+            name="technologiePrincipale"
+          >
             <USelect
               v-model="form.technologiePrincipale"
               :items="form.technologies"
@@ -147,40 +192,111 @@
             />
           </UFormField>
 
-          <UFormField label="Ville" name="ville">
-            <UInput v-model="form.ville" placeholder="Ex. Paris" class="w-full" />
+          <UFormField
+            label="Ville"
+            name="ville"
+          >
+            <UInput
+              v-model="form.ville"
+              placeholder="Ex. Paris"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Mode de travail" name="mode">
-            <USelect v-model="form.mode" :items="modes" placeholder="Sélectionner" class="w-full" />
+          <UFormField
+            label="Mode de travail"
+            name="mode"
+          >
+            <USelect
+              v-model="form.mode"
+              :items="modes"
+              :placeholder="PLACEHOLDER_LISTE"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Température" name="temperature">
-            <USelect v-model="form.temperature" :items="temperatures" placeholder="Sélectionner" class="w-full" />
+          <UFormField
+            label="Température"
+            name="temperature"
+          >
+            <USelect
+              v-model="form.temperature"
+              :items="temperatures"
+              :placeholder="PLACEHOLDER_LISTE"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="TJM annoncé (€)" name="tjmAnnonce">
-            <UInputNumber v-model="form.tjmAnnonce" :min="0" :step="10" class="w-full" />
+          <UFormField
+            label="TJM annoncé (€)"
+            name="tjmAnnonce"
+          >
+            <UInputNumber
+              v-model="form.tjmAnnonce"
+              :min="0"
+              :step="10"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="TJM client (€)" name="tjmClient">
-            <UInputNumber v-model="form.tjmClient" :min="0" :step="10" class="w-full" />
+          <UFormField
+            label="TJM client (€)"
+            name="tjmClient"
+          >
+            <UInputNumber
+              v-model="form.tjmClient"
+              :min="0"
+              :step="10"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Durée annoncée (mois)" name="dureeAnnonceeMois">
-            <UInputNumber v-model="form.dureeAnnonceeMois" :min="0.5" :step="0.5" class="w-full" />
+          <UFormField
+            label="Durée annoncée (mois)"
+            name="dureeAnnonceeMois"
+          >
+            <UInputNumber
+              v-model="form.dureeAnnonceeMois"
+              :min="0.5"
+              :step="0.5"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Charge" name="charge">
-            <USelect v-model="form.charge" :items="charges" placeholder="Sélectionner" class="w-full" />
+          <UFormField
+            label="Charge"
+            name="charge"
+          >
+            <USelect
+              v-model="form.charge"
+              :items="charges"
+              :placeholder="PLACEHOLDER_LISTE"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Timing" name="timing">
-            <USelect v-model="form.timing" :items="timings" placeholder="Sélectionner" class="w-full" />
+          <UFormField
+            label="Timing"
+            name="timing"
+          >
+            <USelect
+              v-model="form.timing"
+              :items="timings"
+              :placeholder="PLACEHOLDER_LISTE"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Date du signal" name="dateSignal" required>
-            <UInput v-model="form.dateSignal" type="date" class="w-full" />
+          <UFormField
+            label="Date du signal"
+            name="dateSignal"
+            required
+          >
+            <UInput
+              v-model="form.dateSignal"
+              type="date"
+              class="w-full"
+            />
           </UFormField>
         </section>
       </CarteTitree>
@@ -189,16 +305,35 @@
         icon="i-lucide-send"
         title="Candidature et diffusion"
       >
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <UFormField label="Mode de candidature" name="modeCandidature">
-            <USelect v-model="form.modeCandidature" :items="modesCandidature" placeholder="Sélectionner" class="w-full" />
+        <section :class="CLASSE_GRILLE">
+          <UFormField
+            label="Mode de candidature"
+            name="modeCandidature"
+          >
+            <USelect
+              v-model="form.modeCandidature"
+              :items="modesCandidature"
+              :placeholder="PLACEHOLDER_LISTE"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Précision du mode de candidature" name="modeCandidaturePrecision">
-            <UInput v-model="form.modeCandidaturePrecision" placeholder="Nom, mail ou canal de contact" class="w-full" />
+          <UFormField
+            label="Précision du mode de candidature"
+            name="modeCandidaturePrecision"
+          >
+            <UInput
+              v-model="form.modeCandidaturePrecision"
+              placeholder="Nom, mail ou canal de contact"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Niveau de diffusion" name="niveauDiffusion" class="md:col-span-2">
+          <UFormField
+            label="Niveau de diffusion"
+            name="niveauDiffusion"
+            class="md:col-span-2"
+          >
             <URadioGroup
               v-model="form.niveauDiffusion"
               :items="niveauxDiffusion"
@@ -206,7 +341,11 @@
             />
           </UFormField>
 
-          <UFormField label="Lien de l'annonce extérieure" name="lienAnnonceExterieure" class="md:col-span-2">
+          <UFormField
+            label="Lien de l'annonce extérieure"
+            name="lienAnnonceExterieure"
+            class="md:col-span-2"
+          >
             <UInput
               v-model="form.lienAnnonceExterieure"
               type="url"
@@ -218,10 +357,18 @@
       </CarteTitree>
 
       <footer class="flex items-center justify-end gap-3 pt-4">
-        <UButton to="/opportunites" color="neutral" variant="ghost">
+        <UButton
+          to="/opportunites"
+          color="neutral"
+          variant="ghost"
+        >
           Annuler
         </UButton>
-        <UButton type="submit" :loading="creation" icon="i-lucide-check">
+        <UButton
+          type="submit"
+          :loading="creation"
+          icon="i-lucide-check"
+        >
           Créer l'opportunité
         </UButton>
       </footer>
@@ -245,9 +392,9 @@ const { data: options, pending: chargementOptions, error: erreurOptions } = awai
 
 const form = reactive({
   titre: '',
-  source: undefined as string | undefined,
+  source: undefined as keyof typeof LIBELLES_SOURCE | undefined,
   typeMission: undefined as string | undefined,
-  niveauRecherche: undefined as string | undefined,
+  niveauRecherche: undefined as keyof typeof LIBELLES_NIVEAU | undefined,
   apporteurId: user.value?.id ?? '',
   moteurId: undefined as string | undefined,
   clientFinal: undefined as string | undefined,
@@ -257,13 +404,13 @@ const form = reactive({
   tjmClient: undefined as number | undefined,
   dureeAnnonceeMois: undefined as number | undefined,
   charge: undefined as string | undefined,
-  timing: undefined as string | undefined,
+  timing: undefined as keyof typeof LIBELLES_TIMING | undefined,
   ville: '',
-  mode: undefined as string | undefined,
-  temperature: undefined as string | undefined,
-  modeCandidature: undefined as string | undefined,
+  mode: undefined as keyof typeof LIBELLES_MODE | undefined,
+  temperature: undefined as keyof typeof LIBELLES_TEMPERATURE | undefined,
+  modeCandidature: undefined as keyof typeof LIBELLES_MODE_CANDIDATURE | undefined,
   modeCandidaturePrecision: '',
-  niveauDiffusion: 'reseau_perso',
+  niveauDiffusion: 'reseau_perso' as keyof typeof LIBELLES_NIVEAU_DIFFUSION,
   lienAnnonceExterieure: '',
   dateSignal: new Date().toISOString().slice(0, 10),
   technologies: [] as string[],
@@ -277,42 +424,32 @@ const membres = computed(() => (options.value?.membres ?? []).map(m => ({
 const entreprises = computed(() => options.value?.entreprises ?? [])
 const technologiesDisponibles = computed(() => options.value?.technologies ?? [])
 
-const sources = [
-  { label: 'Client', value: 'client' },
-  { label: 'Commercial (ESN)', value: 'commercial' },
-  { label: 'Contact', value: 'contact' }
-]
+// Grille à deux colonnes des trois cartes du formulaire
+const CLASSE_GRILLE = 'grid grid-cols-1 md:grid-cols-2 gap-4'
+const PLACEHOLDER_LISTE = 'Sélectionner'
+
+// Options des listes déroulantes, déduites des codes partagés avec le serveur (shared/utils/opportunites.ts)
+const sources = optionsDe(LIBELLES_SOURCE)
+const niveaux = optionsDe(LIBELLES_NIVEAU)
+const modes = optionsDe(LIBELLES_MODE)
+const temperatures = optionsDe(LIBELLES_TEMPERATURE)
+const timings = optionsDe(LIBELLES_TIMING)
+const modesCandidature = optionsDe(LIBELLES_MODE_CANDIDATURE)
+
+// Explication de chaque niveau de diffusion, affichée sous son libellé
+const DESCRIPTIONS_DIFFUSION: Record<keyof typeof LIBELLES_NIVEAU_DIFFUSION, string> = {
+  libre: 'Le relais public de l\'opportunité est autorisé.',
+  reseau_perso: 'Partage de personne à personne, choix recommandé.',
+  interne_strict: 'Réservé aux membres du collectif.'
+}
+const niveauxDiffusion = optionsDe(LIBELLES_NIVEAU_DIFFUSION).map(option => ({
+  ...option,
+  description: DESCRIPTIONS_DIFFUSION[option.value]
+}))
+
+// Listes ouvertes (non contraintes en base) : de simples propositions
 const typesMission = ['Run', 'Build', 'Expertise']
-const niveaux = [
-  { label: 'Opérationnel', value: 'operationnel' },
-  { label: 'Senior', value: 'senior' },
-  { label: 'Expert', value: 'expert' }
-]
-const modes = [
-  { label: 'Télétravail', value: 'teletravail' },
-  { label: 'Hybride', value: 'hybride' },
-  { label: 'Présentiel', value: 'presentiel' }
-]
-const temperatures = [
-  { label: 'Chaud', value: 'chaud' },
-  { label: 'Tiède', value: 'tiede' }
-]
 const charges = ['Temps plein', '3-4 jours par semaine', '1-2 jours par semaine']
-const timings = [
-  { label: 'Urgent', value: 'urgent' },
-  { label: 'Dans moins d’un mois', value: 'moins_1_mois' },
-  { label: 'Dans plus d’un mois', value: 'plus_1_mois' }
-]
-const modesCandidature = [
-  { label: 'Via l’apporteur', value: 'via_apporteur' },
-  { label: 'Contact direct recruteur', value: 'contact_direct_recruteur' },
-  { label: 'Via le moteur', value: 'via_moteur' }
-]
-const niveauxDiffusion = [
-  { label: 'Libre', value: 'libre', description: 'Le relais public de l’opportunité est autorisé.' },
-  { label: 'Réseau personnel', value: 'reseau_perso', description: 'Partage de personne à personne, choix recommandé.' },
-  { label: 'Interne strict', value: 'interne_strict', description: 'Réservé aux membres du collectif.' }
-]
 
 const creation = ref(false)
 
