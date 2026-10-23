@@ -34,21 +34,8 @@ const UBadge = resolveComponent('UBadge')
 const UTooltip = resolveComponent('UTooltip')
 const NuxtLink = resolveComponent('NuxtLink')
 
-// Pour chaque statut : couleur du badge et couleur de la barre à gauche de la ligne
-const STATUTS: Record<StatutOpportunite, { couleur: NuxtUiColor, barre: string }> = {
-  'Signal': { couleur: 'neutral', barre: 'bg-neutral-400' },
-  'Matching': { couleur: 'info', barre: 'bg-info-500' },
-  'Proposé': { couleur: 'warning', barre: 'bg-warning-500' },
-  'En discussion': { couleur: 'warning', barre: 'bg-warning-500' },
-  'Signé': { couleur: 'success', barre: 'bg-success-500' },
-  'Perdu': { couleur: 'error', barre: 'bg-error-500' },
-  'En pause': { couleur: 'neutral', barre: 'bg-neutral-400' }
-}
-
-const COULEURS_TEMPERATURE: Record<Temperature, NuxtUiColor> = {
-  Chaud: 'error',
-  Tiède: 'info'
-}
+// Couleurs des statuts (STATUTS_OPPORTUNITE) et des températures (COULEURS_TEMPERATURE) :
+// partagées avec la fiche de détail, dans app/utils/opportunites.ts
 
 const CLASSE_TITRE = 'font-medium text-sm text-highlighted truncate'
 
@@ -66,8 +53,8 @@ const colonnesTableau = computed<TableColumn<Opportunite>[]>(() => [
     header: '',
     meta: { class: { th: 'w-1 p-0', td: 'w-1 p-0 pr-2' } },
     cell: ({ row }) => h('div', {
-      // Gris si le statut venant de la base de donnée n'est pas reconnu
-      class: ['w-1 rounded-sm self-stretch', STATUTS[row.original.statut]?.barre ?? 'bg-neutral-400'],
+      // Couleur du statut Signal si le statut venant de la base de donnée n'est pas reconnu
+      class: ['w-1 rounded-sm self-stretch', (STATUTS_OPPORTUNITE[row.original.statut] ?? STATUTS_OPPORTUNITE.Signal).barre],
       style: 'min-height: 2rem'
     })
   },
@@ -133,14 +120,14 @@ const colonnesTableau = computed<TableColumn<Opportunite>[]>(() => [
     }
   },
 
-  // Statut : badge plein, de la couleur définie dans STATUTS, avec l'infobulle « Statut »
+  // Statut : badge plein, de la couleur définie dans STATUTS_OPPORTUNITE, avec l'infobulle « Statut »
   {
     id: 'statut',
     header: 'Statut',
     meta: { class: { th: 'w-28 text-center', td: 'w-28 text-center' } },
     cell: ({ row }) => h(UTooltip, { text: 'Statut' }, () =>
       h(UBadge, {
-        color: STATUTS[row.original.statut]?.couleur,
+        color: STATUTS_OPPORTUNITE[row.original.statut]?.couleur,
         variant: 'solid',
         size: 'md'
       }, () => row.original.statut)
@@ -152,7 +139,7 @@ const colonnesTableau = computed<TableColumn<Opportunite>[]>(() => [
     accessorKey: 'dateSignal',
     header: 'Date signal',
     meta: { class: { th: 'w-28 text-center', td: 'w-28 text-center text-sm' } },
-    cell: ({ row }) => row.original.dateSignal?.split('-').reverse().join('/') ?? ''
+    cell: ({ row }) => formaterDate(row.original.dateSignal)
   }
 ])
 </script>
