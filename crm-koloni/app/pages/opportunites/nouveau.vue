@@ -87,6 +87,7 @@
               create-item="always"
               placeholder="Sélectionner ou saisir un type"
               class="w-full"
+              @create="creerTypeMission"
             />
           </UFormField>
 
@@ -114,9 +115,11 @@
             />
           </UFormField>
 
+          <!-- Une entreprise saisie qui n'existe pas encore est créée à l'enregistrement : l'aide le signale -->
           <UFormField
             label="Client final"
             name="clientFinal"
+            :help="clientFinalNouveau ? 'Nouvelle entreprise : elle sera ajoutée aux entreprises clientes.' : undefined"
           >
             <UInputMenu
               v-model="form.clientFinal"
@@ -124,6 +127,7 @@
               create-item="always"
               placeholder="Rechercher ou saisir une entreprise"
               class="w-full"
+              @create="creerClientFinal"
             />
           </UFormField>
 
@@ -207,6 +211,7 @@
               create-item="always"
               placeholder="Rechercher, choisir ou ajouter des technologies"
               class="w-full"
+              @create="creerTechnologie"
             />
           </UFormField>
 
@@ -435,8 +440,14 @@ const membres = computed(() => (options.value?.membres ?? []).map(m => ({
   ...m,
   label: `${m.prenom} ${m.nom} (${m.mail})`
 })))
-const entreprises = computed(() => options.value?.entreprises ?? [])
-const technologiesDisponibles = computed(() => options.value?.technologies ?? [])
+// Valeurs saisies dans le formulaire qui n'existaient pas encore (créées à l'enregistrement)
+const saisies = reactive({ entreprises: [] as string[], typesMission: [] as string[], technologies: [] as string[] })
+
+const entreprises = computed(() => [...(options.value?.entreprises ?? []), ...saisies.entreprises])
+const technologiesDisponibles = computed(() => [...(options.value?.technologies ?? []), ...saisies.technologies])
+
+// Client final choisi qui n'est pas encore une entreprise cliente de la base
+const clientFinalNouveau = computed(() => Boolean(form.clientFinal && saisies.entreprises.includes(form.clientFinal)))
 
 // Grille à deux colonnes des trois cartes du formulaire
 const CLASSE_GRILLE = 'grid grid-cols-1 md:grid-cols-2 gap-4'
@@ -464,8 +475,33 @@ const niveauxDiffusion = optionsDe(LIBELLES_NIVEAU_DIFFUSION).map(option => ({
 }))
 
 // Listes ouvertes (non contraintes en base) : de simples propositions
-const typesMission = ['Run', 'Build', 'Expertise']
+const typesMission = computed(() => ['Run', 'Build', 'Expertise', ...saisies.typesMission])
 const charges = ['Temps plein', '3-4 jours par semaine', '1-2 jours par semaine']
+
+// « Créer … » dans un UInputMenu émet seulement l'événement create, sans sélectionner la valeur :
+// on l'ajoute à sa liste puis on la sélectionne. Une valeur déjà présente, à la casse près, est
+// reprise telle quelle (la base refuse les doublons de nom sans tenir compte de la casse).
+function ajouterSaisie(ajoutees: string[], existantes: string[], saisie: string): string | undefined {
+  const valeur = saisie.trim()
+  if (!valeur) return undefined
+  const existante = existantes.find(v => v.toLowerCase() === valeur.toLowerCase())
+  if (existante) return existante
+  ajoutees.push(valeur)
+  return valeur
+}
+
+function creerClientFinal(nom: string) {
+  form.clientFinal = ajouterSaisie(saisies.entreprises, entreprises.value, nom)
+}
+
+function creerTypeMission(type: string) {
+  form.typeMission = ajouterSaisie(saisies.typesMission, typesMission.value, type)
+}
+
+function creerTechnologie(nom: string) {
+  const technologie = ajouterSaisie(saisies.technologies, technologiesDisponibles.value, nom)
+  if (technologie && !form.technologies.includes(technologie)) form.technologies.push(technologie)
+}
 
 const creation = ref(false)
 
