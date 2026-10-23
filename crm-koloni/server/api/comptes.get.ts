@@ -41,14 +41,15 @@ export default defineEventHandler(async (event): Promise<Compte[]> => {
     SELECT
       m.id::text, m.nom, m.prenom, m.mail, m.telephone, m.ville,
       m.role, m.disponibilite,
-      to_char(m.date_fin_mission, 'YYYY-MM-DD') AS date_fin_mission,
+      -- date_disponibilite : fin de mission (en mission) ou date de disponibilité (à l'écoute)
+      to_char(m.date_disponibilite, 'YYYY-MM-DD') AS date_fin_mission,
       m.actif,
       to_char(m.date_creation, 'YYYY-MM-DD') AS date_creation,
       (SELECT count(*)::int FROM opportunite o WHERE o.apporteur_id = m.id)      AS nb_opportunites_apportees,
       (SELECT count(*)::int FROM opportunite o WHERE o.moteur_id = m.id)         AS nb_opportunites_moteur,
       (SELECT count(*)::int FROM positionnement p WHERE p.membre_id = m.id)      AS nb_positionnements,
       (SELECT count(*)::int FROM opportunite o WHERE o.preneur_membre_id = m.id) AS nb_missions_signees
-    FROM membre m
+    FROM membre_resume m
     WHERE (${actif}::boolean IS NULL OR m.actif = ${actif})
       AND (${disponibilite}::text IS NULL OR m.disponibilite = ${disponibilite})
       AND (${recherche}::text IS NULL
