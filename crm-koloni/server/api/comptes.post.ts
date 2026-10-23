@@ -14,8 +14,9 @@ const schema = z.object({
   notes: champsMembre.notes.optional(),
   role: champsMembre.role.default(Role.membre),
   ville: champsMembre.ville.optional(),
-  disponibilite: champsMembre.disponibilite.default('en_recherche'),
-  date_fin_mission: champsMembre.date_fin_mission.optional()
+  // Un compte neuf n'a encore rien déclaré (valeur par défaut de la base)
+  disponibilite: champsMembre.disponibilite.default('inconnu'),
+  date_disponibilite: champsMembre.date_disponibilite.optional()
 })
 
 export default defineEventHandler(async (event) => {
@@ -24,15 +25,15 @@ export default defineEventHandler(async (event) => {
   const sql = useDb(event)
 
   const hash = await hashPassword(corps.password)
-  const dateFinMission = dateFinMissionAutorisee(corps.disponibilite, corps.date_fin_mission)
+  const dateDisponibilite = dateDisponibiliteAutorisee(corps.disponibilite, corps.date_disponibilite)
 
   try {
     const [membre] = await sql<{ id: string }[]>`
       INSERT INTO membre (nom, prenom, mail, telephone, lien_linkedin, notes, role, ville,
-                          disponibilite, date_fin_mission, mot_de_passe_hash)
+                          disponibilite, date_disponibilite, mot_de_passe_hash)
       VALUES (${corps.nom}, ${corps.prenom}, ${corps.mail}, ${corps.telephone ?? null},
               ${corps.lien_linkedin ?? null}, ${corps.notes ?? null}, ${corps.role}, ${corps.ville ?? null},
-              ${corps.disponibilite}, ${dateFinMission}::date, ${hash})
+              ${corps.disponibilite}, ${dateDisponibilite}::date, ${hash})
       RETURNING id::text
     `
     setResponseStatus(event, 201)

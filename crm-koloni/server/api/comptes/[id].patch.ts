@@ -2,7 +2,7 @@
 // Seuls les champs envoyés sont modifiés ; une valeur vide efface un champ facultatif.
 // Un compte désactivé n'est jamais supprimé : ses traces sont conservées.
 import * as z from 'zod'
-import { Role } from '#shared/types/utilisateur'
+import { DISPONIBILITES_DATEES, Role } from '#shared/types/utilisateur'
 
 const params = z.object({
   id: z.string().regex(/^\d+$/)
@@ -18,7 +18,7 @@ const schema = z.object({
   role: champsMembre.role.optional(),
   ville: champsMembre.ville.optional(),
   disponibilite: champsMembre.disponibilite.optional(),
-  date_fin_mission: champsMembre.date_fin_mission.optional(),
+  date_disponibilite: champsMembre.date_disponibilite.optional(),
   actif: z.boolean().optional()
 }).refine(corps => Object.values(corps).some(valeur => valeur !== undefined), {
   message: 'Rien à modifier'
@@ -33,8 +33,8 @@ export default defineEventHandler(async (event) => {
   const champs: Record<string, unknown> = Object.fromEntries(
     Object.entries(corps).filter(([, valeur]) => valeur !== undefined)
   )
-  // Un membre qui repasse « en recherche » n'a plus de date de fin de mission
-  if (corps.disponibilite === 'en_recherche') champs.date_fin_mission = null
+  // Un membre qui passe dans un état sans date (en recherche, inconnue) perd sa date de disponibilité
+  if (corps.disponibilite && !DISPONIBILITES_DATEES.includes(corps.disponibilite)) champs.date_disponibilite = null
 
   // Retirer le rôle administrateur ou désactiver un compte n'est permis que s'il reste un autre administrateur actif,
   // sinon l'application se retrouverait sans personne pour gérer les comptes

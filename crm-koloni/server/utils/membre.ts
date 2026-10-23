@@ -6,7 +6,7 @@
  */
 
 import * as z from 'zod'
-import { Role } from '#shared/types/utilisateur'
+import { DISPONIBILITES_DATEES, LIBELLES_DISPONIBILITE, Role } from '#shared/types/utilisateur'
 import type { Disponibilite } from '#shared/types/utilisateur'
 
 // "" et espaces -> null, pour qu'un champ vidé dans un formulaire efface la valeur en base
@@ -24,12 +24,14 @@ export const champsMembre = {
   notes: facultatif(z.string().trim().max(5000)),
   role: z.enum(Role),
   ville: facultatif(z.string().trim().max(100)),
-  disponibilite: z.enum(['en_recherche', 'en_mission']),
-  date_fin_mission: facultatif(z.iso.date())
+  // Les quatre états de la base (chk_membre_disponibilite)
+  disponibilite: z.enum(Object.keys(LIBELLES_DISPONIBILITE) as [Disponibilite, ...Disponibilite[]]),
+  date_disponibilite: facultatif(z.iso.date())
 }
 
 export const motDePasse = z.string().min(8).max(200)
 
-// La date de fin de mission n'a de sens que pour un membre en mission (chk_membre_date_fin_mission)
-export const dateFinMissionAutorisee = (disponibilite: Disponibilite, date: string | null | undefined) =>
-  disponibilite === 'en_mission' ? (date ?? null) : null
+// La date n'a de sens qu'en mission (fin de mission) ou à l'écoute (date de disponibilité) :
+// chk_membre_date_disponibilite la refuse pour les deux autres états
+export const dateDisponibiliteAutorisee = (disponibilite: Disponibilite, date: string | null | undefined) =>
+  DISPONIBILITES_DATEES.includes(disponibilite) ? (date ?? null) : null

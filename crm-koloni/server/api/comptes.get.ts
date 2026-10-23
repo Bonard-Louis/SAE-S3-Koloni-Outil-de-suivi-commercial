@@ -12,7 +12,7 @@ interface LigneCompte {
   ville: string | null
   role: Role
   disponibilite: Disponibilite
-  date_fin_mission: string | null
+  date_disponibilite: string | null
   actif: boolean
   date_creation: string
   nb_opportunites_apportees: number
@@ -23,7 +23,7 @@ interface LigneCompte {
 
 const filtres = z.object({
   actif: z.enum(['true', 'false']).optional(),
-  disponibilite: z.enum(['en_recherche', 'en_mission']).optional(),
+  disponibilite: champsMembre.disponibilite.optional(),
   recherche: z.string().trim().max(100).optional()
 })
 
@@ -42,7 +42,7 @@ export default defineEventHandler(async (event): Promise<Compte[]> => {
       m.id::text, m.nom, m.prenom, m.mail, m.telephone, m.ville,
       m.role, m.disponibilite,
       -- date_disponibilite : fin de mission (en mission) ou date de disponibilité (à l'écoute)
-      to_char(m.date_disponibilite, 'YYYY-MM-DD') AS date_fin_mission,
+      to_char(m.date_disponibilite, 'YYYY-MM-DD') AS date_disponibilite,
       m.actif,
       to_char(m.date_creation, 'YYYY-MM-DD') AS date_creation,
       (SELECT count(*)::int FROM opportunite o WHERE o.apporteur_id = m.id)      AS nb_opportunites_apportees,
@@ -66,7 +66,7 @@ export default defineEventHandler(async (event): Promise<Compte[]> => {
     ville: nullEnUndefined(l.ville),
     role: l.role,
     disponibilite: l.disponibilite,
-    dateFinMission: nullEnUndefined(l.date_fin_mission),
+    dateDisponibilite: nullEnUndefined(l.date_disponibilite),
     actif: l.actif,
     dateCreation: l.date_creation,
     nbOpportunitesApportees: l.nb_opportunites_apportees,

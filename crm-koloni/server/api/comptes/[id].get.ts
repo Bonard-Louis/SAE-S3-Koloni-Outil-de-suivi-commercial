@@ -13,7 +13,7 @@ interface LigneCompteDetail {
   role: Role
   ville: string | null
   disponibilite: Disponibilite
-  date_fin_mission: string | null
+  date_disponibilite: string | null
   actif: boolean
 }
 
@@ -29,9 +29,9 @@ export default defineEventHandler(async (event): Promise<CompteDetail> => {
   const [m] = await sql<LigneCompteDetail[]>`
     SELECT
       id::text, nom, prenom, mail, telephone, lien_linkedin, notes, role, ville, disponibilite,
-      to_char(date_fin_mission, 'YYYY-MM-DD') AS date_fin_mission,
+      to_char(date_disponibilite, 'YYYY-MM-DD') AS date_disponibilite,
       actif
-    FROM membre
+    FROM membre_resume
     WHERE id = ${id}
   `
 
@@ -50,7 +50,7 @@ export default defineEventHandler(async (event): Promise<CompteDetail> => {
     role: m.role,
     ville: nullEnUndefined(m.ville),
     disponibilite: m.disponibilite,
-    dateFinMission: nullEnUndefined(m.date_fin_mission),
+    dateDisponibilite: nullEnUndefined(m.date_disponibilite),
     actif: m.actif
   }
 })

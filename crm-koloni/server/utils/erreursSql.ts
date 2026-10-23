@@ -21,7 +21,8 @@ const MESSAGES: Record<string, string> = {
   chk_opp_preneur_exclusif: 'Le preneur est soit un membre, soit un profil extérieur, pas les deux',
   chk_contact_moyen_contact: 'Renseigner au moins un mail, un téléphone ou un lien LinkedIn',
   chk_membre_linkedin: 'Lien LinkedIn invalide',
-  chk_membre_date_fin_mission: 'La date de fin de mission n\'a de sens que pour un membre en mission',
+  chk_membre_disponibilite: 'Disponibilité inconnue',
+  chk_membre_date_disponibilite: 'La date ne s\'indique que pour un membre en mission ou à l\'écoute',
   chk_membre_ville_format: 'La ville ne peut pas être vide',
   chk_contact_linkedin: 'Lien LinkedIn invalide',
   chk_profil_ext_linkedin: 'Lien LinkedIn invalide'
