@@ -51,7 +51,8 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const identifiant = await sql.begin(async (transaction) => {
+  // enTransaction transmet l'auteur à la base
+  const identifiant = await enTransaction(event, session.user.id, async (transaction) => {
     let clientId: string | null = null
     if (body.clientFinal) {
       const [client] = await transaction<{ id: string }[]>`
