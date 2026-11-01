@@ -27,7 +27,7 @@ const schema = z.object({
 export default defineEventHandler(async (event) => {
   await exigerAdmin(event)
   const { id } = await getValidatedRouterParams(event, params.parse)
-  const corps = await readValidatedBody(event, schema.parse)
+  const corps = await lireCorps(event, schema)
   const sql = useDb(event)
 
   const champs: Record<string, unknown> = Object.fromEntries(

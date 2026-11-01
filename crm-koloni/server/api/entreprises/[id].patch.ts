@@ -22,7 +22,7 @@ const schema = z.object({
 export default defineEventHandler(async (event) => {
   const session = await exigerSession(event)
   const { id } = await getValidatedRouterParams(event, params.parse)
-  const corps = await readValidatedBody(event, schema.parse)
+  const corps = await lireCorps(event, schema)
 
   // Seuls les champs envoyés sont mis à jour
   const champs = Object.fromEntries(Object.entries(corps).filter(([, valeur]) => valeur !== undefined))

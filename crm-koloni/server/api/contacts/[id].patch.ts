@@ -17,7 +17,7 @@ const champsModifiables = champsContact.partial().refine(donnees => Object.keys(
 export default defineEventHandler(async (event) => {
   const session = await exigerSession(event)
   const { id } = await getValidatedRouterParams(event, identifiantContact.parse)
-  const modifs = await readValidatedBody(event, champsModifiables.parse)
+  const modifs = await lireCorps(event, champsModifiables)
 
   try {
     return await enTransaction(event, session.user.id, async (tx) => {

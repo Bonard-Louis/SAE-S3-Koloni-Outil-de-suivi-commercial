@@ -21,7 +21,7 @@ const schema = z.object({
 
 export default defineEventHandler(async (event) => {
   await exigerAdmin(event)
-  const corps = await readValidatedBody(event, schema.parse)
+  const corps = await lireCorps(event, schema)
   const sql = useDb(event)
 
   const hash = await hashPassword(corps.password)

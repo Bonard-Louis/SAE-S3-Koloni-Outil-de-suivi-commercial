@@ -1,7 +1,7 @@
 // Création d'un contact côté client (ouverte à tout membre connecté)
 export default defineEventHandler(async (event) => {
   const session = await exigerSession(event)
-  const contact = await readValidatedBody(event, champsContact.parse)
+  const contact = await lireCorps(event, champsContact)
 
   if (!contactAvecMoyenDeContact(contact)) {
     throw createError({ statusCode: 400, statusMessage: MESSAGE_MOYEN_DE_CONTACT })
