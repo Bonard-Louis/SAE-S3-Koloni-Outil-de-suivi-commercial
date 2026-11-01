@@ -49,7 +49,7 @@
               <dt class="text-sm text-muted">
                 {{ champ.label }}
               </dt>
-              <dd class="font-medium text-highlighted break-words">
+              <dd class="font-medium text-highlighted wrap-break-word">
                 <ULink
                   v-if="champ.lien && champ.valeur"
                   :to="champ.valeur"
