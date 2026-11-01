@@ -1,4 +1,5 @@
 import * as z from 'zod'
+import type { ObjetCree } from '#shared/types/referentiels'
 
 const schema = z.object({
   titre: z.string().trim().min(1).max(255),
@@ -34,7 +35,7 @@ const schema = z.object({
 
 export default defineEventHandler(async (event) => {
   const session = await exigerSession(event)
-  const body = await readValidatedBody(event, schema.parse)
+  const body = await lireCorps(event, schema)
   const sql = useDb(event)
 
   const [membreApporteur] = await sql<{ id: string }[]>`
@@ -53,16 +54,21 @@ export default defineEventHandler(async (event) => {
     }
   }
 
+  // Entreprise ou technologie créée par cette opportunité : renvoyée pour que la page propose de la compléter
+  // (xmax, colonne système de PostgreSQL, vaut 0 sur une ligne tout juste insérée, et non retrouvée par ON CONFLICT)
+  const objetsCrees: { entreprises: ObjetCree[], technologies: ObjetCree[] } = { entreprises: [], technologies: [] }
+
   // enTransaction transmet l'auteur à la base
   const identifiant = await enTransaction(event, session.user.id, async (transaction) => {
     let clientId: string | null = null
     if (body.clientFinal) {
-      const [client] = await transaction<{ id: string }[]>`
+      const [client] = await transaction<{ id: string, nom: string, est_nouvelle: boolean }[]>`
         INSERT INTO entreprise_cliente (nom) VALUES (${body.clientFinal})
         ON CONFLICT (lower(btrim(nom))) DO UPDATE SET nom = entreprise_cliente.nom
-        RETURNING id::text
+        RETURNING id::text, nom, (xmax = 0) AS est_nouvelle
       `
       clientId = client!.id
+      if (client!.est_nouvelle) objetsCrees.entreprises.push({ id: client!.id, nom: client!.nom })
     }
 
     const technologies = [...new Map(body.technologies.map(nom => [nom.toLocaleLowerCase('fr'), nom])).values()]
@@ -86,11 +92,12 @@ export default defineEventHandler(async (event) => {
     `
 
     for (const nom of technologies) {
-      const [technologie] = await transaction<{ id: string }[]>`
+      const [technologie] = await transaction<{ id: string, nom: string, est_nouvelle: boolean }[]>`
         INSERT INTO technologie (nom) VALUES (${nom})
         ON CONFLICT (lower(btrim(nom))) DO UPDATE SET nom = technologie.nom
-        RETURNING id::text
+        RETURNING id::text, nom, (xmax = 0) AS est_nouvelle
       `
+      if (technologie!.est_nouvelle) objetsCrees.technologies.push({ id: technologie!.id, nom: technologie!.nom })
       await transaction`
         INSERT INTO opportunite_technologie (opportunite_id, technologie_id, est_principale)
         VALUES (${opportunite!.id}, ${technologie!.id}, ${nom === body.technologiePrincipale})
@@ -102,5 +109,5 @@ export default defineEventHandler(async (event) => {
   })
 
   setResponseStatus(event, 201)
-  return { id: identifiant }
+  return { id: identifiant, objetsCrees }
 })

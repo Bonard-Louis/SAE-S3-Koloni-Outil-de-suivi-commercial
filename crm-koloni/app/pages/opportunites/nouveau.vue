@@ -83,8 +83,9 @@
           >
             <UInputMenu
               v-model="form.typeMission"
+              v-model:search-term="recherches.typeMission"
               :items="typesMission"
-              create-item="always"
+              :create-item="creationProposee(recherches.typeMission, typesMission)"
               placeholder="Sélectionner ou saisir un type"
               class="w-full"
               @create="creerTypeMission"
@@ -123,8 +124,9 @@
           >
             <UInputMenu
               v-model="form.clientFinal"
+              v-model:search-term="recherches.clientFinal"
               :items="entreprises"
-              create-item="always"
+              :create-item="creationProposee(recherches.clientFinal, entreprises)"
               placeholder="Rechercher ou saisir une entreprise"
               class="w-full"
               @create="creerClientFinal"
@@ -206,9 +208,10 @@
           >
             <UInputMenu
               v-model="form.technologies"
+              v-model:search-term="recherches.technologies"
               :items="technologiesDisponibles"
               multiple
-              create-item="always"
+              :create-item="creationProposee(recherches.technologies, technologiesDisponibles)"
               placeholder="Rechercher, choisir ou ajouter des technologies"
               class="w-full"
               @create="creerTechnologie"
@@ -392,10 +395,49 @@
         </UButton>
       </footer>
     </UForm>
+
+    <!-- Après l'enregistrement : les entreprises et technologies créées à la volée, à compléter sur leur page
+         (nouvel onglet, pour ne pas quitter le fil) ; fermer la fenêtre mène à la fiche de l'opportunité -->
+    <UModal
+      v-model:open="completionOuverte"
+      title="Informations à compléter"
+      description="L'opportunité est créée. Ces éléments viennent d'être ajoutés : complétez-les sur leur page."
+      :ui="{ footer: 'justify-end' }"
+    >
+      <template #body>
+        <ul class="space-y-2">
+          <li
+            v-for="lien in liensACompleter"
+            :key="lien.to"
+          >
+            <ULink
+              :to="lien.to"
+              target="_blank"
+              class="inline-flex items-center gap-1.5"
+            >
+              <UIcon
+                name="i-lucide-external-link"
+                class="size-4"
+              />
+              {{ lien.libelle }}
+            </ULink>
+          </li>
+        </ul>
+      </template>
+      <template #footer>
+        <UButton
+          label="Voir l'opportunité"
+          icon="i-lucide-arrow-right"
+          @click="allerALOpportunite"
+        />
+      </template>
+    </UModal>
   </UContainer>
 </template>
 
 <script setup lang="ts">
+import type { ObjetCree } from '#shared/types/referentiels'
+
 interface OptionsOpportunite {
   membres: { id: string, nom: string, prenom: string, mail: string }[]
   entreprises: string[]
@@ -478,6 +520,17 @@ const niveauxDiffusion = optionsDe(LIBELLES_NIVEAU_DIFFUSION).map(option => ({
 const typesMission = computed(() => ['Run', 'Build', 'Expertise', ...saisies.typesMission])
 const charges = ['Temps plein', '3-4 jours par semaine', '1-2 jours par semaine']
 
+// Texte tapé dans la recherche de chaque liste ouverte à la saisie
+const recherches = reactive({ typeMission: '', clientFinal: '', technologies: '' })
+
+// « Créer … » n'est proposé que pour une valeur absente de la liste, sans tenir compte de la casse
+// (la base refuse les doublons de nom à la casse près) ; 'always' le propose même si la recherche
+// trouve des valeurs proches (« SQL » alors que « SQL Server » existe)
+function creationProposee(recherche: string, existantes: string[]) {
+  const valeur = recherche.trim().toLowerCase()
+  return Boolean(valeur) && !existantes.some(v => v.toLowerCase() === valeur) ? 'always' : false
+}
+
 // « Créer … » dans un UInputMenu émet seulement l'événement create, sans sélectionner la valeur :
 // on l'ajoute à sa liste puis on la sélectionne. Une valeur déjà présente, à la casse près, est
 // reprise telle quelle (la base refuse les doublons de nom sans tenir compte de la casse).
@@ -501,9 +554,41 @@ function creerTypeMission(type: string) {
 function creerTechnologie(nom: string) {
   const technologie = ajouterSaisie(saisies.technologies, technologiesDisponibles.value, nom)
   if (technologie && !form.technologies.includes(technologie)) form.technologies.push(technologie)
+  // La sélection multiple reste ouverte : on vide la recherche pour taper la technologie suivante
+  recherches.technologies = ''
 }
 
 const creation = ref(false)
+
+// Opportunité enregistrée, et liens vers les objets créés à compléter (fenêtre ouverte s'il y en a)
+const idOpportunite = ref<string>()
+const liensACompleter = ref<{ libelle: string, to: string }[]>([])
+
+const completionOuverte = computed({
+  get: () => liensACompleter.value.length > 0,
+  // Fermer la fenêtre (Échap, clic à côté) mène aussi à la fiche de l'opportunité
+  set: (ouverte) => {
+    if (!ouverte) allerALOpportunite()
+  }
+})
+
+function allerALOpportunite() {
+  return router.push(`/opportunites/${idOpportunite.value}`)
+}
+
+// Un lien par entreprise et par technologie créées, vers la page qui permet de les compléter
+function liensVers(objetsCrees: { entreprises: ObjetCree[], technologies: ObjetCree[] }) {
+  return [
+    ...objetsCrees.entreprises.map(e => ({
+      libelle: `Compléter l'entreprise « ${e.nom} » (secteur, taille, ville)`,
+      to: `/entreprises/${e.id}`
+    })),
+    ...objetsCrees.technologies.map(t => ({
+      libelle: `Rattacher la technologie « ${t.nom} » à sa famille`,
+      to: `/technologies/${t.id}`
+    }))
+  ]
+}
 
 watch(() => form.technologies, (selection) => {
   if (form.technologiePrincipale && !selection.includes(form.technologiePrincipale)) {
@@ -534,7 +619,7 @@ async function creer() {
 
   creation.value = true
   try {
-    const resultat = await $fetch<{ id: string }>('/api/opportunites', {
+    const resultat = await $fetch<{ id: string, objetsCrees: { entreprises: ObjetCree[], technologies: ObjetCree[] } }>('/api/opportunites', {
       method: 'POST',
       body: {
         ...form,
@@ -547,7 +632,11 @@ async function creer() {
       }
     })
     toast.add({ title: 'Opportunité créée avec succès', color: 'success' })
-    await router.push(`/opportunites/${resultat.id}`)
+    idOpportunite.value = resultat.id
+    // Rien de nouveau à compléter : on va directement à la fiche ; sinon la fenêtre s'ouvre
+    const liens = liensVers(resultat.objetsCrees)
+    if (liens.length) liensACompleter.value = liens
+    else await allerALOpportunite()
   } catch (error) {
     const message = (error as { data?: { statusMessage?: string } }).data?.statusMessage
     toast.add({ title: 'Création impossible', description: message, color: 'error' })
