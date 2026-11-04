@@ -1,12 +1,12 @@
-# SAE-S3-Koloni-Outil-de-suivi-commercial
+# CRM Koloni
 
 ## Équipe & Rôles
 
 * **Garaios Mathias** - *Scrum Master*
 * **Drapied Hugo** - *Product Owner*
-* **Martinez Lucie** - *Developer*
-* **Fellah Sara** - *Developer*
-* **Bonard Louis** - *Developer*
+* **Martinez Lucie** - *Développeuse*
+* **Fellah Sara** - *Développeuse*
+* **Bonard Louis** - *Développeur*
 
 ---
 
@@ -23,31 +23,63 @@ Actuellement, les membres font circuler des opportunités de mission et relancen
 * Assurer un suivi précis du statut par opportunité.
 * Visualiser clairement ce qui se transforme en mission au bout du compte.
 
-A completer après le rdv avec le client
+### Cadre du projet
+
+Le projet est encadré par l'IUT de Blagnac dans le cadre de la **SAE 5.01 : Développement avancé**, dont l'objectif est de réaliser une application réelle avec un client réel, en équipe, pour mettre en œuvre l'ensemble des connaissances acquises lors de la formation comme projet de fin d'études.
 
 ---
 
-## Technologies utilisés
+## Technologies utilisées
 
-* **Base de données :** PostgreSQL
-* **Backend :** NUXT
-* **Frontend :** NUXT
+* **Interface :** Nuxt 4 et Nuxt UI 4
+* **API :** routes serveur de Nuxt, avec zod pour la validation et nuxt-auth-utils pour les sessions
+* **Base de données :** PostgreSQL, lancé avec Docker
+* **Outillage :** Bun, TypeScript et ESLint
 
 ---
 
-## Structure du Repository
+## Démarrage
+
+1. Lancer la base de données : voir [bdd/postgre/README.md](bdd/postgre/README.md).
+2. Lancer l'application : voir [crm-koloni/README.md](crm-koloni/README.md).
+
+---
+
+## Documentation
+
+* [Recueil de besoins](recueil-de-besoin/Recueil_de_Besoins.md)
+* [Cahier des charges](recueil-de-besoin/Cahier%20des%20charges.md) : exigences et découpage en releases
+* [Glossaire](documentation/GLOSSAIRE.md) : schéma de la base de données
+* [Charte des couleurs](documentation/CHARTE-COULEURS.md)
+* [Issues GitHub](https://github.com/DresseurPanda/CRM-Koloni/issues) : une issue par exigence, regroupées par release
+
+---
+
+## Structure du dépôt
 
 ```text
 .
 ├── bdd/
-│   ├── postgre/            # Scripts SQL versionnés (001_, 002_, ... appliqués dans l'ordre)
+│   ├── postgre/             # Scripts SQL versionnés (001_, 002_, ... appliqués dans l'ordre) et Docker de la base
 │   └── data/                # Données de dev, ignorées par git (non versionnées)
+├── crm-koloni/              # Application Nuxt
+│   ├── app/                 # Interface (Nuxt UI)
+│   │   ├── pages/           # Écrans, une route par fichier
+│   │   ├── components/      # Composants réutilisables
+│   │   ├── composables/     # Logique partagée entre les pages
+│   │   ├── middleware/      # Contrôle d'accès aux pages
+│   │   └── utils/
+│   ├── server/              # API (routes Nitro)
+│   │   ├── api/             # Une route par fichier (ex. opportunites/index.post.ts)
+│   │   └── utils/           # Connexion à la base, session, validation
+│   └── shared/              # Types et utilitaires communs à l'interface et à l'API
 ├── documentation/
+│   ├── CHARTE-COULEURS.md   # Couleurs de l'interface
 │   └── GLOSSAIRE.md         # Documentation du schéma de base de données
 ├── recueil-de-besoin/
 │   ├── Cahier des charges.md
 │   ├── Recueil_de_Besoins.md
-│   └── maquettes/            # Maquettes des écrans (images)
+│   └── maquettes/           # Maquettes des écrans (images et HTML)
 └── README.md
 ```
 
@@ -65,12 +97,12 @@ A completer après le rdv avec le client
 Convention inspirée de [Conventional Commits](https://www.conventionalcommits.org/), message rédigé en français :
 
 ```text
-type: résumé court à l'indicatif
+type: résumé court
 
 Corps optionnel expliquant le pourquoi, si le résumé ne suffit pas.
 ```
 
-Types utilisés : `feat` (fonctionnalité), `fix` (correction), `docs` (documentation), `chore` (outillage/réorganisation), `refactor` (restructuration sans changement de comportement).
+Types utilisés : `feat` (fonctionnalité), `fix` (correction), `docs` (documentation), `style` (mise en forme sans changement de logique), `chore` (outillage/réorganisation), `refactor` (restructuration sans changement de comportement).
 
 ---
 
