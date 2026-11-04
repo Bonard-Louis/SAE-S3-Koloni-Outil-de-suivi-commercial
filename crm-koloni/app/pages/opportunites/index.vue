@@ -54,6 +54,7 @@
         <TableauOpportunites
           :opportunites="opportunitesPage"
           :get-badges="getOpportuniteBadges"
+          :titre-to="lienFicheOpportunite"
         />
 
         <BarrePagination
@@ -191,6 +192,10 @@ const opportunitesFiltrees = computed(() => {
 const opportunitesPage = computed(() =>
   opportunitesFiltrees.value.slice((page.value - 1) * ITEMS_PAR_PAGE, page.value * ITEMS_PAR_PAGE)
 )
+
+function lienFicheOpportunite(opportunite: Opportunite) {
+  return `/opportunites/${opportunite.id}`
+}
 
 function valider() {
   filtresAppliques.value = { ...filtres }

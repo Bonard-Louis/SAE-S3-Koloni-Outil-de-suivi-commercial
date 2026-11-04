@@ -2,7 +2,9 @@
 import type { NavigationMenuItem } from '@nuxt/ui'
 import { Role } from '#shared/types/utilisateur'
 
-const { isAuthenticated, role } = useAuth()
+const { isAuthenticated, role, logout } = useAuth()
+const enDeconnexion = ref(false)
+const router = useRouter()
 
 const items = computed<NavigationMenuItem[]>(() => [
   { label: 'Dashboard', icon: 'i-lucide-layout-dashboard', to: '/' },
@@ -15,6 +17,17 @@ const items = computed<NavigationMenuItem[]>(() => [
       ]
     : [])
 ])
+
+async function deconnecter() {
+  if (enDeconnexion.value) return
+  enDeconnexion.value = true
+  try {
+    await logout()
+    await router.push('/connexion/login')
+  } finally {
+    enDeconnexion.value = false
+  }
+}
 </script>
 
 <template>
@@ -36,6 +49,14 @@ const items = computed<NavigationMenuItem[]>(() => [
     />
     <template #right>
       <InfoUtilisateur v-if="isAuthenticated" />
+      <UButton
+        v-if="isAuthenticated"
+        icon="i-lucide-log-out"
+        color="neutral"
+        variant="ghost"
+        :loading="enDeconnexion"
+        @click="deconnecter"
+      />
       <UColorModeButton />
     </template>
     <template #body>
@@ -45,6 +66,16 @@ const items = computed<NavigationMenuItem[]>(() => [
         class="-mx-2.5"
         :ui="{ link: 'hover:text-primary', linkLeadingIcon: 'group-hover:text-primary' }"
         aria-label="Navigation mobile"
+      />
+      <UButton
+        v-if="isAuthenticated"
+        label="Déconnexion"
+        icon="i-lucide-log-out"
+        color="neutral"
+        variant="ghost"
+        class="mt-4 w-full"
+        :loading="enDeconnexion"
+        @click="deconnecter"
       />
     </template>
   </UHeader>

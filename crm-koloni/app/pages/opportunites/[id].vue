@@ -48,6 +48,65 @@
             </div>
           </dl>
         </CarteTitree>
+
+        <CarteTitree
+          icon="i-lucide-notebook-pen"
+          title="Notes"
+        >
+          <div
+            v-if="notes?.length"
+            class="space-y-4"
+          >
+            <article
+              v-for="note in notes"
+              :key="note.id"
+              class="border-b border-gray-200 pb-4 last:border-0 last:pb-0 dark:border-gray-800"
+            >
+              <p class="whitespace-pre-wrap text-gray-900 dark:text-white">
+                {{ note.contenu }}
+              </p>
+              <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                {{ note.auteur }} · {{ formaterDateHeure(note.dateRedaction) }}
+              </p>
+            </article>
+          </div>
+          <p
+            v-else
+            class="text-sm text-gray-500 dark:text-gray-400"
+          >
+            Aucune note pour le moment.
+          </p>
+
+          <UForm
+            :state="formNote"
+            class="mt-6 space-y-3"
+            @submit="ajouterNote"
+          >
+            <UFormField
+              label="Ajouter une note"
+              name="contenu"
+              required
+            >
+              <UTextarea
+                v-model="formNote.contenu"
+                :rows="4"
+                :maxlength="5000"
+                class="w-full"
+                placeholder="Partagez une information utile à tous…"
+              />
+            </UFormField>
+            <div class="flex justify-end">
+              <UButton
+                type="submit"
+                icon="i-lucide-send"
+                :loading="envoiNote"
+                :disabled="!formNote.contenu.trim()"
+              >
+                Publier la note
+              </UButton>
+            </div>
+          </UForm>
+        </CarteTitree>
       </div>
     </template>
 
@@ -76,14 +135,56 @@ interface Opportunite {
 }
 
 const route = useRoute()
+const toast = useToast()
+const formNote = reactive({ contenu: '' })
+const envoiNote = ref(false)
+
+interface NoteOpportunite {
+  id: string
+  contenu: string
+  dateRedaction: string
+  auteur: string
+}
 
 const { data: opportunite } = await useFetch<Opportunite | null>(
   () => `/api/opportunites/${route.params.id}`,
   { default: () => null }
 )
+const { data: notes, refresh: rechargerNotes } = await useFetch<NoteOpportunite[]>(
+  () => `/api/opportunites/${route.params.id}/notes`,
+  { default: () => [] }
+)
+
+async function ajouterNote() {
+  const contenu = formNote.contenu.trim()
+  if (!contenu || envoiNote.value) return
+
+  envoiNote.value = true
+  try {
+    await $fetch(`/api/opportunites/${route.params.id}/notes`, {
+      method: 'POST',
+      body: { contenu }
+    })
+    formNote.contenu = ''
+    await rechargerNotes()
+    toast.add({ title: 'Note publiée', color: 'success' })
+  } catch (error) {
+    toast.add({
+      title: 'Publication impossible',
+      description: (error as { data?: { statusMessage?: string } }).data?.statusMessage,
+      color: 'error'
+    })
+  } finally {
+    envoiNote.value = false
+  }
+}
 
 function formaterDate(iso?: string) {
   return iso ? iso.split('-').reverse().join('/') : 'date inconnue'
+}
+
+function formaterDateHeure(iso: string) {
+  return new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(iso))
 }
 
 const champs = computed(() => {

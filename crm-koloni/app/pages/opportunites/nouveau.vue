@@ -39,7 +39,12 @@
         title="Source et besoin"
       >
         <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <UFormField label="Titre" name="titre" required class="md:col-span-2">
+          <UFormField
+            label="Titre"
+            name="titre"
+            required
+            class="md:col-span-2"
+          >
             <UInput
               v-model="form.titre"
               placeholder="Ex. Migration de données"
@@ -47,7 +52,10 @@
             />
           </UFormField>
 
-          <UFormField label="Source du besoin" name="source">
+          <UFormField
+            label="Source du besoin"
+            name="source"
+          >
             <USelect
               v-model="form.source"
               :items="sources"
@@ -56,7 +64,10 @@
             />
           </UFormField>
 
-          <UFormField label="Type de mission" name="typeMission">
+          <UFormField
+            label="Type de mission"
+            name="typeMission"
+          >
             <UInputMenu
               v-model="form.typeMission"
               :items="typesMission"
@@ -66,7 +77,10 @@
             />
           </UFormField>
 
-          <UFormField label="Niveau recherché" name="niveauRecherche">
+          <UFormField
+            label="Niveau recherché"
+            name="niveauRecherche"
+          >
             <USelect
               v-model="form.niveauRecherche"
               :items="niveaux"
@@ -75,7 +89,10 @@
             />
           </UFormField>
 
-          <UFormField label="Client final" name="clientFinal">
+          <UFormField
+            label="Client final"
+            name="clientFinal"
+          >
             <UInputMenu
               v-model="form.clientFinal"
               :items="entreprises"
@@ -86,15 +103,33 @@
           </UFormField>
 
           <template v-if="!form.clientFinal">
-            <UFormField label="Secteur du client" name="clientFinalSecteur">
-              <UInput v-model="form.clientFinalSecteur" placeholder="Ex. Banque, industrie" class="w-full" />
+            <UFormField
+              label="Secteur du client"
+              name="clientFinalSecteur"
+            >
+              <UInput
+                v-model="form.clientFinalSecteur"
+                placeholder="Ex. Banque, industrie"
+                class="w-full"
+              />
             </UFormField>
-            <UFormField label="Taille du client" name="clientFinalTaille">
-              <UInput v-model="form.clientFinalTaille" placeholder="Ex. PME, grand compte" class="w-full" />
+            <UFormField
+              label="Taille du client"
+              name="clientFinalTaille"
+            >
+              <UInput
+                v-model="form.clientFinalTaille"
+                placeholder="Ex. PME, grand compte"
+                class="w-full"
+              />
             </UFormField>
           </template>
 
-          <UFormField label="Apporteur" name="apporteurId" required>
+          <UFormField
+            label="Apporteur"
+            name="apporteurId"
+            required
+          >
             <USelectMenu
               v-model="form.apporteurId"
               :items="membres"
@@ -106,7 +141,10 @@
             />
           </UFormField>
 
-          <UFormField label="Moteur (facultatif)" name="moteurId">
+          <UFormField
+            label="Moteur (facultatif)"
+            name="moteurId"
+          >
             <USelectMenu
               v-model="form.moteurId"
               :items="membres"
@@ -126,7 +164,11 @@
         title="Conditions de la mission"
       >
         <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <UFormField label="Technologies" name="technologies" class="md:col-span-2">
+          <UFormField
+            label="Technologies"
+            name="technologies"
+            class="md:col-span-2"
+          >
             <UInputMenu
               v-model="form.technologies"
               :items="technologiesDisponibles"
@@ -137,7 +179,10 @@
             />
           </UFormField>
 
-          <UFormField label="Technologie principale" name="technologiePrincipale">
+          <UFormField
+            label="Technologie principale"
+            name="technologiePrincipale"
+          >
             <USelect
               v-model="form.technologiePrincipale"
               :items="form.technologies"
@@ -147,40 +192,111 @@
             />
           </UFormField>
 
-          <UFormField label="Ville" name="ville">
-            <UInput v-model="form.ville" placeholder="Ex. Paris" class="w-full" />
+          <UFormField
+            label="Ville"
+            name="ville"
+          >
+            <UInput
+              v-model="form.ville"
+              placeholder="Ex. Paris"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Mode de travail" name="mode">
-            <USelect v-model="form.mode" :items="modes" placeholder="Sélectionner" class="w-full" />
+          <UFormField
+            label="Mode de travail"
+            name="mode"
+          >
+            <USelect
+              v-model="form.mode"
+              :items="modes"
+              placeholder="Sélectionner"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Température" name="temperature">
-            <USelect v-model="form.temperature" :items="temperatures" placeholder="Sélectionner" class="w-full" />
+          <UFormField
+            label="Température"
+            name="temperature"
+          >
+            <USelect
+              v-model="form.temperature"
+              :items="temperatures"
+              placeholder="Sélectionner"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="TJM annoncé (€)" name="tjmAnnonce">
-            <UInputNumber v-model="form.tjmAnnonce" :min="0" :step="10" class="w-full" />
+          <UFormField
+            label="TJM annoncé (€)"
+            name="tjmAnnonce"
+          >
+            <UInputNumber
+              v-model="form.tjmAnnonce"
+              :min="0"
+              :step="10"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="TJM client (€)" name="tjmClient">
-            <UInputNumber v-model="form.tjmClient" :min="0" :step="10" class="w-full" />
+          <UFormField
+            label="TJM client (€)"
+            name="tjmClient"
+          >
+            <UInputNumber
+              v-model="form.tjmClient"
+              :min="0"
+              :step="10"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Durée annoncée (mois)" name="dureeAnnonceeMois">
-            <UInputNumber v-model="form.dureeAnnonceeMois" :min="0.5" :step="0.5" class="w-full" />
+          <UFormField
+            label="Durée annoncée (mois)"
+            name="dureeAnnonceeMois"
+          >
+            <UInputNumber
+              v-model="form.dureeAnnonceeMois"
+              :min="0.5"
+              :step="0.5"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Charge" name="charge">
-            <USelect v-model="form.charge" :items="charges" placeholder="Sélectionner" class="w-full" />
+          <UFormField
+            label="Charge"
+            name="charge"
+          >
+            <USelect
+              v-model="form.charge"
+              :items="charges"
+              placeholder="Sélectionner"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Timing" name="timing">
-            <USelect v-model="form.timing" :items="timings" placeholder="Sélectionner" class="w-full" />
+          <UFormField
+            label="Timing"
+            name="timing"
+          >
+            <USelect
+              v-model="form.timing"
+              :items="timings"
+              placeholder="Sélectionner"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Date du signal" name="dateSignal" required>
-            <UInput v-model="form.dateSignal" type="date" class="w-full" />
+          <UFormField
+            label="Date du signal"
+            name="dateSignal"
+            required
+          >
+            <UInput
+              v-model="form.dateSignal"
+              type="date"
+              class="w-full"
+            />
           </UFormField>
         </section>
       </CarteTitree>
@@ -190,15 +306,34 @@
         title="Candidature et diffusion"
       >
         <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <UFormField label="Mode de candidature" name="modeCandidature">
-            <USelect v-model="form.modeCandidature" :items="modesCandidature" placeholder="Sélectionner" class="w-full" />
+          <UFormField
+            label="Mode de candidature"
+            name="modeCandidature"
+          >
+            <USelect
+              v-model="form.modeCandidature"
+              :items="modesCandidature"
+              placeholder="Sélectionner"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Précision du mode de candidature" name="modeCandidaturePrecision">
-            <UInput v-model="form.modeCandidaturePrecision" placeholder="Nom, mail ou canal de contact" class="w-full" />
+          <UFormField
+            label="Précision du mode de candidature"
+            name="modeCandidaturePrecision"
+          >
+            <UInput
+              v-model="form.modeCandidaturePrecision"
+              placeholder="Nom, mail ou canal de contact"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField label="Niveau de diffusion" name="niveauDiffusion" class="md:col-span-2">
+          <UFormField
+            label="Niveau de diffusion"
+            name="niveauDiffusion"
+            class="md:col-span-2"
+          >
             <URadioGroup
               v-model="form.niveauDiffusion"
               :items="niveauxDiffusion"
@@ -206,7 +341,11 @@
             />
           </UFormField>
 
-          <UFormField label="Lien de l'annonce extérieure" name="lienAnnonceExterieure" class="md:col-span-2">
+          <UFormField
+            label="Lien de l'annonce extérieure"
+            name="lienAnnonceExterieure"
+            class="md:col-span-2"
+          >
             <UInput
               v-model="form.lienAnnonceExterieure"
               type="url"
@@ -218,10 +357,18 @@
       </CarteTitree>
 
       <footer class="flex items-center justify-end gap-3 pt-4">
-        <UButton to="/opportunites" color="neutral" variant="ghost">
+        <UButton
+          to="/opportunites"
+          color="neutral"
+          variant="ghost"
+        >
           Annuler
         </UButton>
-        <UButton type="submit" :loading="creation" icon="i-lucide-check">
+        <UButton
+          type="submit"
+          :loading="creation"
+          icon="i-lucide-check"
+        >
           Créer l'opportunité
         </UButton>
       </footer>
