@@ -26,6 +26,9 @@ interface OpportuniteDetail {
   id: string
   titre: string
   statut: StatutOpportunite
+  droits: {
+    qualifier: boolean
+  }
   source?: string
   typeMission?: string
   niveauRecherche?: string

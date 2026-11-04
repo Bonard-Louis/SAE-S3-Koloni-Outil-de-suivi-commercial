@@ -1,6 +1,7 @@
 // Fiche complète d'une opportunité : la fiche, ses technologies, contacts, positionnements et notes,
 // sa date d'ouverture à l'extérieur, et le fil qui réunit l'historique des statuts et le journal d'actions
 import * as z from 'zod'
+import { Role } from '#shared/types/utilisateur'
 
 const params = z.object({
   id: z.string().regex(/^\d+$/)
@@ -20,6 +21,7 @@ interface LigneOpportunite {
   client_final_taille: string | null
   apporteur_id: string
   apporteur: string
+  qualifiee_par_id: string | null
   saisi_par: string | null
   moteur_id: string | null
   moteur: string | null
@@ -62,7 +64,7 @@ interface LigneFil {
 const nombre = (valeur: string | null) => (valeur === null ? undefined : Number(valeur))
 
 export default defineEventHandler(async (event) => {
-  await exigerSession(event)
+  const session = await exigerSession(event)
   const { id } = await getValidatedRouterParams(event, params.parse)
   const sql = useDb(event)
 
@@ -81,7 +83,7 @@ export default defineEventHandler(async (event) => {
       to_char(o.date_cloture, 'YYYY-MM-DD') AS date_cloture,
       to_char(o.date_relance, 'YYYY-MM-DD') AS date_relance,
       o.raison_perte,
-      q.prenom || ' ' || q.nom AS qualifiee_par,
+      o.qualifiee_par_id::text, q.prenom || ' ' || q.nom AS qualifiee_par,
       to_char(o.date_qualification AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD') AS date_qualification,
       to_char(ouv.date_ouverture_exterieur, 'YYYY-MM-DD') AS date_ouverture_exterieur
     FROM opportunite o
@@ -159,6 +161,11 @@ export default defineEventHandler(async (event) => {
     id: o.id,
     titre: o.titre,
     statut: libelleStatut(o.statut),
+    droits: {
+      qualifier: o.statut === 'signal'
+        && o.qualifiee_par_id === null
+        && (session.role === Role.admin || session.user.id === o.apporteur_id)
+    },
     source: libelleSource(o.source),
     typeMission: nullEnUndefined(o.type_mission),
     niveauRecherche: libelleNiveau(o.niveau_recherche),
